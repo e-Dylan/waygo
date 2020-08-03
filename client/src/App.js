@@ -83,6 +83,25 @@ class App extends Component {
     fetch(API_URL)
       .then(res => res.json())
       .then(waymessages => {
+        // Every message will be taken from db, put into an array at the index of their
+        // lat + lng. 
+        // When messages are displayed, we display one popup for every lat+lng key,
+        // and all the different messages at that same lat+lng key are put into the same object.
+        const haveSeenLocation = {};
+        waymessages = waymessages.reduce((all, waymessage) => {
+          const key = `${waymessage.latitude}${waymessage.longitude}`;
+          if (haveSeenLocation[key]) {
+            // Waymessage object already exists at this key (lat+lng), append to the object
+            haveSeenLocation[key].otherWayMessages = haveSeenLocation[key].otherWayMessages || [];
+            haveSeenLocation[key].otherWayMessages.push(waymessage);
+          } else {
+            // No waymessage already exists at this key (lat+lng), create first object
+            haveSeenLocation[key] = waymessage; 
+            all.push(waymessage);
+          }
+          return all;
+        }, []);
+
         this.setState({
           waymessages
         });
@@ -217,14 +236,21 @@ class App extends Component {
             </Marker> : ''
           }
           
-          // All waymessage markers loaded into user's map
+          // Loop over all waymessage markers to load into user's map
           {this.state.waymessages.map(waymessage => (
             <Marker
               key={waymessage._id}
               position={[waymessage.latitude, waymessage.longitude]} 
               icon={waymessageIcon}>
               <Popup>
-                <em>{waymessage.username}:</em> {waymessage.message}
+                <p><em>{waymessage.username}:</em> {waymessage.message}</p>
+
+                { waymessage.otherWayMessages ? waymessage.otherWayMessages.map(waymessage => 
+                    <p key="waymessage._id"><em>{waymessage.username}:</em> {waymessage.message}</p>
+                  ) : 
+                    ''
+                }
+
               </Popup>
             </Marker>
           ))}
