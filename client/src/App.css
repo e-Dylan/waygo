@@ -1,0 +1,95 @@
+body {
+    margin: 0px;
+    width: 100vw;
+    height: 100vh;
+}
+
+#root {
+    height: 100%;
+}
+
+.form-checkbox {
+	background-color: #cacece;
+	border: 1px solid #cacece;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+	padding: 9px;
+	border-radius: 12px;
+	display: inline-block;
+	position: relative;
+}
+
+.map {
+    height: 100%;
+}
+
+.waygo-logo {
+    width: 80 px;
+    height: 60 px;
+    text-decoration: none;
+    color: #25385B;
+    transition: 0.15s;
+    font-size: 24px;
+    font-weight: 700;
+    padding-bottom: 12px;
+}
+
+.waygo-logo:hover {
+    text-decoration: none;
+    color: #090D37
+}
+
+.button_shadow {
+
+}
+
+.button_content {
+
+}
+
+.home-dock {
+    z-index: 1000;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 25%;
+    height: 100%;
+    background-color: #A2AFFF;
+    color: #25385B;
+    font-weight: bolder;
+}
+
+.home-dock-button {
+    position: inherit;
+    background-color: #A2B0FF;
+    border: 1px solid #090D37;
+    width: 90%;
+}
+
+.home-dock-button:hover {
+
+}
+
+.waymessage-form {
+    z-index: 1000;
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    width: 35%;
+    height: 40%;
+    background-color: #A2AFFF;
+    color: #25385B;
+    font-weight: bold;
+}
+
+.waymessage-form-button {
+    position: inherit;
+    background-color: #A2B0FF;
+    border: 1px solid #090D37;
+    width: 80px;
+    height: 35px;
+    bottom: 10px;
+}
+
+.waymessage-form-button:hover {
+
+}
