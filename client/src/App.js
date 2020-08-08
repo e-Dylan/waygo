@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { observer } from 'mobx-react';
+
 import L from "leaflet";
-import Joi from "joi";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet"
 import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
 
@@ -10,11 +11,24 @@ import waymessageIconUrl from "./resources/waymessage_icon.svg"
 import './App.css';
 import { render } from 'react-dom';
 
+// Dependencies
+import Joi from "joi";
+
+// backend api functions
+import * as api from './api';
+
+// Map Component
+import MapComponent from './MapComponent';
+
+// User login
+import UserStore from './stores/userstore';
+import LoginForm from './LoginForm';
+import SubmitButton from './SubmitButton';
+
 // made by Aina, ID thenounproject.com
 const userLocationIcon = L.icon({
   iconUrl: userLocationIconUrl,
   iconSize: [50, 82],
-  iconAnchor: [25, 82],
   popupAnchor: [0, -72],
   shadowUrl: 'my-icon-shadow.png',
   shadowSize: [68, 95],
@@ -25,8 +39,7 @@ const userLocationIcon = L.icon({
 const waymessageIcon = L.icon({
   iconUrl: waymessageIconUrl,
   iconSize: [50, 82],
-  iconAnchor: [25, 82],
-  popupAnchor: [0, -72],
+  popupAnchor: [0, -32],
   shadowUrl: 'my-icon-shadow.png',
   shadowSize: [68, 95],
   shadowAnchor: [22, 94]
@@ -77,64 +90,77 @@ class App extends Component {
     waymessages: []
   }
 
-  componentDidMount() {
-    // Get user's location, load waymessages from db into user's state
-    // only get messages within certain lng/lat of user?
-    fetch(API_URL)
-      .then(res => res.json())
-      .then(waymessages => {
-        // Every message will be taken from db, put into an array at the index of their
-        // lat + lng. 
-        // When messages are displayed, we display one popup for every lat+lng key,
-        // and all the different messages at that same lat+lng key are put into the same object.
-        const haveSeenLocation = {};
-        waymessages = waymessages.reduce((all, waymessage) => {
-          const key = `${waymessage.latitude}${waymessage.longitude}`;
-          if (haveSeenLocation[key]) {
-            // Waymessage object already exists at this key (lat+lng), append to the object
-            haveSeenLocation[key].otherWayMessages = haveSeenLocation[key].otherWayMessages || [];
-            haveSeenLocation[key].otherWayMessages.push(waymessage);
-          } else {
-            // No waymessage already exists at this key (lat+lng), create first object
-            haveSeenLocation[key] = waymessage; 
-            all.push(waymessage);
-          }
-          return all;
-        }, []);
+  async componentDidMount() {
 
+    // Check if user is logged in on application load
+    try {
+      // fetch isLoggedIn api
+      let res = await fetch('/isLoggedIn', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      });
+
+      let result = await res.json();
+      if (result && result.success) {
+        // user is logged in
+        UserStore.loading = false;
+        UserStore.isLoggedIn = true;
+        UserStore.username = result.username;
+      } else { 
+        // user isn't logged in on the page
+        UserStore.loading = false;
+        UserStore.isLoggedIn = false;
+        UserStore.username = '';
+      }
+    } 
+    catch(e) {
+      UserStore.loading = false;
+      UserStore.isLoggedIn = false;
+    }
+
+    // Fetch all waymessages from backend db
+    api.fetchWayMessages()
+      .then(waymessages => {
         this.setState({
           waymessages
-        });
-      });
-
-    navigator.geolocation.getCurrentPosition((userPosition) => {
-      // setState refreshes the react app when called
-      this.setState({
-        userPosition: {
-          lat: userPosition.coords.latitude,
-          lng: userPosition.coords.longitude
-        },
-        hasUserPosition: true,
-        zoom: 13,
-      });
-
-      console.log("User location received... positioning map. " + userPosition.coords.latitude + ", " + userPosition.coords.latitude);
-    }, () => {
-      console.log("User location request denied... locating general location from ip adress.")
-      fetch("https://ipapi.co/json")
-        .then(res => res.json())
-        .then(location => {
-          console.log(location);
-          this.setState({
-            userPosition: {
-              lat: location.latitude,
-              lng: location.longitude,
-            },
-            hasUserPosition: true,
-            zoom: 13,
-          });
         })
-    });
+      })
+
+    // Grab user's location with geolocator/ip api.
+    api.getUserLocation()
+      .then(userPosition => {
+        this.setState({
+          userPosition,
+          hasUserPosition: true,
+          zoom: 13,
+        });
+      })
+  }
+
+  async doLogout() {
+    // Check if user is logged in on application load
+    try {
+      // fetch logout api
+      let res = await fetch('/logout', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      });
+
+      let result = await res.json();
+      if (result && result.success) {
+        UserStore.isLoggedIn = false;
+        UserStore.username = '';
+      }
+    }
+    catch(e) {
+      console.log(e);
+    }
   }
 
   // DOESNT WORK, LATLNG DOESNT UPDATE.
@@ -207,13 +233,56 @@ class App extends Component {
   }
 
   render() {
+
+    /**
+     * User Auth 
+     */
+    if (UserStore.loading) {
+      // If user is loading to login, display loading screen.
+      return (
+        <div className="app">
+          <div className="container">
+            Loading, please wait...
+          </div>
+        </div>
+      );
+    } else {
+      // User has finished loading in, check if logged in or not, display correct app screen.
+      if (UserStore.isLoggedIn) {
+        return (
+          <div className="app">
+            <div className="container">
+              Welcome {UserStore.username}
+
+              <SubmitButton
+                text={ 'Logout' }
+                disabled={ false }
+                onClick={ () => this.doLogout() }
+              />
+            </div>
+          </div>
+        );
+      }
+
+      // User is not logged in, display landing page
+      return (
+        <div className="app">
+            <div className="container">
+              <LoginForm />
+            </div>
+          </div>
+      );
+
+    }
+
+    // Map -> Put into separate MapComponent
     const userPosition = [this.state.userPosition.lat, this.state.userPosition.lng]
     const markerPostion = [this.state.markerPosition.lat, this.state.markerPosition.lng]
     return (
       <div className = "map">
         <Map className="map" center={userPosition} zoom={this.state.zoom}>
           <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors: Location Icon by Aina, ID thenounproject.com'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
@@ -246,7 +315,7 @@ class App extends Component {
                 <p><em>{waymessage.username}:</em> {waymessage.message}</p>
 
                 { waymessage.otherWayMessages ? waymessage.otherWayMessages.map(waymessage => 
-                    <p key="waymessage._id"><em>{waymessage.username}:</em> {waymessage.message}</p>
+                    <p key={waymessage._id}><em>{waymessage.username}:</em> {waymessage.message}</p>
                   ) : 
                     ''
                 }
@@ -310,4 +379,4 @@ class App extends Component {
   
 }
 
-export default App;
+export default observer(App);

@@ -1,7 +1,7 @@
 const express = require('express');
 
-const messages = require('./waymessages');
-
+// Waymessages are stored in a mongo json database, fetched using monk with express router.
+const waymessages = require('./waymessages');
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -10,6 +10,6 @@ router.get('/', (req, res) => {
   });
 });
 
-router.use('/waymessages', messages);
+router.use('/waymessages', waymessages);
 
 module.exports = router;

@@ -1,8 +1,8 @@
 const express = require('express');
 const Joi = require('joi');
 
-const db = require("../db");
-const waymessages = db.get("waymessages"); // waymessage database
+const waymessage_db = require("../waymessage_db");
+const waymessages = waymessage_db.get("waymessages"); // waymessage database
 
 const waymessage_schema = Joi.object({
   // data coming from user for a waymessage is:
@@ -25,11 +25,12 @@ const waymessage_schema = Joi.object({
 const router = express.Router();
 
 router.get('/', (req, res) => {
+  console.log("got get");
   waymessages
   .find()
   .then(allMessages => {
     res.json(allMessages);
-  })
+  });
 });
 
 // Server receiving request from user, response function
