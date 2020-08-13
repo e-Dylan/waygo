@@ -1,4 +1,4 @@
-const API_URL_WAYMESSAGES_DB = window.location.hostname === "localhost" ? "http://localhost:5000/api/waymessages" : "production-url-here";
+const API_URL_WAYMESSAGES_DB = window.location.hostname === "localhost" ? "http://localhost:1337/api/waymessages" : "production-url-here";
 
 export function fetchWayMessages() {
     // Get user's location, load waymessages from db into user's state

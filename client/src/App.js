@@ -59,7 +59,9 @@ const waymessage_schema = Joi.object({
     .required(),
 })
 
-const API_URL = window.location.hostname == "localhost" ? "http://localhost:5000/api/waymessages" : "production-url-here";
+const WAYMESSAGE_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/waymessages" : "production-url-here";
+const LOGOUT_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/logout" : "production-url-here";
+const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/isLoggedIn" : "production-url-here";
 
 class App extends Component {
   // every component has a state object, can be set with setState()
@@ -95,8 +97,10 @@ class App extends Component {
     // Check if user is logged in on application load
     try {
       // fetch isLoggedIn api
-      let res = await fetch('/isLoggedIn', {
-        method: 'post',
+
+      let res = await fetch(ISLOGGEDIN_API_URL, {
+        method: 'POST',
+        credentials: 'include',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -144,8 +148,9 @@ class App extends Component {
     // Check if user is logged in on application load
     try {
       // fetch logout api
-      let res = await fetch('/logout', {
+      let res = await fetch(LOGOUT_API_URL, {
         method: 'post',
+        credentials: 'include',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -207,10 +212,12 @@ class App extends Component {
         sendingWayMessage: true,
       });
 
-      fetch(API_URL, {
+      fetch(WAYMESSAGE_API_URL, {
         method: "POST",
+        credentials: 'include',
         headers: {
-          'content-type': "application/json",
+          'Accept': "application/json",
+          'Content-Type': "application/json",
         },
         body: JSON.stringify({
           username: this.state.userWayMessage.name,
