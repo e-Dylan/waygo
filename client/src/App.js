@@ -18,12 +18,13 @@ import Joi from "joi";
 import * as api from './api';
 
 // Map Component
-import MapComponent from './MapComponent';
+import MapComponent from './components/MapComponent';
 
 // User login
 import UserStore from './stores/userstore';
-import LoginForm from './LoginForm';
-import SubmitButton from './SubmitButton';
+import LoginForm from './components/LoginForm';
+import SubmitButton from './components/SubmitButton';
+import Nav from './components/Nav';
 
 // made by Aina, ID thenounproject.com
 const userLocationIcon = L.icon({
@@ -274,10 +275,11 @@ class App extends Component {
       // User is not logged in, display landing page
       return (
         <div className="app">
+            <Nav />
             <div className="container">
               <LoginForm />
             </div>
-          </div>
+        </div>
       );
 
     }

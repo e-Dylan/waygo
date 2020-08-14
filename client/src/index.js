@@ -7,6 +7,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import "leaflet/dist/leaflet.css"
 import "bootstrap/dist/css/bootstrap.css"
@@ -15,10 +16,23 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+// Components to render for each route.
+import Nav from './components/Nav';
+import LoginForm from './components/LoginForm';
+
+import history from './history';
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Router history={history}>
+    <div className="app">
+        <Nav />
+        <div className="container">
+          <Route path="/account/login" component={LoginForm} />
+        </div>
+    </div>
+
+  </Router>,
+
   document.getElementById('root')
 );
 

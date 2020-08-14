@@ -12,10 +12,10 @@ body, html, #root, .app, .container {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #282c34;
+    background-color: #A2B0FF;
     max-width: 100%;
 }
-  
+
 .login-form {
    box-sizing: border-box;
    width: 100%;
@@ -116,3 +116,61 @@ body, html, #root, .app, .container {
     height: 35px;
     bottom: 10px;
 }
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 10vh;
+    background: #A2B0FF;
+    color: white;
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    font-size: 100%;
+    display: block;
+}
+
+.nav-container {
+    overflow: hidden;
+    width: calc(100% - 60px);
+}
+
+.nav-waygo-logo-img {
+    width: 6vw;
+    height: 6vh;
+    padding: 5px;
+    border: none;
+}
+
+.nav-container a {
+    float: left;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+    text-decoration: none;
+    transition: 0.15s ease;
+}
+
+.nav-container a:hover {
+    color: black;
+}
+
+.nav-right {
+    float: right;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: white;
+}
+
+/* 
+* {
+    background: #000 !important;
+    color: #0f0 !important;
+    outline: solid #f00 1px !important;
+} */
