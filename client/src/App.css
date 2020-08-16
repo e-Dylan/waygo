@@ -1,60 +1,11 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap'); */
+
 body, html, #root, .app, .container {
     width: 100%;
     height: 100%;
     margin: 0px;
     padding: 0px;
-}
-  
-.container {
-    font-size: 28px;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #A2B0FF;
-    max-width: 100%;
-}
-
-.login-form {
-   box-sizing: border-box;
-   width: 100%;
-   max-width: 400px;
-   padding-left: 20px;
-   padding-right: 20px;
-}
-  
-.input-field {
-   padding-top: 16px;
-}
-  
-.input {
-   box-sizing: border-box;
-   outline: none;
-   border: solid 2px #1189de;
-   border-radius: 4px;
-   color: #292929;
-   width: 100%;
-   padding: 12px;
-   font-size: 14px;
-   background: rgba(255, 255, 255, 1);
-}
-  
-.submit-button {
-   padding-top: 16px;
-}
-  
-.btn {
-   width: 100%;
-   min-width: 280px;
-   color: #565656;
-   padding: 12px;
-   font-size: 14px;
-   font-weight: bold;
-   border: solid 2px #1189de;
-   border-radius: 4px;
-   background: #fff;
-   cursor: pointer;
 }
 
 .map {
@@ -77,7 +28,7 @@ body, html, #root, .app, .container {
     color: #090D37
 }
 
-.home-dock {
+.map-home-dock {
     z-index: 1000;
     position: absolute;
     top: 0px;
@@ -89,7 +40,7 @@ body, html, #root, .app, .container {
     font-weight: bolder;
 }
 
-.home-dock-button {
+.map-home-dock-button {
     position: inherit;
     background-color: #A2B0FF;
     border: 1px solid #090D37;
@@ -115,57 +66,6 @@ body, html, #root, .app, .container {
     width: 80px;
     height: 35px;
     bottom: 10px;
-}
-
-nav {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    min-height: 10vh;
-    background: #A2B0FF;
-    color: white;
-    z-index: 2;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    vertical-align: baseline;
-    font-size: 100%;
-    display: block;
-}
-
-.nav-container {
-    overflow: hidden;
-    width: calc(100% - 60px);
-}
-
-.nav-waygo-logo-img {
-    width: 6vw;
-    height: 6vh;
-    padding: 5px;
-    border: none;
-}
-
-.nav-container a {
-    float: left;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    list-style: none;
-    text-decoration: none;
-    transition: 0.15s ease;
-}
-
-.nav-container a:hover {
-    color: black;
-}
-
-.nav-right {
-    float: right;
-}
-
-.nav-link {
-    text-decoration: none;
-    color: white;
 }
 
 /* 

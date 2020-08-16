@@ -137,10 +137,4 @@ router.post('/login', (req, res) => {
   
   });
 
-router.get('/login', (req, res) => {
-    res.json({
-        router: "dasdawd"
-    });
-});
-
 module.exports = router;

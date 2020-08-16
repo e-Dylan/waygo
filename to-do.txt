@@ -1,0 +1,34 @@
+WAYGO DEVELOPMENT TO-DO LIST
+
+[FRONTEND]
+
+-   Landing home page / for both logged/non-logged in users
+    background image, colour scheme and NYC/TORONTO videos in background
+
+-   footer on the landing page (social media links/images, contacts, email, etc.)
+
+
+    [LOGIN FORM]
+
+    -   implement login/register form animation/jquery for smooth transition
+        between the two (on one page, no redirect/refresh?)
+
+    -   write doRegister() method to fetch backend /account/register route
+
+
+    [refactoring]
+
+    ✔ Move all components out of App.js into components, render them conditionally
+      in App.js using in-html if-statements and UserStore state (isLoggedIn, etc.)
+    
+    ✔ Render App.js from index.js, use Router in App.js
+
+    ✔   move map from App.js into MapComponent to be included from App.js.
+
+
+
+
+[BACKEND]
+
+-   configure backend /account/register route to respond with inserting
+    user register data into user sql database and respond with success

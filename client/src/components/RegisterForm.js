@@ -5,9 +5,7 @@ import UserStore from '../stores/UserStore'
 
 const login_form_image = require('../resources/images/login-form-image.png');
 
-const WEBSITE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : "production-url-here";
-
-class LoginForm extends React.Component {
+class RegisterForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -15,6 +13,7 @@ class LoginForm extends React.Component {
             
             username: '',
             password: '',
+            email: '',
 
             // disable button when login request is loading
             buttonDisabled: false,
@@ -36,6 +35,7 @@ class LoginForm extends React.Component {
 
             username: '',
             password: '',
+            email: '',
 
             buttonDisabled: false,
         })
@@ -63,6 +63,7 @@ class LoginForm extends React.Component {
                 },
                 body: JSON.stringify({
                     username: this.state.username,
+                    email: this.state.email,
                     password: this.state.password,
                 })
             });
@@ -72,7 +73,6 @@ class LoginForm extends React.Component {
             if (result && result.success) {
                 UserStore.isLoggedIn = true;
                 UserStore.username = result.username;
-                window.location.replace(WEBSITE_URL);
             } else if (result && result.success === false) {
                 // User tried to log in, no account match found, login failed.
                 this.resetForm();
@@ -89,7 +89,7 @@ class LoginForm extends React.Component {
     render() {
         return (
             <div className="base-container">
-                <div className="header">Login</div>
+                <div className="header">Register</div>
                 <div className="content">
                     <div className="login-form-image">
                         <img src={login_form_image} />
@@ -106,6 +106,15 @@ class LoginForm extends React.Component {
                             />
                         </div>
                         <div className="form-group">
+                            <label htmlFor="email">email</label>
+                            <InputField
+                                type='email'
+                                placeholder='email'
+                                value={this.state.email ? this.state.email : ''}
+                                onChange={ (val) => this.setStateFromInputValue('email', val) }
+                            />
+                        </div>
+                        <div className="form-group">
                             <label htmlFor="password">password</label>
                             <InputField
                                 type='password'
@@ -118,7 +127,7 @@ class LoginForm extends React.Component {
                 </div>
                 <div className="footer">
                     <SubmitButton
-                        text='Login'
+                        text='Register'
                         disabled={this.state.buttonDisabled}
                         onClick={ () => this.doLogin() }
                     />
@@ -128,4 +137,4 @@ class LoginForm extends React.Component {
     }
 }
 
-export default LoginForm;
+export default RegisterForm;

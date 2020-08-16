@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap');
+
+
+body, html, #root, .app {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.base-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #A2AFFF;
+}
+
+.header {
+    font-size: 24px;
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    margin-top: 12px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.image {
+    width: 21em;
+}
+
+/* LEAVE THIS, MEANS IMAGE TAKES 100% OF SIZE GIVEN AS PARAMETERS */
+img {
+    width: 100%;
+    height: 100%;
+}
+
+.form {
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+}
+
+label {
+    font-size: 20px;
+    font-family: "Ubuntu", sans-serif;
+}
+
+.form-group input {
+    margin-top: 6px;
+    min-width: 16em;
+    height: 100%;
+    padding: 0px 10px;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    width: 100%;
+    align-items: center;
+    background-color: #f3f3f3;
+    border: 0;
+    border-radius: 3px;
+    transition: all 100ms ease-in-out;
+}
+
+input:focus {
+    outline: none;
+    box-shadow: 0px 0px 6px 1px rgb(81, 139, 192);
+}
+
+.btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 18px;
+    padding: 2px 20px;
+    border: none;
+    background-color: rgb(214, 234, 253);
+    border-radius: 3px;
+    transition: all 100ms ease-in-out;
+}
+
+.btn:hover {
+    background-color: rgb(172, 215, 255);
+}
+
+.btn:focus {
+    outline: none;
+    border: none;
+}
+
+.footer {
+    margin-top: 2em;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 8vh;
+    height: 14vh;
+    background: #A2B0FF;
+    color: white;
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    font-size: 100%;
+    display: block;
+}
+
+.nav-container {
+    overflow: hidden;
+    width: calc(100% - 60px);
+    height: 100%;
+}
+
+.nav-waygo-logo-img {
+    width: 6vw;
+    height: 6vh;
+    padding: 5px;
+    border: none;
+}
+
+.nav-container a {
+    font-size: 16px;
+    float: left;
+    display: flex;
+    /* justify-content: space-around; */
+    flex-direction: row;
+    align-items: center;
+    list-style: none;
+    text-decoration: none;
+    transition: 0.15s ease;
+    margin-left: 20px;
+    margin-right: 20px;
+    /* line-height: 12vh;        makes button height too large */
+    transform: translate(0, 200%);
+
+}
+
+.nav-container a:hover {
+    color: black;
+}
+
+.nav-left {
+    float: left;
+    margin-left: 6%;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+}
+
+.nav-right {
+    float: right;
+    display: flex;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: white;
+    padding: 0;
+    height: auto;
+}
+
+.home-background-video {
+    position: fixed;
+    right: 0;
+    top: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.login-form-image {
+    max-height: 250px;
+    max-width: 1000px;
+    height: 50%;
+    width: 40%;
+    margin-top: 30px;
+    align-self: center;
+}
