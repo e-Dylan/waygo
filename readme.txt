@@ -1,4 +1,4 @@
-# waygo	BETA-V0.2
+# waygo	v0.4
 
 A waypoint navigation app to make driving more chill.
 

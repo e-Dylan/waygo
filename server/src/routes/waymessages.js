@@ -42,12 +42,12 @@ router.post('/waymessages', (req, res, next) => {
         // body (user message object) is valid -> no errors
         const { username, message, latitude, longitude } = req.body;
         const userWayMessage = {
-        username,
-        message,
-        latitude,
-        longitude,
-        // add current time
-        date: new Date()
+            username,
+            message,
+            latitude,
+            longitude,
+            // add current time
+            date: new Date()
         };
         // insert into DB
         waymessages.insert(userWayMessage)

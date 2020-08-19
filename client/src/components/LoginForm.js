@@ -88,7 +88,7 @@ class LoginForm extends React.Component {
 
     render() {
         return (
-            <div className="base-container">
+            <div className="base-container" ref={this.props.containerRef}>
                 <div className="header">Login</div>
                 <div className="content">
                     <div className="login-form-image">
@@ -116,7 +116,7 @@ class LoginForm extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="footer">
+                <div className="login-form-button login-form-button-login">
                     <SubmitButton
                         text='Login'
                         disabled={this.state.buttonDisabled}

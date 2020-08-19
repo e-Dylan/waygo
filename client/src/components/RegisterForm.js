@@ -3,7 +3,9 @@ import InputField from './InputField'
 import SubmitButton from './SubmitButton'
 import UserStore from '../stores/UserStore'
 
-const login_form_image = require('../resources/images/login-form-image.png');
+import LoginForm from './LoginForm';
+
+const register_form_image = require('../resources/images/register-form-image.png');
 
 class RegisterForm extends React.Component {
 
@@ -41,10 +43,10 @@ class RegisterForm extends React.Component {
         })
     }
 
-    async doLogin() {
-        const LOGIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/login" : "production-url-here";
+    async doRegister() {
+        const REGISTER_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/register" : "production-url-here";
 
-        if (!this.state.username || !this.state.password) {
+        if (!this.state.username || !this.state.email || !this.state.password) {
             return;
         }
 
@@ -54,7 +56,7 @@ class RegisterForm extends React.Component {
 
         try {   
             // make a request to the backend /login to try to login.
-            let res = await fetch(LOGIN_API_URL, {
+            let res = await fetch(REGISTER_API_URL, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -65,14 +67,15 @@ class RegisterForm extends React.Component {
                     username: this.state.username,
                     email: this.state.email,
                     password: this.state.password,
-                })
+                }),
             });
             
             // backend will respond success if the user matches any, not if no user.
             let result = await res.json();
             if (result && result.success) {
-                UserStore.isLoggedIn = true;
-                UserStore.username = result.username;
+                alert(result.msg + "\nUsername: " + result.username);
+                this.resetForm();
+                LoginForm.doLogin();
             } else if (result && result.success === false) {
                 // User tried to log in, no account match found, login failed.
                 this.resetForm();
@@ -88,11 +91,11 @@ class RegisterForm extends React.Component {
 
     render() {
         return (
-            <div className="base-container">
+            <div className="base-container" ref={this.props.containerRef}>
                 <div className="header">Register</div>
                 <div className="content">
                     <div className="login-form-image">
-                        <img src={login_form_image} />
+                        <img src={register_form_image} />
                     </div>
                     <div className="form">
                         <div className="form-group">
@@ -125,11 +128,11 @@ class RegisterForm extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="footer">
+                <div className="login-form-button login-form-button-register">
                     <SubmitButton
                         text='Register'
                         disabled={this.state.buttonDisabled}
-                        onClick={ () => this.doLogin() }
+                        onClick={ () => this.doRegister() }
                     />
                 </div>
             </div>

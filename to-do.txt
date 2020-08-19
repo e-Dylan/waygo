@@ -1,6 +1,8 @@
-WAYGO DEVELOPMENT TO-DO LIST
+﻿WAYGO DEVELOPMENT TO-DO LIST
 
 [FRONTEND]
+
+    [LANDING PAGE]
 
 -   Landing home page / for both logged/non-logged in users
     background image, colour scheme and NYC/TORONTO videos in background
@@ -8,13 +10,37 @@ WAYGO DEVELOPMENT TO-DO LIST
 -   footer on the landing page (social media links/images, contacts, email, etc.)
 
 
-    [LOGIN FORM]
+    [LOGIN FORM + REGISTER FORM]
 
-    -   implement login/register form animation/jquery for smooth transition
+    ✔   implement login/register form animation/jquery for smooth transition
         between the two (on one page, no redirect/refresh?)
+
+        - make email box slide smoothly down on transition when register
+          is shown.
+
+          [TODO THIS:]
+            -> make login/register elements IN ONE COMPONENT
+            -> change elements of the form on stateChange
+            -> move password box transform down (smoothly css)
+            -> make email box visible and move tranform down (")
 
     -   write doRegister() method to fetch backend /account/register route
 
+    -   create svg animation movement for the login image.
+    -       -> create different images for login/register
+
+
+    [MAP COMPONENT]
+
+        [home dock] 
+        
+            - smooth animations (jquery?) open/close left-side (modifiable side?)
+            - waymessage button to bring up waymessage form
+            - close button (X) with micro hover/click animations
+
+        [travel routing]
+
+            - destination input box with search
 
     [refactoring]
 
@@ -29,6 +55,8 @@ WAYGO DEVELOPMENT TO-DO LIST
 
 
 [BACKEND]
+
+    [LOGIN/REGISTER HANDLING]
 
 -   configure backend /account/register route to respond with inserting
     user register data into user sql database and respond with success

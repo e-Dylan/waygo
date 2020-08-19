@@ -4,6 +4,9 @@ import L from "leaflet";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet"
 import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
 
+// Css
+import '../App.css';
+
 import userLocationIconUrl from "../resources/userlocation_icon.svg"
 import waymessageIconUrl from "../resources/waymessage_icon.svg"
 
@@ -163,50 +166,50 @@ class MapComponent extends React.Component {
     }
 
     waymessageFormIsValid = () => {
-    const userMessage = {
-        username: this.state.userWayMessage.name,
-        message: this.state.userWayMessage.message,
-    };
-    const result = waymessage_schema.validate(userMessage)
+        const userMessage = {
+            username: this.state.userWayMessage.name,
+            message: this.state.userWayMessage.message,
+        };
+        const result = waymessage_schema.validate(userMessage)
 
-    return !result.error ? true : false
+        return !result.error ? true : false
     }
 
     // Onclick "Send" method user waymessage form.
     waymessageFormSubmit = (event) => {
-    event.preventDefault();
+        event.preventDefault();
 
-    if (this.waymessageFormIsValid()) {
-        // Request backend API to insert user WayMessage into database.
-        this.setState({
-        sendingWayMessage: true,
-        });
-
-        fetch(WAYMESSAGE_API_URL, {
-        method: "POST",
-        credentials: 'include',
-        headers: {
-            'Accept': "application/json",
-            'Content-Type': "application/json",
-        },
-        body: JSON.stringify({
-            username: this.state.userWayMessage.name,
-            message: this.state.userWayMessage.message,
-            latitude: this.state.userPosition.lat,
-            longitude: this.state.userPosition.lng,
-        })
-        }).then(res => res.json())
-        .then(message => {
-        console.log(message);
-        setTimeout(() => {
+        if (this.waymessageFormIsValid()) {
+            // Request backend API to insert user WayMessage into database.
             this.setState({
-            sendingWayMessage: false,
-            sentWayMessage: true,
+            sendingWayMessage: true,
             });
-        }, 0);
-        });
 
-    }
+            fetch(WAYMESSAGE_API_URL, {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                'Accept': "application/json",
+                'Content-Type': "application/json",
+            },
+            body: JSON.stringify({
+                username: this.state.userWayMessage.name,
+                message: this.state.userWayMessage.message,
+                latitude: this.state.userPosition.lat,
+                longitude: this.state.userPosition.lng,
+            })
+            }).then(res => res.json())
+            .then(message => {
+            console.log(message);
+            setTimeout(() => {
+                this.setState({
+                sendingWayMessage: false,
+                sentWayMessage: true,
+                });
+            }, 0);
+            });
+
+        }
     }
 
     render() {

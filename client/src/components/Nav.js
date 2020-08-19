@@ -38,7 +38,6 @@ class Nav extends React.Component {
 
                         <div className="nav-right">
                             <a className="nav-link" href="/account/login">login</a>
-                            <a className="nav-link" href="/account/register">register</a>
                         </div>
 
                     </div>

@@ -16,11 +16,6 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-// Components to render for each route.
-import Nav from './components/Nav';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
-
 import history from './history';
 
 
@@ -38,16 +33,8 @@ import history from './history';
 */
 
 ReactDOM.render(
-  
-  <Router history={history}>
-    <div className="app">
-      <App />
-        
-      <Route path="/account/login" component={LoginForm} />
-      <Route path="/account/register" component={RegisterForm} />
-    </div>
 
-  </Router>,
+  <App />,
 
   document.getElementById('root')
 );

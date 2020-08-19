@@ -13,6 +13,9 @@ import history from './history';
 import UserStore from './stores/UserStore';
 
 import Nav from './components/Nav';
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
+import LoginRegisterComponent from './components/LoginRegisterComponent';
 
 const LOGOUT_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/logout" : "production-url-here";
 const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/isLoggedIn" : "production-url-here";
@@ -20,31 +23,8 @@ const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://lo
 class App extends Component {
   // every component has a state object, can be set with setState()
   state = {
-    userPosition: {
-      lat: 51.505,
-      lng: -0.09,
-    },
-    hasUserPosition: false,
 
-    markerPosition: {
-      lat: 0,
-      lng: 0,
-    },
-    activeMarker: false,
-
-    zoom: 2,
-
-    userWayMessage: {
-      name: "",
-      message: ""
-    },
-
-    showWayMessageForm: false,
-    sendingWayMessage: false,
-    sentWayMessage: false,
-
-    waymessages: []
-  }
+  };
 
   async componentDidMount() {
 
@@ -81,15 +61,23 @@ class App extends Component {
   }
 
   render() {
+
     return(
-      <Router history={history}>
+      // <div className="app">
+        <Router history={history}>
 
-        <Nav />
+        
+        <div className="app">
 
-        <Route path="/live-map" component={MapComponent} />
+          <Nav />
+          <Route path="/account/login" component={LoginRegisterComponent} />
+
+          <Route path="/live-map" component={MapComponent} />
+        </div>
+        
       
       </Router>
-      
+      //</div>
     )
   }
   
