@@ -3,6 +3,7 @@ import InputField from './InputField'
 import SubmitButton from './SubmitButton'
 import UserStore from '../stores/UserStore'
 
+const register_form_image = require('../resources/images/register-form-image.png');
 const login_form_image = require('../resources/images/login-form-image.png');
 
 const WEBSITE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : "production-url-here";
@@ -16,9 +17,13 @@ class LoginForm extends React.Component {
             username: '',
             password: '',
 
+            current: props.current,
+            opposite: props.opposite,
+
             // disable button when login request is loading
             buttonDisabled: false,
         }
+        // updateState = updateState.bind(this);
     }
 
     setStateFromInputValue(property, val) {
@@ -28,17 +33,62 @@ class LoginForm extends React.Component {
         }
         this.setState({
             [property]: val
-        })
+        });
     }
 
     resetForm() {
         this.setState({
-
             username: '',
             password: '',
 
             buttonDisabled: false,
-        })
+        });
+    }
+
+    async doRegister() {
+        const REGISTER_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/register" : "production-url-here";
+
+        if (!this.state.username || !this.state.email || !this.state.password) {
+            return;
+        }
+
+        this.setState({
+            buttonDisabled: true,
+        });
+
+        try {   
+            // make a request to the backend /login to try to login.
+            let res = await fetch(REGISTER_API_URL, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: this.state.username,
+                    email: this.state.email,
+                    password: this.state.password,
+                }),
+            });
+            
+            // backend will respond success if the user matches any, not if no user.
+            let result = await res.json();
+            if (result && result.success) {
+                alert(result.msg + "\nUsername: " + result.username);
+                this.resetForm();
+                LoginForm.doLogin();
+            } else if (result && result.success === false) {
+                // User tried to log in, no account match found, login failed.
+                this.resetForm();
+                alert(result.msg); // change alert
+            }
+        }
+        catch(e) {
+            // error requesting to api
+            console.log(e);
+            this.resetForm();
+        }
     }
 
     async doLogin() {
@@ -87,12 +137,13 @@ class LoginForm extends React.Component {
     }
 
     render() {
+        var currentTitle = this.state.current.charAt(0).toUpperCase() + this.state.current.slice(1)
         return (
             <div className="base-container" ref={this.props.containerRef}>
-                <div className="header">Login</div>
+                <div className="header" id="loginform-title">{currentTitle}</div>
                 <div className="content">
                     <div className="login-form-image">
-                        <img src={login_form_image} />
+                        <img src={login_form_image} /> {/*<img src={register_form_image} />*/}
                     </div>
                     <div className="form">
                         <div className="form-group">
@@ -103,6 +154,15 @@ class LoginForm extends React.Component {
                                 name='username'
                                 value={this.state.username ? this.state.username : ''}
                                 onChange={ (val) => this.setStateFromInputValue('username', val) }
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="email">email</label>
+                            <InputField
+                                type='email'
+                                placeholder='email'
+                                value={this.state.email ? this.state.email : ''}
+                                onChange={ (val) => this.setStateFromInputValue('email', val) }
                             />
                         </div>
                         <div className="form-group">
@@ -118,7 +178,8 @@ class LoginForm extends React.Component {
                 </div>
                 <div className="login-form-button login-form-button-login">
                     <SubmitButton
-                        text='Login'
+                        text={currentTitle}
+                        id="loginform-submit-button"
                         disabled={this.state.buttonDisabled}
                         onClick={ () => this.doLogin() }
                     />

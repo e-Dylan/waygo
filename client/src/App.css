@@ -201,6 +201,20 @@ img {
     flex-direction: column;
     align-items: flex-start;
     width: fit-content;
+    transition: all 400ms ease-in-out;
+    opacity: 100%;
+}
+
+.form-group-moveup {
+    transform: translate(0, -120%);
+}
+
+.form-group-transparent {
+    opacity: 0%;
+}
+
+.form-group-behind {
+    z-index: -1;
 }
 
 label {
