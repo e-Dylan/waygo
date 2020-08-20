@@ -45,6 +45,7 @@ class LoginRegisterComponent extends Component {
     resetForm() {
         this.setState({
             username: '',
+            email: '',
             password: '',
 
             buttonDisabled: false,
@@ -82,6 +83,8 @@ class LoginRegisterComponent extends Component {
             let result = await res.json();
             if (result && result.success) {
                 alert(result.msg + "\nUsername: " + result.username);
+                // Automatically log user in if successfully registered.
+                this.doLogin();
                 this.resetForm();
             } else if (result && result.success === false) {
                 // User tried to log in, no account match found, login failed.
@@ -149,10 +152,9 @@ class LoginRegisterComponent extends Component {
         const email_div = document.getElementById("email-div");
         const email_inputfield = document.getElementById("email-inputfield");
         const password_div = document.getElementById("password-div");
-        const login_form_button_div = document.getElementById("login-form-submit-button-div")
+        const login_form_button_div = document.getElementById("login-form-submit-button-div");
         
-        console.log(email_inputfield);
-        
+        // css animations
         if (loginActive) {
             // move left (to register)
             this.sideButton.classList.remove("side-button-right");
@@ -227,6 +229,7 @@ class LoginRegisterComponent extends Component {
                                     <label htmlFor="email">email</label>
                                     <InputField
                                         id='email-inputfield'
+                                        disabled={true}
                                         type='email'
                                         placeholder='email'
                                         value={this.state.email ? this.state.email : ''}

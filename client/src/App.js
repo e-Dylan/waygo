@@ -62,6 +62,34 @@ class App extends Component {
   async doLogout() {
     console.log("logging out");
     console.log("logged:"+UserStore.isLoggedIn);
+
+    try {
+      let res = await fetch(LOGOUT_API_URL, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      });
+
+      let result = await res.json();
+      if (result && result.success) {
+        // user has logged out
+        UserStore.loading = false;
+        UserStore.isLoggedIn = false;
+        UserStore.username = '';
+        alert(result.msg);
+      } else {
+        // stay logged out, error for some reason
+        UserStore.loading = false;
+        alert(result.msg);
+      }
+    } 
+    catch (e) {
+      UserStore.loading = false;
+      console.log(e);
+    }
   }
 
   render() {

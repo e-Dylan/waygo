@@ -156,14 +156,16 @@ router.post('/login', (req, res) => {
     if (req.session.userID) {
       req.session.destroy();
       res.json({
-        success: true
+        success: true,
+        msg: "Successfuly logged out.",
       });
       return true;
     } else {
       console.log("no session id: \n" + req.session.userID);
       // User was not signed in
       res.json({
-        success: false
+        success: false,
+        msg: "Error: Failed to logout - user is not logged in."
       });
       return false;
     }

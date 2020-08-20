@@ -40,7 +40,7 @@ class Nav extends React.Component {
 
                         <div className="nav-right">  
                             <a className="nav-link" href="/account/login">login</a>
-                            <a className="nav-link" onClick={this.props.doLogout}>logout</a>
+                            <a className="nav-link" href="" onClick={this.props.doLogout}>logout</a>
                         </div>
 
                     </div>

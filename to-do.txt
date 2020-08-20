@@ -5,7 +5,25 @@
     [LANDING PAGE]
 
 -   Landing home page / for both logged/non-logged in users
-    background image, colour scheme and NYC/TORONTO videos in background
+    
+    (LOGGED OUT):
+    
+        - single landing page full-page video looping,
+        - home-dock-like appearance with digital clock in center of screen
+        - maybe some sort of social feed (twitter?) on a side panel (expandable)
+
+    (LOGGIN IN):
+        
+        - includes logged-out home-dock
+        - additional second-screen for widgets:
+
+            Filled out on the page with react-strap cards/forms
+
+            - visual/digital clock widget
+            - weather app widget
+            - visualization widget(s) (double pend.?)
+            - twitter widget?
+
 
 -   footer on the landing page (social media links/images, contacts, email, etc.)
 
@@ -15,16 +33,16 @@
     ✔   implement login/register form animation/jquery for smooth transition
         between the two (on one page, no redirect/refresh?)
 
-        - make email box slide smoothly down on transition when register
+        ✔ make email box slide smoothly down on transition when register
           is shown.
 
           [TODO THIS:]
-            -> make login/register elements IN ONE COMPONENT
-            -> change elements of the form on stateChange
-            -> move password box transform down (smoothly css)
-            -> make email box visible and move tranform down (")
+            ✔-> make login/register elements IN ONE COMPONENT
+            ✔-> change elements of the form on stateChange
+            ✔-> move password box transform down (smoothly css)
+            ✔-> make email box visible and move tranform down (")
 
-    -   write doRegister() method to fetch backend /account/register route
+    ✔   write doRegister() method to fetch backend /account/register route
 
     -   create svg animation movement for the login image.
     -       -> create different images for login/register
@@ -58,5 +76,5 @@
 
     [LOGIN/REGISTER HANDLING]
 
--   configure backend /account/register route to respond with inserting
+✔   configure backend /account/register route to respond with inserting
     user register data into user sql database and respond with success

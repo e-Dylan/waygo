@@ -11,6 +11,7 @@ class InputField extends React.Component {
                     type={this.props.type}
                     placeholder={this.props.placeholder}
                     value={this.props.value}
+                    disabled={this.props.disabled}
                     onChange={ (e) => this.props.onChange(e.target.value) } // pass new target value (the input box is the target) to the change function when called
                 /> 
             </div>

@@ -253,7 +253,7 @@ label {
     font-family: "Ubuntu", sans-serif;
     color: #fff;
     border-radius: 3px;
-    transition: all 100ms ease-in-out;
+    transition: all 400ms ease-in-out;
     cursor: pointer;
     margin-top: 2em;
 }
