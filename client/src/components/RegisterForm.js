@@ -3,8 +3,6 @@ import InputField from './InputField'
 import SubmitButton from './SubmitButton'
 import UserStore from '../stores/UserStore'
 
-import LoginForm from './LoginForm';
-
 const register_form_image = require('../resources/images/register-form-image.png');
 
 class RegisterForm extends React.Component {
@@ -75,7 +73,6 @@ class RegisterForm extends React.Component {
             if (result && result.success) {
                 alert(result.msg + "\nUsername: " + result.username);
                 this.resetForm();
-                LoginForm.doLogin();
             } else if (result && result.success === false) {
                 // User tried to log in, no account match found, login failed.
                 this.resetForm();

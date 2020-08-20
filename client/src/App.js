@@ -13,8 +13,6 @@ import history from './history';
 import UserStore from './stores/UserStore';
 
 import Nav from './components/Nav';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
 import LoginRegisterComponent from './components/LoginRegisterComponent';
 
 const LOGOUT_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/logout" : "production-url-here";
@@ -58,26 +56,27 @@ class App extends Component {
       UserStore.loading = false;
       UserStore.isLoggedIn = false;
     }
+    console.log("logged:"+UserStore.isLoggedIn);
+  }
+
+  async doLogout() {
+    console.log("logging out");
+    console.log("logged:"+UserStore.isLoggedIn);
   }
 
   render() {
 
     return(
-      // <div className="app">
         <Router history={history}>
 
-        
-        <div className="app">
+          <div className="app">
+            <Nav doLogout={this.doLogout} />
+            <Route path="/account/login" component={LoginRegisterComponent} />
 
-          <Nav />
-          <Route path="/account/login" component={LoginRegisterComponent} />
-
-          <Route path="/live-map" component={MapComponent} />
-        </div>
+            <Route path="/live-map" component={MapComponent} />
+          </div>
         
-      
-      </Router>
-      //</div>
+        </Router>
     )
   }
   

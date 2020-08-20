@@ -8,6 +8,7 @@ const waygo_nav_logo = require('../resources/waygo-logo2.png');
 class Nav extends React.Component {
 
     render() {
+        console.log(this.props.isLoggedIn);
         return (
             <div>
                 { UserStore.isLoggedIn ?
@@ -21,7 +22,8 @@ class Nav extends React.Component {
                         
 
                         <div className="nav-right">
-
+                            <a className="nav-link" href="/account/login">login</a>
+                            <a className="nav-link" onClick={this.props.doLogout}>logout</a>
                         </div>
 
                     </div>
@@ -36,8 +38,9 @@ class Nav extends React.Component {
                         </div>
                         
 
-                        <div className="nav-right">
+                        <div className="nav-right">  
                             <a className="nav-link" href="/account/login">login</a>
+                            <a className="nav-link" onClick={this.props.doLogout}>logout</a>
                         </div>
 
                     </div>

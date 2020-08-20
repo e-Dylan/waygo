@@ -143,10 +143,14 @@ class LoginRegisterComponent extends Component {
 
     changeState() {
         const { loginActive } = this.state;
+    
+        const login_image = document.getElementById("login-image");
+        const register_image = document.getElementById("register-image");
         const email_div = document.getElementById("email-div");
         const email_inputfield = document.getElementById("email-inputfield");
         const password_div = document.getElementById("password-div");
-
+        const login_form_button_div = document.getElementById("login-form-submit-button-div")
+        
         console.log(email_inputfield);
         
         if (loginActive) {
@@ -154,21 +158,35 @@ class LoginRegisterComponent extends Component {
             this.sideButton.classList.remove("side-button-right");
             this.sideButton.classList.add("side-button-left");
 
+            login_image.classList.add("login-image-left-hidden");
+            register_image.classList.remove("register-image-right-hidden");
+
             email_div.classList.remove("form-group-moveup");
             email_div.classList.remove("form-group-transparent");
             email_div.classList.remove("form-group-behind");
             email_inputfield.disabled = false;
+
             password_div.classList.remove("form-group-moveup");
+
+            login_form_button_div.classList.remove("login-form-button-login");
+            login_form_button_div.classList.add("login-form-button-register");
         } else {
             // move right (to login)
             this.sideButton.classList.remove("side-button-left");
             this.sideButton.classList.add("side-button-right");
 
+            login_image.classList.remove("login-image-left-hidden");
+            register_image.classList.add("register-image-right-hidden");
+
             email_div.classList.add("form-group-moveup");
             email_div.classList.add("form-group-transparent");
             email_div.classList.add("form-group-behind");
             email_inputfield.disabled = true;
+
             password_div.classList.add("form-group-moveup");
+
+            login_form_button_div.classList.add("login-form-button-login");
+            login_form_button_div.classList.remove("login-form-button-register");
         }
 
         this.setState( (prevState) => ({
@@ -190,8 +208,10 @@ class LoginRegisterComponent extends Component {
                         <div className="header" id="loginform-title">{currentTitle}</div>
                         <div className="content">
                             <div className="login-form-image">
-                                <img src={loginActive ? login_form_image : register_form_image} />
+                                <img src={login_form_image} className="" id="login-image" />
+                                <img src={register_form_image} className="register-image-right-hidden" id="register-image" />
                             </div>
+                            
                             <div className="form">
                                 <div className="form-group">
                                     <label htmlFor="username">username</label>
@@ -203,7 +223,7 @@ class LoginRegisterComponent extends Component {
                                         onChange={ (val) => this.setStateFromInputValue('username', val) }
                                     />
                                 </div>
-                                <div className="form-group form-group-moveup form-group-transparent" id="email-div">
+                                <div className="form-group form-group-moveup form-group-behind form-group-transparent" id="email-div">
                                     <label htmlFor="email">email</label>
                                     <InputField
                                         id='email-inputfield'
@@ -224,10 +244,10 @@ class LoginRegisterComponent extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="login-form-button login-form-button-login">
+                        <div className="login-form-button login-form-button-login" id="login-form-submit-button-div">
                             <SubmitButton
                                 text={currentTitle}
-                                id="loginform-submit-button"
+                                id="login-form-submit-button"
                                 disabled={this.state.buttonDisabled}
                                 onClick={ () => loginActive ? this.doLogin() : this.doRegister() }
                             />

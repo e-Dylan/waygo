@@ -55,7 +55,7 @@ router.post('/register', (req, res) => {
                     msg: "Successfully inserted user into database.",
                     data: values,
                 });
-                
+
                 let userJson = {
                     username: values[0],
                     email: values[1],
@@ -151,7 +151,7 @@ router.post('/login', (req, res) => {
   })
   
   router.post('/logout', (req, res) => {
-    console.log("loggint out: session id: " + req.session);
+    console.log("logging out: session id: " + req.session);
     // If user is signed in, destroy session
     if (req.session.userID) {
       req.session.destroy();
