@@ -94,17 +94,29 @@ class App extends Component {
 
   render() {
 
+	const RoutesWithNav = () => {
+		return (
+			<div>
+				<Nav doLogout={this.doLogout} />
+				<Switch>
+					<Route exact path="/" />
+					<Route path="/account/login" component={LoginRegisterComponent} />
+				</Switch>
+			</div>
+		);
+	}
+
     return(
-        <Router history={history}>
+	<Router history={history}>
 
-          <div className="app">
-            <Nav doLogout={this.doLogout} />
-            <Route path="/account/login" component={LoginRegisterComponent} />
+		<div className="app">
+			<Switch>
+				<Route path="/live-map" component={MapComponent} />
+				<Route component={RoutesWithNav} />
+			</Switch>
+		</div>
 
-            <Route path="/live-map" component={MapComponent} />
-          </div>
-        
-        </Router>
+	</Router>
     )
   }
   

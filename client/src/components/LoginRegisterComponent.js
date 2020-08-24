@@ -10,8 +10,8 @@ import UserStore from '../stores/UserStore';
 import InputField from './InputField'
 import SubmitButton from './SubmitButton'
 
-const register_form_image = require('../resources/images/register-form-image.png');
-const login_form_image = require('../resources/images/login-form-image.png');
+const register_form_image = require('../resources/login-form/register-form-image.png');
+const login_form_image = require('../resources/login-form/login-form-image.png');
 
 const WEBSITE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : "production-url-here";
 

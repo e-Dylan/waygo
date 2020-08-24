@@ -340,23 +340,158 @@ label {
     color: #090D37
 }
 
-.map-home-dock {
-    z-index: 1000;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 25%;
-    height: 100%;
-    background-color: #A2AFFF;
-    color: #25385B;
-    font-weight: bolder;
+.search-hud-cards {
+	width: 40%;
+	max-width: 450px;
+	min-width: 200px;
+	height: 90%;
+	z-index: 999;
+	position: absolute;
+	left: 50px;
+	top: 25px;
 }
 
-.map-home-dock-button {
-    position: inherit;
-    background-color: #A2B0FF;
-    border: 1px solid #090D37;
-    width: 90%;
+.map-search-bar-card {
+	width: 100%;
+	height: 30px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background-color: #ffffff;
+	border-radius: 2px;
+	box-shadow: 0px 0px 12px 6px rgba(15, 15, 15, 0.2);
+	border-radius: 6px;
+}
+
+.search-bar-button {
+	width: 30px;
+	height: 80%;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	left: 6px;
+	border: none;
+	cursor: pointer;
+	transition: all 0.5s ease-in-out;
+}
+
+.search-bar-button__burger {
+	height: 8%;
+	width: 70%;
+	background: gray;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
+	transition: all 0.5s ease-in-out;
+}
+
+.search-bar-button__burger::before,
+.search-bar-button__burger::after {
+	content: '';
+	position: absolute;
+	height: 8%;
+	width: 70%;
+	background: gray;
+	border-radius: 20px;
+	transition: all 0.5s ease-in-out;
+}
+.search-bar-button__burger::before {
+	transform: translateY(-6.7px);
+}
+.search-bar-button__burger::after {
+	transform: translateY(6.5px);
+}
+
+.map-search-bar-search {
+	width: 80%;
+	height: 90%;
+	position: absolute;
+	left: 40px;
+	border-radius: 4px;
+	border: none;
+	font-size: 19px;
+	font-family: "Ubuntu", sans-serif;
+}
+.map-search-bar-search:focus {
+	border: none;
+}
+
+.full-width-div {
+	width: 100%;
+	padding: 10px 0 10px 0;
+	margin-bottom: 40px;
+	border-bottom: 1px solid #d3dae0;
+}
+
+.text-center {
+	text-align: center;
+	letter-spacing: 3px;
+	font-weight: bolder;
+}
+
+.map-home-dock {
+	position: absolute;
+	width: 300px;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+    z-index: 1000;
+    background-color: #A2AFFF;
+	color: rgb(255, 255, 255);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	transform: translateX(-94%);
+	transition: 150ms all ease-in-out;
+	padding: 0px;
+}
+
+.map-home-dock-open {
+	transform: translateX(0%);
+}
+.map-home-dock-closed {
+	transform: translateX(-83%);
+}
+
+.map-home-dock-close-button {
+	z-index: 1000;
+	width: 25px;
+	height: 25px;
+	padding: 2px 0px;
+	border: 1px solid white;
+	background-color: #ffffff;
+	border-radius: 2px;
+	background: none;
+	transition: all 100ms ease-in-out;
+	cursor: default;
+	position: absolute;
+	top: 5px;
+	right: -30px;
+}
+.map-home-dock-close-button-open {
+	top: 5px;
+	right: 10px;
+}
+
+.map-home-dock-close-button:hover {
+	/* background-color: #ffffff; */
+}
+
+.map-home-dock-close-button:focus {
+	outline: none;
+}
+
+.map-home-dock-post-waymessage-button {
+	width: 200px;
+	height: 4vh;
+	background-color: #ffffff; /*#FFCA85;*/
+	outline: none;
+	border-radius: 3px;
+	transition: 200ms all ease-in-out;
+}
+
+.map-home-dock-post-waymessage-button:hover {
+	background-color: #eeb56a;
 }
 
 .waymessage-form {
@@ -364,20 +499,33 @@ label {
     position: absolute;
     bottom: 8px;
     right: 10px;
-    width: 35%;
+	width: 30%;
+	max-width: 300px;
+	min-width: 250px;
     height: 40%;
-    background-color: #A2AFFF;
+	/* background-color: #A2AFFF; */
+	background-color: white;
     color: #25385B;
-    font-weight: bold;
+	font-weight: bold;
+	box-shadow: 0px 0px 12px 4px rgba(15, 15, 15, 0.2);
 }
 
 .waymessage-form-button {
     position: inherit;
-    background-color: #A2B0FF;
-    border: 1px solid #090D37;
+	background-color: #A2B0FF;
+	color: #25385B;
+	border: none;
+	border-radius: 3px;
     width: 80px;
     height: 35px;
     bottom: 10px;
+}
+
+
+@media screen and (max-width: 768px) {
+	body {
+		display: none;
+	}
 }
 
 /* 

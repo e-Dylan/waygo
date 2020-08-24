@@ -1,9 +1,10 @@
-const API_URL_WAYMESSAGES_DB = window.location.hostname === "localhost" ? "http://localhost:1337/api/waymessages" : "production-url-here";
+const WAYMESSAGE_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/waymessages" : "production-url-here";
+
 
 export function fetchWayMessages() {
     // Get user's location, load waymessages from db into user's state
     // only get messages within certain lng/lat of user?
-    return fetch(API_URL_WAYMESSAGES_DB)
+    return fetch(WAYMESSAGE_API_URL)
       .then(res => res.json())
       .then(waymessages => {
         // Every message will be taken from db, put into an array at the index of their
@@ -49,4 +50,17 @@ export function getUserLocation() {
           });
       });
     });
+}
+
+export function sendWayMessage(message) {
+	return fetch(WAYMESSAGE_API_URL, {
+		method: "POST",
+		credentials: 'include',
+		headers: {
+			'Accept': "application/json",
+			'Content-Type': "application/json",
+		},
+		body: JSON.stringify(message),
+	})
+	.then(res => res.json())
 }
