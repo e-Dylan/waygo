@@ -1,14 +1,14 @@
 import React from 'react';
 
-import L from "leaflet";
+import L, { map } from "leaflet";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet"
 import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
 
 // Css
 import '../App.css';
 
-import userLocationIconUrl from "../resources/map/userlocation_icon.svg"
-import waymessageIconUrl from "../resources/map/waymessage_icon.svg"
+import userLocationIcon from "../resources/map/userlocation_icon.svg"
+import waymessageIcon from "../resources/map/waymessage_icon.svg"
 
 // Dependencies
 import Joi from "joi";
@@ -22,25 +22,12 @@ import UserStore from '../stores/UserStore';
 import MapHomeDock from './MapHomeDock';
 import WaymessageFormComponent from './WaymessageFormComponent';
 
-// made by Aina, ID thenounproject.com
-const userLocationIcon = L.icon({
-    iconUrl: userLocationIconUrl,
-    iconSize: [50, 82],
-    popupAnchor: [0, -72],
-    shadowUrl: 'my-icon-shadow.png',
-    shadowSize: [68, 95],
-    shadowAnchor: [22, 94]
-});
-  
-  // made by 
-const waymessageIcon = L.icon({
-    iconUrl: waymessageIconUrl,
-    iconSize: [50, 82],
-    popupAnchor: [0, -32],
-    shadowUrl: 'my-icon-shadow.png',
-    shadowSize: [68, 95],
-	shadowAnchor: [22, 94],
-});
+import leftArrow from '../resources/map-home-dock/left-arrow-close.png';
+import rightArrow from '../resources/map-home-dock/right-arrow-open.svg';
+
+const H = window.H;
+const HERE_KEY = "V-l1LgLrOPH3M3mzR9l6-gyEMyjD3_yRakz7o7pxjQs";
+const APP_ID = "AP8r2fMp1pJE4CkH4rXT"
   
 const waymessage_schema = Joi.object({
     // waymessage schema for client-side frontend as well as backend db insertion
@@ -60,7 +47,13 @@ const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://lo
 
 class MapComponent extends React.Component {
 
+	mapRef = React.createRef();
+	
+	activeMarker = null;
+
     state = {
+		map: null,
+
 		homeDockOpen: false,
 
         userPosition: {
@@ -69,11 +62,11 @@ class MapComponent extends React.Component {
         },
         hasUserPosition: false,
 
+		hasActiveMarker: false,
         markerPosition: {
             lat: 0,
             lng: 0,
         },
-        activeMarker: false,
 
         zoom: 2,
 
@@ -91,8 +84,6 @@ class MapComponent extends React.Component {
 	moveHomeDock = () => {
 		const homeDock = document.getElementById("map-home-dock");
 		const dockCloseButton = document.getElementById("map-home-dock-close-button");
-
-		const searchBarBurgerButton = document.querySelector('.search-bar-button');
 
 		this.setState( (prevState) => ({
 				homeDockOpen: !prevState.homeDockOpen,
@@ -117,9 +108,99 @@ class MapComponent extends React.Component {
 		}
 	}
 
+	initializeMapMarkers(map) {
+		var userIcon = new H.map.Icon(userLocationIcon)
+		var userMarker = new H.map.Marker(
+				{ lat: this.state.userPosition.lat, lng: this.state.userPosition.lng },
+				{  icon: userIcon  }
+			);
+
+		map.addObject(userMarker);
+		map.setCenter({ lat: this.state.userPosition.lat, lng: this.state.userPosition.lng});
+		map.setZoom(14);
+	}
+
+	initializeMap() {
+		// HERE API
+		const platform = new H.service.Platform({
+			apikey: "V-l1LgLrOPH3M3mzR9l6-gyEMyjD3_yRakz7o7pxjQs"
+		});
+
+		const defaultLayers = platform.createDefaultLayers();
+
+		const map = new H.Map(
+			this.mapRef.current,
+			defaultLayers.vector.normal.map,
+			{
+				center: this.state.userPosition,
+				zoom: 4,
+				pixelRatio: window.devicePixelRatio || 1
+			}
+		);
+
+		window.addEventListener('resize', () => map.getViewPort().resize());
+
+		// static map traffic lines
+		map.addLayer(defaultLayers.vector.normal.traffic);
+		// traffic incident icons
+		map.addLayer(defaultLayers.vector.normal.trafficincidents);
+
+		// Initialize map events
+		// Click
+		map.addEventListener('tap', (event) => {
+			var coords = map.screenToGeo(event.currentPointer.viewportX, event.currentPointer.viewportY);
+			this.placeActiveMarker(coords);
+		})
+
+		// Set state's map once finished initializing.
+		this.setState({ map });
+
+		const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+		const ui = H.ui.UI.createDefault(map, defaultLayers);
+	}
+
+	placeActiveMarker(coords) {
+		if (!this.state.hasActiveMarker) {
+			// doesn't have marker yet, create one and add it.
+			this.activeMarker = new H.map.DomMarker({ lat: coords.lat, lng: coords.lng });
+			this.state.map.addObject(this.activeMarker);
+			this.setState({ hasActiveMarker: true });
+
+		} else {
+			// user has active marker, just move it.
+			this.activeMarker.setGeometry({
+				lat: coords.lat, lng: coords.lng
+			});
+		}
+	}
+
+	removeActiveMarker() {
+		if (this.state.hasActiveMarker) {
+			this.state.map.removeObject(this.activeMarker);
+			this.setState({ hasActiveMarker: false });
+		}
+	}
+
+	reversegeocode(coords) {
+		// get the location/city data using lng/lat to display in a card or popup
+
+	}
+
+	geocode(query) {
+		fetch(`https://geocoder.ls.hereapi.com/search/6.2/geocode.json
+		?languages=en-US
+		&maxresults=4
+		&searchtext=${query}
+		&apiKey=${HERE_KEY}`)
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+			})
+	}
+
     async componentDidMount() {
 
-        // isLoggedIn check on Map load
+        // isLoggedIn check on Map load	
         try {
           // fetch isLoggedIn api
     
@@ -148,7 +229,10 @@ class MapComponent extends React.Component {
         catch(e) {
           UserStore.loading = false;
           UserStore.isLoggedIn = false;
-        }
+		}
+
+		// initialize HERE map api
+		this.initializeMap();
     
         // Fetch all waymessages from backend db
         api.fetchWayMessages()
@@ -167,10 +251,15 @@ class MapComponent extends React.Component {
 					hasUserPosition: true,
 					zoom: 13,
 				});
-			}, 1000)
-            
-          })
-    }
+				this.initializeMapMarkers(this.state.map);
+			}, 0)
+		  })
+	}
+
+	componentWillUnmount() {
+		// destructor
+		this.state.map.dispose();
+	}
 
     // DOESNT WORK, LATLNG DOESNT UPDATE.
     mapOnClick = (event) => {
@@ -236,6 +325,10 @@ class MapComponent extends React.Component {
 		}
 	}
 
+	updateSearch = (inputFieldValue) => {
+		console.log(inputFieldValue);
+	}
+
     render() {
 
         // Map -> Put into separate MapComponent
@@ -243,66 +336,42 @@ class MapComponent extends React.Component {
         const markerPostion = [this.state.markerPosition.lat, this.state.markerPosition.lng]
 
         return (
-            <div className = "map">
-                <Map className="map" center={userPosition} zoom={this.state.zoom}>
-                    <TileLayer
-						attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors: Location Icon by Aina, ID thenounproject.com'
-						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
+            <div className="map" id="map-div">
 
-					<div className="search-hud-cards">
-						<Card body className="map-search-bar-card">
-							<div className="search-bar-button"
-								onClick={this.moveHomeDock}>
-								<div className="search-bar-button__burger"></div>
-							</div>
+				<div ref={this.mapRef} className="map" id="map">
+
+				</div>
+
+				<div className="search-hud-cards">
+					<Card body className="map-search-bar-card">
+						<div className="search-bar-button"
+							onClick={this.moveHomeDock}>
+							<div className="search-bar-button__burger"></div>
+						</div>
+						
+						<input 
+							className="map-search-bar-search"
+							onChange={(e) => this.updateSearch(e.target.value)}
+							>
 							
-							<input className="map-search-bar-search"></input>
+						</input>
+					</Card>
+
+					{ this.state.hasActiveMarker ?
+						<Card body className="map-location-card">
+							
 						</Card>
-					</div>
+					:
+						''
+					}
 					
-
-                    {/* User's position marker */}
-                    { this.state.hasUserPosition ? 
-                        <Marker
-                            position={userPosition} 
-                            icon={userLocationIcon}>
-                        </Marker> : ''
-                    }
-
-                    {/* User placed marker for destination location */}
-                    { this.state.activeMarker ? 
-                        <Marker
-                            position={this.state.markerPosition} 
-                            icon={userLocationIcon}>
-                            <Popup>
-                            Marker position. <br /> Working.
-                            </Popup>
-                        </Marker> : ''
-                    }
-                    
-                    {/* Loop over all waymessage markers to load into user's map */}
-                    {this.state.waymessages.map(waymessage => (
-                        <Marker
-                            key={waymessage._id}
-                            position={[waymessage.latitude, waymessage.longitude]} 
-                            icon={waymessageIcon}>
-							<Popup>
-								<p><em>{waymessage.username}:</em> {waymessage.message}</p>
-
-								{ waymessage.otherWayMessages ? waymessage.otherWayMessages.map(waymessage => 
-									<p key={waymessage._id}><em>{waymessage.username}:</em> {waymessage.message}</p>
-									) : ''
-								}
-							</Popup>
-                        </Marker>
-                    ))}
-                </Map>
+				</div>
 
                 { this.state.showHomeDock ?
                     <MapHomeDock
 						id="map-home-dock"
 						moveHomeDock={this.moveHomeDock}
+						homeDockOpen={this.state.homeDockOpen}
 						showWayMessageForm={this.showWayMessageForm} 
 						waymessageFormSubmit={this.waymessageFormSubmit} 
 						waymessageValueChanged={this.waymessageValueChanged} 

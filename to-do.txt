@@ -1,4 +1,4 @@
-﻿WAYGO DEVELOPMENT TO-DO LIST
+﻿WAYGO/ALLONS-Y DEVELOPMENT TO-DO LIST
 
 [FRONTEND]
 
@@ -50,11 +50,25 @@
 
     [MAP COMPONENT]
 
+		[reverse geocoding]
+
+			✔ click event on the map to register lat/lng coordinates
+			✔ send lat/lng to a geocoding api and get location data
+			✔ position active marker on coordinates
+			- display location data in a card under search bar.
+
+		[geocoding]
+
+			- enter string into search bar, fetch HERE api with location to get loc data (lat/lng)
+			- center map on location lat/lng
+			- place user's active marker on location lat/lng
+			- display card with name of place, image?
+
         [home dock] 
         
-            - smooth animations (jquery?) open/close left-side (modifiable side?)
-            - waymessage button to bring up waymessage form
-            - close button (X) with micro hover/click animations
+            ✔- smooth animations (jquery?) open/close left-side (modifiable position?)
+            ✔- waymessage button to bring up waymessage form
+            ✔- close button (X) with micro hover/click animations
 
         [travel routing]
 

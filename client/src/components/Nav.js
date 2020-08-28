@@ -3,8 +3,6 @@ import '../App.css';
 
 import UserStore from '../stores/UserStore';
 
-const waygo_nav_logo = require('../resources/waygo-logo2.png');
-
 class Nav extends React.Component {
 
     render() {

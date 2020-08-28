@@ -342,9 +342,8 @@ label {
 
 .search-hud-cards {
 	width: 40%;
-	max-width: 450px;
+	max-width: 420px;
 	min-width: 200px;
-	height: 90%;
 	z-index: 999;
 	position: absolute;
 	left: 50px;
@@ -358,11 +357,9 @@ label {
 	flex-direction: row;
 	align-items: center;
 	background-color: #ffffff;
-	border-radius: 2px;
 	box-shadow: 0px 0px 12px 6px rgba(15, 15, 15, 0.2);
 	border-radius: 6px;
 }
-
 .search-bar-button {
 	width: 30px;
 	height: 80%;
@@ -375,16 +372,23 @@ label {
 	cursor: pointer;
 	transition: all 0.5s ease-in-out;
 }
-
+.search-bar-button:hover > .search-bar-button__burger {
+	background: rgb(47, 160, 212);
+}
+.search-bar-button:hover > .search-bar-button__burger::after {
+	background: rgb(47, 160, 212);
+}
+.search-bar-button:hover > .search-bar-button__burger::before {
+	background: rgb(47, 160, 212);
+}
 .search-bar-button__burger {
 	height: 8%;
 	width: 70%;
 	background: gray;
 	border-radius: 5px;
 	box-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
-	transition: all 0.5s ease-in-out;
+	transition: all 0.1s ease-in-out;
 }
-
 .search-bar-button__burger::before,
 .search-bar-button__burger::after {
 	content: '';
@@ -393,7 +397,7 @@ label {
 	width: 70%;
 	background: gray;
 	border-radius: 20px;
-	transition: all 0.5s ease-in-out;
+	transition: all 0.1s ease-in-out;
 }
 .search-bar-button__burger::before {
 	transform: translateY(-6.7px);
@@ -401,7 +405,6 @@ label {
 .search-bar-button__burger::after {
 	transform: translateY(6.5px);
 }
-
 .map-search-bar-search {
 	width: 80%;
 	height: 90%;
@@ -416,17 +419,27 @@ label {
 	border: none;
 }
 
-.full-width-div {
+.map-location-card {
 	width: 100%;
-	padding: 10px 0 10px 0;
-	margin-bottom: 40px;
-	border-bottom: 1px solid #d3dae0;
+	min-height: 120px;
+	display: flex;
+	flex-direction: column	;
+	align-items: center;
+	background-color: #ffffff;
+	box-shadow: 0px 0px 12px 6px rgba(15, 15, 15, 0.2);
+	border-radius: 6px;
 }
 
-.text-center {
-	text-align: center;
-	letter-spacing: 3px;
-	font-weight: bolder;
+/* MAP HOME DOCK */
+
+.home-dock-title {
+	text-decoration: none;
+	color: #ffffff;
+	transition: 0.2s all ease-in-out;
+}
+.home-dock-title:hover {
+	text-decoration: none;
+	color: #CCA7D1;
 }
 
 .map-home-dock {
@@ -441,7 +454,7 @@ label {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	transform: translateX(-94%);
+	transform: translateX(-100%);
 	transition: 150ms all ease-in-out;
 	padding: 0px;
 }
@@ -449,50 +462,98 @@ label {
 .map-home-dock-open {
 	transform: translateX(0%);
 }
-.map-home-dock-closed {
-	transform: translateX(-83%);
-}
 
 .map-home-dock-close-button {
 	z-index: 1000;
 	width: 25px;
 	height: 25px;
 	padding: 2px 0px;
-	border: 1px solid white;
+	border: none;
 	background-color: #ffffff;
 	border-radius: 2px;
 	background: none;
 	transition: all 100ms ease-in-out;
 	cursor: default;
 	position: absolute;
-	top: 5px;
-	right: -30px;
+	top: 28px;
+	right: -37px;
+}
+.map-home-dock-close-button:hover {
+	width: 28px;
+	height: 32px;
+	color: #A2AFFF;
+}
+.map-home-dock-close-button:focus {
+	outline: none;
 }
 .map-home-dock-close-button-open {
 	top: 5px;
 	right: 10px;
 }
 
-.map-home-dock-close-button:hover {
-	/* background-color: #ffffff; */
-}
-
-.map-home-dock-close-button:focus {
-	outline: none;
-}
-
-.map-home-dock-post-waymessage-button {
+.dock-waymessage-button {
 	width: 200px;
 	height: 4vh;
 	background-color: #ffffff; /*#FFCA85;*/
 	outline: none;
 	border-radius: 3px;
 	transition: 200ms all ease-in-out;
+	margin-left: 20px;
+	margin-top: 15px;
 }
 
 .map-home-dock-post-waymessage-button:hover {
-	background-color: #eeb56a;
+	background-color: #CCA7D1;
 }
+
+/* MAP HOME DOCK CONTENT */
+
+.full-width-div {
+	width: 100%;
+	padding: 10px 0 10px 0;
+	border-bottom: 1px solid #d3dae0;
+	display: flex;
+	flex-direction: column;
+}
+.full-width-div text {
+	margin-left: 20px;
+}
+.full-width-div li {
+	margin-left: 20px;
+	list-style: none;
+	margin-bottom: 8px;
+}
+
+.display-my-location-li-div {
+	margin-bottom: 15px;
+	text-align: left;
+	margin-left: 40px;
+	text-decoration: none;
+	list-style: none;
+}
+.dock-section-title {
+	margin-bottom: 20px;
+	/* font-family: "Ubuntu" sans-serif; */
+	color: rgb(77, 77, 77);
+	font-weight: bolder;
+}
+
+.dock-toggle-label {
+	display: flex;
+	flex-direction: row;
+}
+.dock-switch {
+	position: absolute;
+	right: 40px;
+}
+
+.text-center {
+	text-align: center;
+	letter-spacing: 3px;
+	font-weight: bolder;
+}
+
+
 
 .waymessage-form {
     z-index: 1000;
@@ -504,7 +565,7 @@ label {
 	min-width: 250px;
     height: 40%;
 	/* background-color: #A2AFFF; */
-	background-color: white;
+	background-color: #A2AFFF;
     color: #25385B;
 	font-weight: bold;
 	box-shadow: 0px 0px 12px 4px rgba(15, 15, 15, 0.2);
@@ -512,7 +573,7 @@ label {
 
 .waymessage-form-button {
     position: inherit;
-	background-color: #A2B0FF;
+	background-color: #ffffff;
 	color: #25385B;
 	border: none;
 	border-radius: 3px;
@@ -522,11 +583,11 @@ label {
 }
 
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
 	body {
 		display: none;
 	}
-}
+} */
 
 /* 
 * {

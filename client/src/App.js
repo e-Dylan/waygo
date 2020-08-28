@@ -19,9 +19,10 @@ const LOGOUT_API_URL = window.location.hostname === "localhost" ? "http://localh
 const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/isLoggedIn" : "production-url-here";
 
 class App extends Component {
+
   // every component has a state object, can be set with setState()
   state = {
-
+	
   };
 
   async componentDidMount() {
@@ -56,7 +57,6 @@ class App extends Component {
       UserStore.loading = false;
       UserStore.isLoggedIn = false;
     }
-    console.log("logged:"+UserStore.isLoggedIn);
   }
 
   async doLogout() {
