@@ -6,7 +6,7 @@ import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 // Map Component
-import MapComponent from './components/MapComponent';
+import MapApp from './components/MapApp';
 
 import history from './history';
 
@@ -111,7 +111,7 @@ class App extends Component {
 
 		<div className="app">
 			<Switch>
-				<Route path="/live-map" component={MapComponent} />
+				<Route path="/live-map" component={MapApp} />
 				<Route component={RoutesWithNav} />
 			</Switch>
 		</div>
