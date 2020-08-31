@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
 
 // Css
 import '../App.css';
 
-import userLocationIcon from "../resources/map/userlocation_icon.svg"
-import waymessageIcon from "../resources/map/waymessage_icon.svg"
+import userLocationIcon from "../resources/map/userlocation_icon.svg";
+import activeMarkerIcon from "../resources/map/activeMarkerIcon.svg";
+import waymessageIcon from "../resources/map/waymessage_icon.svg";
 
 // Dependencies
 import mapboxgl from 'mapbox-gl';
-import ReactMapGL, { GeolocateControl, Marker } from 'react-map-gl';
+import ReactMapGL, { GeolocateControl, Marker, Layer } from 'react-map-gl';
 import Joi from "joi";
 
 // backend api functions
@@ -52,6 +53,13 @@ class MapApp extends React.Component {
 		const activeMarker = null;
 		this.state = {
 			map: null,
+			viewport: {
+				width: '100vw',
+				height: '100vh',
+				latitude: 0,
+				longitude: 0,
+				zoom: 12,
+			},
 
 			homeDockOpen: false,
 
@@ -62,9 +70,9 @@ class MapApp extends React.Component {
 			hasUserPosition: false,
 
 			hasActiveMarker: false,
-			markerPosition: {
+			activeMarkerPosition: {
 				lat: 0,
-				lng: 0,
+				lng: 0
 			},
 
 			zoom: 2,
@@ -127,86 +135,40 @@ class MapApp extends React.Component {
 	initializeMap() {
 		
 		// initialize mapbox map 
-		// var map = new mapboxgl.Map({
-		// 	container: this.mapContainer, // container id
-		// 	style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-		// 	center: [this.state.userPosition.lng, this.state.userPosition.lat], // starting position [lng, lat]
-		// 	zoom: 14 // starting zoom
-		// });
-
-		// const map = this.reactMap.getMap();
-
-		// // load initializations to mapbox api on startup
-		// map.on('load', () => {
-		// 	var layers = map.getStyle().layers;
-		// 	var labelLayerId;
-		// 	for (var i = 0; i < layers.length; i++) {
-		// 		if (layers[i].type === "symbol" && layers[i].layout['text-field']) {
-		// 			labelLayerId = layers[i].id;
-		// 			break;
-		// 		}
-		// 	}
-
-		// 	// add 3d buildings vector layer to map
-		// 	map.addLayer({
-		// 		'id': '3d-buildings',
-		// 		'source': 'composite',
-		// 		'source-layer': 'building',
-		// 		'filter': ['==', 'extrude', 'true'],
-		// 		'type': 'fill-extrusion',
-		// 		'minzoom': 15,
-		// 		'paint': {
-		// 			'fill-extrusion-color': '#aaa',
-						
-		// 			// use an 'interpolate' expression to add a smooth transition effect to the
-		// 			// buildings as the user zooms in
-		// 			'fill-extrusion-height': [
-		// 				'interpolate',
-		// 				['linear'],
-		// 				['zoom'],
-		// 				15,
-		// 				0,
-		// 				15.05,
-		// 				['get', 'height']
-		// 			],
-		// 			'fill-extrusion-base': [
-		// 				'interpolate',
-		// 				['linear'],
-		// 				['zoom'],
-		// 				15,
-		// 				0,
-		// 				15.05,
-		// 				['get', 'min_height']
-		// 			],
-		// 			'fill-extrusion-opacity': 0.6
-		// 		}
-		// 	},
-		// 		labelLayerId
-		// 	);
-		// });
 
 		// map.on('click', (e) => {
-		// 		this.placeActiveMarker(e.lngLat);
+		// 		this.placeActiveMarker(e.lngLat);		REPLACE THIS METHOD
 		// })
 
 		// // Set state's map once finished initializing.
 		// this.setState({ map });
 	}
 
-	placeActiveMarker(coords) {
+	placeActiveMarker = (event) => {
+		console.log(event);
+		const coords = {
+			lng: event.lngLat[0],
+			lat: event.lngLat[1]
+		};
+	
 		if (!this.state.hasActiveMarker) {
 			// doesn't have marker yet, create one and add it.
-			this.activeMarker = new mapboxgl.Marker()
-				.setLngLat([coords.lng, coords.lat])
-				.addTo(this.state.map);
-
 			this.setState({
-				hasActiveMarker: true
+				hasActiveMarker: true,
+				activeMarkerPosition: {
+					lat: coords.lat,
+					lng: coords.lng,
+				},
 			});
-
+	
 		} else {
 			// user has active marker, just move it.
-			this.activeMarker.setLngLat([coords.lng, coords.lat]);
+			this.setState({
+				activeMarkerPosition: {
+					lat: coords.lat,
+					lng: coords.lng,
+				},
+			});
 		}
 	}
 
@@ -354,21 +316,78 @@ class MapApp extends React.Component {
     render() {
 
         const userPosition = [this.state.userPosition.lat, this.state.userPosition.lng]
-        const markerPostion = [this.state.markerPosition.lat, this.state.markerPosition.lng]
+		
+		const { viewport, data } = this.state;
 
         return (
 			
             <div className="map" id="map-div">
 
 				{this.state.hasUserPosition ?
-				
-					<MapComponent lat={this.state.userPosition.lat} lng={this.state.userPosition.lng} zoom={12}/>
-				
+					<ReactMapGL
+						{...viewport}
+						mapStyle="mapbox://styles/mapbox/streets-v11"
+						mapboxApiAccessToken={MAPBOX_TOKEN}
+						onViewportChange={viewport => this.setState({viewport})}
+						onMouseDown={ this.placeActiveMarker }
+					>
+
+						{/* Add 3d buildings layer to map */}
+						<Layer
+							id='3d-buildings'
+							source= 'composite'
+							source-layer= 'building'
+							filter={['==', 'extrude', 'true']}
+							type= 'fill-extrusion'
+							minzoom={15}
+							paint={{
+								'fill-extrusion-color': '#aaa',
+										
+								// use an 'interpolate' expression to add a smooth transition effect to the
+								// buildings as the user zooms in
+								'fill-extrusion-height': [
+									'interpolate',
+									['linear'],
+									['zoom'],
+									15,
+									0,
+									15.05,
+									['get', 'height']
+								],
+								'fill-extrusion-base': [
+									'interpolate',
+									['linear'],
+									['zoom'],
+									15,
+									0,
+									15.05,
+									['get', 'min_height']
+								],
+								'fill-extrusion-opacity': 0.6,
+							}}>
+							
+						</Layer>
+
+						<Marker latitude={ this.state.activeMarkerPosition.lat } longitude={ this.state.activeMarkerPosition.lng } offsetLeft={-21} offsetTop={-40}>
+							<div>
+								<img src={activeMarkerIcon} />
+							</div>
+						</Marker>
+
+
+						<GeolocateControl
+							style={{display: 'none', float: 'right', margin: 10 + 'px', padding: 5 + 'px'}}
+							positionOptions={{enableHighAccuracy: true}}
+							trackUserLocation={true}
+							auto={true}
+						/>
+
+					</ReactMapGL>
 				:
 					''	
 				}
 				
-				{/* <div ref={el => this.mapContainer = el} className="map"></div> */}
+				{/* REGULAR MAPBOX <div ref={el => this.mapContainer = el} className="map"></div> */}
 
 				<div className="search-hud-cards">
 					<Card body className="map-search-bar-card">

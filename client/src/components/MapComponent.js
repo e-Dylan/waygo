@@ -3,12 +3,48 @@ import { useState } from 'react';
 import ReactMapGL, { GeolocateControl, Marker, Layer } from 'react-map-gl';
 import userLocationIcon from "../resources/map/userlocation_icon.svg"
 
+var state = {
+	hasActiveMarker: false,
+	activeMarkerPosition: {
+	  lat: 0,
+	  lng: 0,
+	},
+};
+
 const geolocateStyle = {
 	float: 'right',
 	margin: '10px',
 	padding: '5px'
 };
 
+
+const placeActiveMarker = (event) => {
+	const coords = {
+		lat: event.lngLat[0],
+		lng: event.lngLat[1]
+	};
+
+	if (!state.hasActiveMarker) {
+		// doesn't have marker yet, create one and add it.
+		state = {
+			hasActiveMarker: true,
+			activeMarkerPosition: {
+				lat: coords.lat,
+				lng: coords.lng,
+			},
+		}
+
+	} else {
+		// user has active marker, just move it.
+		state = {
+			activeMarkerPosition: {
+				lat: coords.lat,
+				lng: coords.lng,
+			},
+		}
+	}
+	console.log(state);
+}
 
 const MapComponent = (props) => {
 
@@ -28,6 +64,7 @@ const MapComponent = (props) => {
 	  mapStyle="mapbox://styles/mapbox/streets-v11"
 	  mapboxApiAccessToken={MAPBOX_TOKEN}
       onViewportChange={nextViewport => setViewport(nextViewport)}
+	  onClick={ placeActiveMarker }
     >
 
 		<Layer
@@ -71,18 +108,24 @@ const MapComponent = (props) => {
 					xmlns="http://www.w3.org/2000/svg" 
 					version="1.1" 
 					viewBox="0 0 847 1058.75" x="0px" y="0px" 
-					fill-rule="evenodd" 
-					clip-rule="evenodd">
+					fillRule="evenodd" 
+					clipRule="evenodd">
 					<defs>
 						<style type="text/css"></style>
 					</defs>
 					<g>
-						<path class="fil0" d="M423 21c134,0 242,108 242,242 0,104 -189,451 -242,563 -53,-112 -241,-459 -241,-563 0,-134 108,-242 241,-242zm0 165c43,0 77,34 77,77 0,42 -34,77 -77,77 -42,0 -77,-35 -77,-77 0,-43 35,-77 77,-77z"/>
+						<path className="fil0" d="M423 21c134,0 242,108 242,242 0,104 -189,451 -242,563 -53,-112 -241,-459 -241,-563 0,-134 108,-242 241,-242zm0 165c43,0 77,34 77,77 0,42 -34,77 -77,77 -42,0 -77,-35 -77,-77 0,-43 35,-77 77,-77z"/>
 					</g>
 				</svg>
 			</div>
 			
 		</Marker>
+
+		 
+			<Marker latitude={ state.activeMarkerPosition.lat } longitude={ state.activeMarkerPosition.lng } offsetLeft={-21} offsetTop={-29}>
+				<div>Marker</div>
+			</Marker>
+
 
 		<GeolocateControl
 			style={geolocateStyle}
