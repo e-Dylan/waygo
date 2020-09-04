@@ -332,6 +332,7 @@ label {
 }
 .map {
 	height: 100%;
+	width: 100%;
 	cursor: pointer;
 }
 
@@ -342,6 +343,12 @@ label {
 	cursor: pointer;
 	padding: 0;
 	z-index: 59;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	pointer-events: none;
 }
 .map-popup {
 	max-width: 200px;
@@ -443,16 +450,28 @@ label {
 	border: none;
 }
 
-.map-location-card {
+.map-geocode-bg-card {
 	width: 100%;
 	min-height: 120px;
 	display: flex;
-	flex-direction: column	;
+	flex-direction: column;
+	align-content: center;
 	align-items: center;
 	background-color: #ffffff;
 	box-shadow: 0px 0px 12px 6px rgba(15, 15, 15, 0.2);
 	border-radius: 6px;
+	height: 35%;
+	padding: 10px;
 }
+.map-search-result-div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 60px;
+	width: 100%;
+	background-color: #ffffff;
+	justify-content: flex-start;
+}	
 
 /* MAP HOME DOCK */
 

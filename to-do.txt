@@ -53,7 +53,7 @@
 		[reverse geocoding]
 
 			✔ click event on the map to register lat/lng coordinates
-			✔ send lat/lng to a geocoding api and get location data
+			✔ send	 lat/lng to a geocoding api and get location data
 			✔ position active marker on coordinates
 			- display location data in a card under search bar.
 
