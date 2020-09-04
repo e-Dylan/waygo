@@ -11,7 +11,7 @@ import waymessageIcon from "../resources/map/waymessage_icon.svg";
 
 // Dependencies
 import mapboxgl from 'mapbox-gl';
-import ReactMapGL, { GeolocateControl, Marker, Layer } from 'react-map-gl';
+import ReactMapGL, { GeolocateControl, Marker, Layer, FlyToInterpolator } from 'react-map-gl';
 import Joi from "joi";
 
 // backend api functions
@@ -184,16 +184,19 @@ class MapComponent extends React.Component {
 		// get the location/city data using lng/lat to display in a card or popup
 	}
 
-	geocode(query) {
-		fetch(`https://geocoder.ls.hereapi.com/search/6.2/geocode.json
-		?languages=en-US
-		&maxresults=4
-		&searchtext=${query}
-		&apiKey={HERE_KEY}`)
-			.then(response => response.json())
-			.then(data => {
-				console.log(data);
-			})
+	forwardGeocode = ({ endpoint, query, autocomplete, flyTo }) => {
+		var res = fetch(
+			`https://api.mapbox.com/geocoding/v5/${endpoint}/${query}.json?
+			access_token=${MAPBOX_TOKEN}&autocomplete=${autocomplete}`
+		)
+			.then(res => res.json())
+			.then(data => { 
+				if (flyTo) {
+					const lng = data.features[0].center[0];
+					const lat = data.features[0].center[1];
+					this._flyTo({lat: lat, lng: lng, zoom: 12});
+				}
+			});
 	}
 
     async componentDidMount() {
@@ -309,10 +312,17 @@ class MapComponent extends React.Component {
 		}
 	}
 
-	_onViewportChange = nextViewport => {
+	_onViewportChange = viewport => this.setState({
+		viewport: { ...this.state.viewport, ...viewport }
+	});
 
-		this.setState({ 
-			viewport: nextViewport
+	_flyTo = ({lat, lng, zoom}) => {
+		this._onViewportChange({
+			latitude: lat,
+			longitude: lng,
+			zoom: zoom,
+			transitionInterpolator: new FlyToInterpolator(),
+			transitionDuration: 3000
 		});
 	}
 
@@ -328,7 +338,6 @@ class MapComponent extends React.Component {
 
 		// set geocoded locations array to 5 best response locations from geocode api
 		const geocodedLocations = ["Toronto", "New York", "Maine", "London", "France"];
-		var renderedOutput = geocodedLocations.map(item => <div className='map-search-result-div'> { item } </div>)
 
         return (
             <div className="map" id="map-div">
@@ -340,10 +349,10 @@ class MapComponent extends React.Component {
 						height="100vh"
 						mapStyle="mapbox://styles/mapbox/streets-v11"
 						mapboxApiAccessToken={MAPBOX_TOKEN}
-						onViewportChange={ viewport => this.setState({viewport}) }
+						onViewportChange={ this._onViewportChange }
 						onMouseDown={ this.placeActiveMarker }
 					>
-
+						
 						{/* Add 3d buildings layer to map */}
 						<Layer
 							id='3d-buildings'
@@ -418,7 +427,18 @@ class MapComponent extends React.Component {
 					{ this.state.hasActiveMarker ?
 
 						<Card body className="map-geocode-bg-card">
-							{renderedOutput}
+							{ geocodedLocations.map(item => 
+								<div 
+								className="map-search-result-div" 
+								onClick={ () => {
+									this.forwardGeocode({
+										endpoint: "mapbox.places", query: item, autocomplete: true, flyTo: true
+									});
+								}} 
+								key={item}>
+									{ item }
+								</div>
+							)}
 						</Card>
 					:
 						''
