@@ -1,7 +1,8 @@
 import React from 'react';
-import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
+// import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
+import { Card } from 'reactstrap';
 
-import $ from 'jquery';
+// import $ from 'jquery';
 
 import SubmitButton from './SubmitButton';
 import leftArrow from '../resources/map-home-dock/left-arrow-close.png';

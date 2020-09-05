@@ -6,7 +6,7 @@ import UserStore from '../stores/UserStore';
 class Nav extends React.Component {
 
     render() {
-        console.log(this.props.isLoggedIn);
+       // console.log(UserStore.isLoggedIn); // calling before isLoggedIn UserStore is set.
         return (
             <div>
                 { UserStore.isLoggedIn ?

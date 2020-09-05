@@ -53,14 +53,17 @@
 		[reverse geocoding]
 
 			✔ click event on the map to register lat/lng coordinates
-			✔ send	 lat/lng to a geocoding api and get location data
 			✔ position active marker on coordinates
 			- display location data in a card under search bar.
 
 		[geocoding]
 
-			- enter string into search bar, fetch HERE api with location to get loc data (lat/lng)
-			- center map on location lat/lng
+			✔ enter string into search bar, fetch api with location to get loc data (lat/lng)
+			- onchange method of search bar:
+				-> call api request for best 5 results matching text
+				-> fill array with each 5 items returned from api
+				-> map over array to fill div's with each item in result array.
+			✔ center map on location lat/lng
 			- place user's active marker on location lat/lng
 			- display card with name of place, image?
 

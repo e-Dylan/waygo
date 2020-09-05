@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
 
 import '../App.css';
-
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import UserStore from '../stores/UserStore';
 

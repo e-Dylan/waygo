@@ -1,6 +1,6 @@
 import React from 'react';
-import { Map, TileLayer, Marker, Popup } from "react-leaflet";
-import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
+// import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import { Card, CardTitle, Form, FormGroup, Input } from "reactstrap";
 
 class WaymessageFormComponent extends React.Component {
 	

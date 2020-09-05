@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 
-import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
+// import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
+import { Card } from 'reactstrap';
 
 // Css
 import '../App.css';
-
-import userLocationIcon from "../resources/map/userlocation_icon.svg";
-import activeMarkerIcon from "../resources/map/activeMarkerIcon.svg";
-import waymessageIcon from "../resources/map/waymessage_icon.svg";
 
 // Dependencies
 import mapboxgl from 'mapbox-gl';
@@ -24,8 +21,12 @@ import MapComponentOnly from './MapComponentOnly';
 import MapHomeDock from './MapHomeDock';
 import WaymessageFormComponent from './WaymessageFormComponent';
 
-import leftArrow from '../resources/map-home-dock/left-arrow-close.png';
-import rightArrow from '../resources/map-home-dock/right-arrow-open.svg';
+// Icons
+import userLocationIcon from "../resources/map/userlocation_icon.svg";
+import activeMarkerIcon from "../resources/map/activeMarkerIcon.svg";
+import waymessageIcon from "../resources/map/waymessage_icon.svg";
+
+import citySearchIcon from "../resources/maki-icons/building-alt1-15.svg";
 
 const MAPBOX_TOKEN = "pk.eyJ1Ijoic2VsZmRyaXZpbmdkcml2ZXIiLCJhIjoiY2tlZGhwd28wMDE0aDJ5b3pic2d5Mm55YSJ9.zKnna2oVzmFrkXCjdEVsuA";
 mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -82,10 +83,11 @@ class MapComponent extends React.Component {
 			},
 
 			showHomeDock: true,
-
+			showSearchResults: false,
 			showWayMessageForm: false,
 
-			waymessages: []
+			waymessages: [],
+			searchResultLocations: [],
 		}
 	}
 	
@@ -180,7 +182,7 @@ class MapComponent extends React.Component {
 		}
 	}
 
-	reversegeocode(coords) {
+	reverseGeocode(coords) {
 		// get the location/city data using lng/lat to display in a card or popup
 	}
 
@@ -196,6 +198,36 @@ class MapComponent extends React.Component {
 					const lat = data.features[0].center[1];
 					this._flyTo({lat: lat, lng: lng, zoom: 12});
 				}
+
+				// fill search results array with this api call on every geocode api request.
+				const tempsearchResultLocations = [];
+
+				for (let i = 0; i < 5; i++) {
+
+					var place_name = data.features[i].text;
+					const context = data.features[i].context;
+
+					// console.log(context[0].text);
+
+					if (data.features[i].context != null) {
+						for (let j = 0; j < data.features[i].context.length; j++) {
+							// last place, concat without a comma
+							place_name += ', ' + context[j].text;
+						}	
+					}
+					const place_data = [
+						place_name,
+						data.features[i].center[1],
+						data.features[i].center[0]
+					];
+					// console.log(place_data);
+					tempsearchResultLocations[i] = place_data;
+				}
+				
+				this.setState({
+					searchResultLocations: tempsearchResultLocations,
+				});
+				// console.log(this.state.searchResultLocations);
 			});
 	}
 
@@ -253,6 +285,8 @@ class MapComponent extends React.Component {
 				// this.initializeMapMarkers();
 			}, 0)
 		  });
+
+
 		  
 	}
 
@@ -322,22 +356,12 @@ class MapComponent extends React.Component {
 			longitude: lng,
 			zoom: zoom,
 			transitionInterpolator: new FlyToInterpolator(),
-			transitionDuration: 3000
+			transitionDuration: 0
 		});
-	}
-
-	updateSearch = (inputFieldValue) => {
-		console.log(inputFieldValue);
-
-		// make a geocoding request to receive 5 best options (autocorrect=true)
-		// display 5 best matches in separate divs stacked column in search card
 	}
 
     render() {
 		const { viewport } = this.state;
-
-		// set geocoded locations array to 5 best response locations from geocode api
-		const geocodedLocations = ["Toronto", "New York", "Maine", "London", "France"];
 
         return (
             <div className="map" id="map-div">
@@ -418,25 +442,59 @@ class MapComponent extends React.Component {
 						
 						<input 
 							className="map-search-bar-search"
-							onChange={(e) => this.updateSearch(e.target.value)}
+							onFocus={(e) => {
+								this.setState({ showSearchResults: true });
+							}}
+							onBlur={(e) => {
+								// this.setState({ showSearchResults: false });
+							}}
+							onChange={(e) => {
+								// make api call to get best 5 results using search text,
+								// set search result text to response data.
+								if (e.target.value.length > 2) {
+									// only send api request if query is >= 3 chars.
+									this.forwardGeocode({
+										endpoint: "mapbox.places", query: e.target.value, autocomplete: true, flyTo: false
+									});
+								}
+
+								if (e.target.value.length == 0) {
+									// If clearing search bar, hide and empty search results.
+									this.setState({
+										showSearchResults: false,
+										searchResultLocations: [],
+									});
+								} else {
+									this.setState({ showSearchResults: true });
+								}
+								
+							}}
 							>
 							
 						</input>
 					</Card>
 
-					{ this.state.hasActiveMarker ?
+					{ this.state.showSearchResults ?
 
 						<Card body className="map-geocode-bg-card">
-							{ geocodedLocations.map(item => 
+							{ this.state.searchResultLocations.map(item => 
 								<div 
 								className="map-search-result-div" 
-								onClick={ () => {
-									this.forwardGeocode({
-										endpoint: "mapbox.places", query: item, autocomplete: true, flyTo: true
+								onClick={ () => {						
+									// stop showing search results when location is clicked.
+									this.setState({
+										showSearchResults: false,
+									});
+									// call flyTo method to move to this position.
+									this._flyTo({
+										lat: item[1],
+										lng: item[2],
+										zoom: 12
 									});
 								}} 
-								key={item}>
-									{ item }
+								key={item[0]}>
+									<img src={ citySearchIcon } className="map-search-result-icon"></img>
+									<a>{ item[0] }</a>
 								</div>
 							)}
 						</Card>

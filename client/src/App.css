@@ -333,7 +333,7 @@ label {
 .map {
 	height: 100%;
 	width: 100%;
-	cursor: pointer;
+	cursor: normal;
 }
 
 .map-marker {
@@ -461,17 +461,33 @@ label {
 	box-shadow: 0px 0px 12px 6px rgba(15, 15, 15, 0.2);
 	border-radius: 6px;
 	height: 35%;
-	padding: 10px;
+	padding: 0px;
+	padding-bottom: 5px;
 }
 .map-search-result-div {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	height: 60px;
+	height: 45px;
 	width: 100%;
+	/* border-top: 1px groove; */
 	background-color: #ffffff;
 	justify-content: flex-start;
+	cursor: pointer;
+	transition: 0.2s all ease-in-out;
+}
+.map-search-result-div a {
+	margin-left: 30px;
 }	
+.map-search-result-div:hover {
+	background-color: rgba(180, 229, 252, 0.5);
+}
+
+.map-search-result-icon {
+	width: 15px;
+	height: 15px;
+	margin-left: 10px;
+}
 
 /* MAP HOME DOCK */
 

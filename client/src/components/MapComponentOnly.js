@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import ReactMapGL, { GeolocateControl, Marker, Layer } from 'react-map-gl';
-import userLocationIcon from "../resources/map/userlocation_icon.svg"
+// import userLocationIcon from "../resources/map/userlocation_icon.svg"
 
 var state = {
 	hasActiveMarker: false,
