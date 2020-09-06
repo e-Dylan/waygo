@@ -371,6 +371,15 @@ label {
     color: #090D37
 }
 
+.map-context-menu {
+    width: 150px;
+    height: 200px;
+    z-index: 999;
+    position: absolute;
+    left: 50px;
+    top: 200px;
+}
+
 .search-hud-cards {
 	width: 40%;
 	max-width: 420px;

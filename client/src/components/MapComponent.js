@@ -17,9 +17,9 @@ import * as api from '../api';
 import UserStore from '../stores/UserStore';
 
 // Component Dependencies
-import MapComponentOnly from './MapComponentOnly';
 import MapHomeDock from './MapHomeDock';
 import WaymessageFormComponent from './WaymessageFormComponent';
+import MapContextMenu from './MapContextMenu';
 
 // Icons
 import userLocationIcon from "../resources/map/userlocation_icon.svg";
@@ -76,6 +76,17 @@ class MapComponent extends React.Component {
 				lng: 0
 			},
 
+			hasActiveStart: false,
+			startPosition: {
+				lat: 0,
+				lng: 0
+			},
+			hasActiveDestination: false,
+			destinationPosition: {
+				lat: 0,
+				lng: 0
+			},
+
 			zoom: 2,
 
 			userWayMessage: {
@@ -83,6 +94,7 @@ class MapComponent extends React.Component {
 			},
 
 			showHomeDock: true,
+			showContextMenu: true,
 			showSearchResults: false,
 			showWayMessageForm: false,
 
@@ -432,6 +444,14 @@ class MapComponent extends React.Component {
 				}
 				
 				{/* REGULAR MAPBOX <div ref={el => this.mapContainer = el} className="map"></div> */}
+
+				<div className="map-context-menu">
+					{ this.state.showContextMenu ?
+						<MapContextMenu />
+					:
+						''
+					}
+				</div>
 
 				<div className="search-hud-cards">
 					<Card body className="map-search-bar-card">
