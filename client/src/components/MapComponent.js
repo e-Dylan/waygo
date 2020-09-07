@@ -8,7 +8,7 @@ import '../App.css';
 
 // Dependencies
 import mapboxgl from 'mapbox-gl';
-import ReactMapGL, { GeolocateControl, Marker, Layer, FlyToInterpolator } from 'react-map-gl';
+import ReactMapGL, { GeolocateControl, Marker, Layer, FlyToInterpolator, MapController } from 'react-map-gl';
 import Joi from "joi";
 
 // backend api functions
@@ -94,7 +94,7 @@ class MapComponent extends React.Component {
 			},
 
 			showHomeDock: true,
-			showContextMenu: true,
+			showContextMenu: false,
 			showSearchResults: false,
 			showWayMessageForm: false,
 
@@ -147,45 +147,70 @@ class MapComponent extends React.Component {
 	}
 
 	initializeMap() {
+		const map = document.getElementById('map-div');
+	}
+
+	leftClickMap = (event) => {
+		if (event.leftButton) {
+			if (this.state.showContextMenu) {
+				this.toggleContextMenu(event);
+			}
+
+			this.placeActiveMarker(event);
+		}
 		
-		// initialize mapbox map 
-
-		// map.on('click', (e) => {
-		// 		this.placeActiveMarker(e.lngLat);		REPLACE THIS METHOD
-		// })
-
-		// // Set state's map once finished initializing.
-		// this.setState({ map });
 	}
 
 	placeActiveMarker = (event) => {
 		// console.log(event);
-		if (event.leftButton) {
-			const coords = {
-				lng: event.lngLat[0],
-				lat: event.lngLat[1]
-			};
-		
-			if (!this.state.hasActiveMarker) {
-				// doesn't have marker yet, create one and add it.
-				this.setState({
-					hasActiveMarker: true,
-					activeMarkerPosition: {
-						lat: coords.lat,
-						lng: coords.lng,
-					},
-				});
-		
-			} else {
-				// user has active marker, just move it.
-				this.setState({
-					activeMarkerPosition: {
-						lat: coords.lat,
-						lng: coords.lng,
-					},
-				});
-			}
+		const coords = {
+			lng: event.lngLat[0],
+			lat: event.lngLat[1]
+		};
+	
+		if (!this.state.hasActiveMarker) {
+			// doesn't have marker yet, create one and add it.
+			this.setState({
+				hasActiveMarker: true,
+				activeMarkerPosition: {
+					lat: coords.lat,
+					lng: coords.lng,
+				},
+			});
+	
+		} else {
+			// user has active marker, just move it.
+			this.setState({
+				activeMarkerPosition: {
+					lat: coords.lat,
+					lng: coords.lng,
+				},
+			});
 		}
+	}
+
+	toggleContextMenu = (event) => {
+		// console.log(event);
+		event.preventDefault();
+
+		const map = document.getElementById('map-div');
+		const menu = document.getElementById('map-context-menu');
+
+		const x = event.center.x;
+		const y = event.center.y;
+
+		menu.style.top = `${y}px`;
+		menu.style.left = `${x}px`;
+		
+		if (!this.state.showContextMenu) {
+			// make visible
+			menu.classList.remove('hidden');
+		} else {
+			menu.classList.add('hidden');
+		}
+
+		this.setState({ showContextMenu: !this.state.showContextMenu });
+		
 	}
 
 	removeActiveMarker() {
@@ -248,7 +273,7 @@ class MapComponent extends React.Component {
         // isLoggedIn check on Map load	
         try {
           // fetch isLoggedIn api
-    
+
           let res = await fetch(ISLOGGEDIN_API_URL, {
             method: 'POST',
             credentials: 'include',
@@ -293,13 +318,10 @@ class MapComponent extends React.Component {
 					hasUserPosition: true,
 					zoom: 13,
 				});
-				// this.initializeMap()
+				this.initializeMap()
 				// this.initializeMapMarkers();
 			}, 0)
 		  });
-
-
-		  
 	}
 
 	// componentWillUnmount() {
@@ -372,8 +394,13 @@ class MapComponent extends React.Component {
 		});
 	}
 
+	onMapClick = (event) => {
+	}
+
     render() {
 		const { viewport } = this.state;
+
+		const mapController = new MapController();
 
         return (
             <div className="map" id="map-div">
@@ -383,10 +410,12 @@ class MapComponent extends React.Component {
 						{...viewport}
 						width="100vw"
 						height="100vh"
+						controller={ mapController }
 						mapStyle="mapbox://styles/mapbox/streets-v11"
 						mapboxApiAccessToken={MAPBOX_TOKEN}
 						onViewportChange={ this._onViewportChange }
-						onMouseDown={ this.placeActiveMarker }
+						onMouseDown={ this.leftClickMap }
+						onContextMenu={ this.toggleContextMenu }
 					>
 						
 						{/* Add 3d buildings layer to map */}
@@ -445,7 +474,7 @@ class MapComponent extends React.Component {
 				
 				{/* REGULAR MAPBOX <div ref={el => this.mapContainer = el} className="map"></div> */}
 
-				<div className="map-context-menu">
+				<div className="map-context-menu" id="map-context-menu">
 					{ this.state.showContextMenu ?
 						<MapContextMenu />
 					:

@@ -1,9 +1,34 @@
 .map-context-menu-bg-card {
     background-color: rgb(50, 50, 50, 100);
-    height: 200px;
-    width: 150px;
+    height: 120px;
+    width: 110px;
     display: flex;
     flex-direction: column;
     border-radius: 4px;
-    z-index: 501;
+	z-index: 501;
+	font-size: 14px;
+	cursor: normal;
+}
+.map-context-menu {
+    position: absolute;
+    left: 50px;
+	top: 200px;
+	display: flex;
+	flex-direction: column;
+}
+.context-menu-div {
+	height: 33.33%;
+	width: 100%;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	transition: 0.2s all ease-in-out;
+}
+.context-menu-div:hover {
+	background-color: rgba(100, 100, 100, 45);
+}
+.context-menu-div a {
+	margin-left: 8%;
+	cursor: normal;
 }
