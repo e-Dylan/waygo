@@ -23,8 +23,11 @@ import MapContextMenu from './MapContextMenu';
 
 // Icons
 import userLocationIcon from "../resources/map/userlocation_icon.svg";
-import activeMarkerIcon from "../resources/map/activeMarkerIcon.svg";
+import userActiveMarkerIcon from "../resources/map/activeMarkerIcon.svg";
+import locationMarkerIcon from '../resources/map/locationMarkerIcon.svg';
 import waymessageIcon from "../resources/map/waymessage_icon.svg";
+
+import torontoImage from '../resources/map/toronto-image.jpg';
 
 import citySearchIcon from "../resources/maki-icons/building-alt1-15.svg";
 
@@ -59,6 +62,7 @@ class MapComponent extends React.Component {
 				latitude: 0,
 				longitude: 0,
 				zoom: 12,
+				pitch: 0,
 			},
 			activeMarker: null,
 
@@ -87,19 +91,19 @@ class MapComponent extends React.Component {
 				lng: 0
 			},
 
-			zoom: 2,
-
 			userWayMessage: {
 				message: ""
 			},
 
 			showHomeDock: true,
+			showLocationDataCard: false,
 			showContextMenu: false,
 			showSearchResults: false,
 			showWayMessageForm: false,
 
 			waymessages: [],
 			searchResultLocations: [],
+			activeLocationData: [],
 		}
 	}
 	
@@ -150,13 +154,22 @@ class MapComponent extends React.Component {
 		const map = document.getElementById('map-div');
 	}
 
-	leftClickMap = (event) => {
+	clickMap = (event) => {
 		if (event.leftButton) {
 			if (this.state.showContextMenu) {
-				this.toggleContextMenu(event);
+				this.hideContextMenu();
 			}
+			if (this.state.showSearchResults) {
+				this.hideSearchResults({reset: false});
+			}
+		}
+		
+	}
 
-			this.placeActiveMarker(event);
+	dblClickMap = (event) => {
+		if (event.leftButton) {
+			this.placeActiveMarker(event);	
+			this.reverseGeocode(event);
 		}
 		
 	}
@@ -210,7 +223,29 @@ class MapComponent extends React.Component {
 		}
 
 		this.setState({ showContextMenu: !this.state.showContextMenu });
-		
+	}
+
+	hideContextMenu = () => {
+		this.setState({ showContextMenu: false });
+	}
+
+	showContextMenu = () => {
+		this.setState({ showContextMenu: true });
+	}
+
+	toggleShowSearchResults = () => {
+		this.setState({ showSearchResults: !this.state.showSearchResults });
+	}
+
+	hideSearchResults = ({ reset }) => {
+		this.setState({ showSearchResults: false });
+		if (reset) {
+			this.setState({ searchResultLocations: [] });
+		}
+	}
+
+	showSearchResults = () => {
+		this.setState({ showSearchResults: true });
 	}
 
 	removeActiveMarker() {
@@ -219,46 +254,49 @@ class MapComponent extends React.Component {
 		}
 	}
 
-	reverseGeocode(coords) {
+	reverseGeocode(event) {
 		// get the location/city data using lng/lat to display in a card or popup
+		const lng = event.lngLat[0];
+		const lat = event.lngLat[1];
+
+		let res = fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?
+		access_token=${MAPBOX_TOKEN}`)
+			.then(res => res.json())
+			.then(data => {
+				// console.log(data.features[0]);
+				this.showLocationData(data.features[0]);
+			});
 	}
 
-	forwardGeocode = ({ endpoint, query, autocomplete, flyTo }) => {
-		var res = fetch(
+	showLocationData(loc) {
+		// best or most fitting location given the query.
+		this.setState({
+			activeLocationData: loc,
+			showLocationDataCard: true,
+		});
+		this.hideSearchResults({reset: false});
+	}
+
+	hideLocationData() {
+		this.setState({
+			showLocationDataCard: false
+		});
+	}
+
+	forwardGeocode = ({ endpoint, query, autocomplete }) => {
+		fetch(
 			`https://api.mapbox.com/geocoding/v5/${endpoint}/${query}.json?
 			access_token=${MAPBOX_TOKEN}&autocomplete=${autocomplete}`
 		)
 			.then(res => res.json())
 			.then(data => { 
-				if (flyTo) {
-					const lng = data.features[0].center[0];
-					const lat = data.features[0].center[1];
-					this._flyTo({lat: lat, lng: lng, zoom: 12});
-				}
 
 				// fill search results array with this api call on every geocode api request.
 				const tempsearchResultLocations = [];
+				// console.log(data);
 
 				for (let i = 0; i < 5; i++) {
-
-					var place_name = data.features[i].text;
-					const context = data.features[i].context;
-
-					// console.log(context[0].text);
-
-					if (data.features[i].context != null) {
-						for (let j = 0; j < data.features[i].context.length; j++) {
-							// last place, concat without a comma
-							place_name += ', ' + context[j].text;
-						}	
-					}
-					const place_data = [
-						place_name,
-						data.features[i].center[1],
-						data.features[i].center[0]
-					];
-					// console.log(place_data);
-					tempsearchResultLocations[i] = place_data;
+					tempsearchResultLocations[i] = data.features[i];
 				}
 				
 				this.setState({
@@ -324,10 +362,9 @@ class MapComponent extends React.Component {
 		  });
 	}
 
-	// componentWillUnmount() {
-	// 	// destructor
-	// 	this.state.map.dispose();
-	// }
+	componentWillUnmount() {
+		// destructor
+	}
 	
 	showWayMessageForm = () => {
 		this.setState({
@@ -384,17 +421,26 @@ class MapComponent extends React.Component {
 		viewport: { ...this.state.viewport, ...viewport }
 	});
 
-	_flyTo = ({lat, lng, zoom}) => {
+	_flyTo = ({lat, lng, zoom, displayActiveMarker}) => {
 		this._onViewportChange({
 			latitude: lat,
 			longitude: lng,
 			zoom: zoom,
+			pitch: 0,
 			transitionInterpolator: new FlyToInterpolator(),
 			transitionDuration: 0
 		});
-	}
 
-	onMapClick = (event) => {
+		if (displayActiveMarker) {
+			this.setState({
+				displayActiveMarker: true,
+				activeMarkerPosition: {
+					lat: lat,
+					lng: lng
+				},
+			});
+			
+		}
 	}
 
     render() {
@@ -402,19 +448,25 @@ class MapComponent extends React.Component {
 
 		const mapController = new MapController();
 
+		const settings = {
+			doubleClickZoom: false
+		};
+
         return (
             <div className="map" id="map-div">
 
 				{this.state.hasUserPosition ?
 					<ReactMapGL
 						{...viewport}
+						{...settings}
 						width="100vw"
 						height="100vh"
 						controller={ mapController }
 						mapStyle="mapbox://styles/mapbox/streets-v11"
 						mapboxApiAccessToken={MAPBOX_TOKEN}
 						onViewportChange={ this._onViewportChange }
-						onMouseDown={ this.leftClickMap }
+						onMouseDown={ this.clickMap }
+						onDblClick={ this.dblClickMap }
 						onContextMenu={ this.toggleContextMenu }
 					>
 						
@@ -455,10 +507,9 @@ class MapComponent extends React.Component {
 
 						<Marker className="map-marker" latitude={ this.state.activeMarkerPosition.lat } longitude={ this.state.activeMarkerPosition.lng } offsetLeft={-21} offsetTop={-40}>
 							<div>
-								<img src={activeMarkerIcon} />
+								<img src={userActiveMarkerIcon} alt="img" />
 							</div>
 						</Marker>
-
 
 						<GeolocateControl
 							style={{display: 'none', float: 'right', margin: 10 + 'px', padding: 5 + 'px'}}
@@ -482,7 +533,8 @@ class MapComponent extends React.Component {
 					}
 				</div>
 
-				<div className="search-hud-cards">
+				<div className="map-hud-cards">
+
 					<Card body className="map-search-bar-card">
 						<div className="search-bar-button"
 							onClick={this.moveHomeDock}>
@@ -492,29 +544,29 @@ class MapComponent extends React.Component {
 						<input 
 							className="map-search-bar-search"
 							onFocus={(e) => {
-								this.setState({ showSearchResults: true });
-							}}
-							onBlur={(e) => {
-								// this.setState({ showSearchResults: false });
+								this.showSearchResults();
+								// this.hideLocationData();
 							}}
 							onChange={(e) => {
 								// make api call to get best 5 results using search text,
 								// set search result text to response data.
+								
 								if (e.target.value.length > 2) {
 									// only send api request if query is >= 3 chars.
 									this.forwardGeocode({
-										endpoint: "mapbox.places", query: e.target.value, autocomplete: true, flyTo: false
+										endpoint: "mapbox.places", 
+										query: e.target.value, 
+										autocomplete: true, 
+										displayActiveMarker: false
 									});
 								}
 
-								if (e.target.value.length == 0) {
+								if (e.target.value.length < 1) {
 									// If clearing search bar, hide and empty search results.
-									this.setState({
-										showSearchResults: false,
-										searchResultLocations: [],
-									});
+									this.hideSearchResults({reset: true});
 								} else {
-									this.setState({ showSearchResults: true });
+									this.showSearchResults();
+									// this.hideLocationData();
 								}
 								
 							}}
@@ -523,27 +575,47 @@ class MapComponent extends React.Component {
 						</input>
 					</Card>
 
+					{ this.state.showLocationDataCard && this.state.activeLocationData != null ?
+						<Card body className="map-location-data-bg-card"> 
+
+							<img src={torontoImage} className="location-data-image"></img>
+							<div>
+								{this.state.activeLocationData.place_name}
+							</div>
+						
+						</Card>
+					:
+						''
+					}
+
 					{ this.state.showSearchResults ?
 
-						<Card body className="map-geocode-bg-card">
+						<Card body className="map-search-results-bg-card">
 							{ this.state.searchResultLocations.map(item => 
 								<div 
-								className="map-search-result-div" 
+								className="map-search-result-div"
 								onClick={ () => {						
 									// stop showing search results when location is clicked.
-									this.setState({
-										showSearchResults: false,
-									});
+									this.hideSearchResults({reset: false});
 									// call flyTo method to move to this position.
-									this._flyTo({
-										lat: item[1],
-										lng: item[2],
-										zoom: 12
-									});
+									if (item != null) {
+										const lng = item.center[0];
+										const lat = item.center[1];
+										this._flyTo({ lng: lng, lat: lat, zoom: 12, displayActiveMarker: true });
+										// ITEM IS FEATURES[i]
+										this.showLocationData(item);
+									}
+									
+									// MAKE FUNCTION: DISPLAY LOCATION CARD
+									// used for reverse geocoding AND flyTo search clicks
+									// displays location in a card with image and data using lngLat
+									// can call in both clicking on map, and from here with its lngLat
+									// also displays location marker, instead of _flyTo().
 								}} 
-								key={item[0]}>
+								key={Math.random()}
+								>
 									<img src={ citySearchIcon } className="map-search-result-icon"></img>
-									<a>{ item[0] }</a>
+									<h1>{ item.place_name }</h1>
 								</div>
 							)}
 						</Card>

@@ -18,13 +18,13 @@ class MapContextMenu extends React.Component {
         return (
             <Card className="map-context-menu-bg-card">
                 <div className="context-menu-div">
-					<a>Set Origin</a>
+					<h1>Set Origin</h1>
                 </div>
 				<div className="context-menu-div">
-					<a>Set Destination</a>
+					<h1>Set Destination</h1>
 				</div>
 				<div className="context-menu-div">
-					<a>Clear</a>
+					<h1>Clear</h1>
 				</div>
             </Card>
         )

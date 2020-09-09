@@ -371,7 +371,7 @@ label {
     color: #090D37
 }
 
-.search-hud-cards {
+.map-hud-cards {
 	width: 40%;
 	max-width: 420px;
 	min-width: 200px;
@@ -450,7 +450,7 @@ label {
 	border: none;
 }
 
-.map-geocode-bg-card {
+.map-search-results-bg-card {
 	width: 100%;
 	min-height: 120px;
 	display: flex;
@@ -460,9 +460,11 @@ label {
 	background-color: #ffffff;
 	box-shadow: 0px 0px 12px 6px rgba(15, 15, 15, 0.2);
 	border-radius: 6px;
-	height: 35%;
+	min-height: 35%;
 	padding: 0px;
 	padding-bottom: 5px;
+	position: absolute;
+	top: 43px;
 }
 .map-search-result-div {
 	display: flex;
@@ -476,8 +478,10 @@ label {
 	cursor: pointer;
 	transition: 0.2s all ease-in-out;
 }
-.map-search-result-div a {
+.map-search-result-div h1 {
 	margin-left: 30px;
+	margin-bottom: 0px;
+	font-size: 16px;
 }	
 .map-search-result-div:hover {
 	background-color: rgba(180, 229, 252, 0.5);
@@ -487,6 +491,28 @@ label {
 	width: 15px;
 	height: 15px;
 	margin-left: 10px;
+}
+
+.map-location-data-bg-card {
+	width: 100%;
+	max-width: 340px;
+	min-height: 250px;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	align-items: center;
+	background-color: #ffffff;
+	box-shadow: 0px 0px 12px 6px rgba(15, 15, 15, 0.2);
+	border-radius: 6px;
+	height: 35%;
+	padding: 0px;
+	padding-bottom: 5px;
+	position: absolute;
+	top: 70px;
+}
+.location-data-image {
+	height: 35%;
+	width: 100%;
 }
 
 /* MAP HOME DOCK */
