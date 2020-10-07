@@ -4,13 +4,13 @@ import { Card, CardTitle, Form, FormGroup, Input } from "reactstrap";
 
 import './components-styles/WaymessageMenu.css';
 
-import closeButtonArrow from '../resources/waymessage-form/down-arrow-close.svg'
+import closeButtonArrow from '../resources/waymessage-menu/down-arrow-close.svg'
 
 class WaymessageMenuComponent extends React.Component {
 
 	render() {
 		return(
-			<Card body className = "waymessage-menu" id="waymessage-menu">
+			<Card body className = "waymessage-menu waymessage-menu-hidden" id="waymessage-menu">
 				<div className="waymessage-form-title">
 					<CardTitle>Post a Waymessage</CardTitle>
 				</div>
@@ -23,7 +23,7 @@ class WaymessageMenuComponent extends React.Component {
 				</div>
 				<div className="waymessage-menu-form">
 					<Form onSubmit={this.props.waymessageFormSubmit}>
-						<FormGroup>
+						<FormGroup className="waymessage-menu-form">
 							<Input 
 								onChange={this.props.waymessageValueChanged}
 								type="textarea" 

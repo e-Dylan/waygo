@@ -55,6 +55,7 @@ class MapComponent extends React.Component {
 
 	constructor(props) {
 		super(props);
+		this.mapObject = React.createRef();
 		this.state = {
 			map: null,
 			viewport: {
@@ -233,8 +234,7 @@ class MapComponent extends React.Component {
 		const waymessageMenu = document.getElementById("waymessage-menu");
 
 		waymessageDiv.classList.add("waymessage-menu-hidden");
-		waymessageDiv.style.width = '0px';
-		waymessageMenu.style.width = '0px';
+		waymessageMenu.classList.add("waymessage-menu-hidden");
 		
 		this.setState({ showWaymessageMenu: false });
 	}
@@ -244,8 +244,7 @@ class MapComponent extends React.Component {
 		const waymessageMenu = document.getElementById("waymessage-menu");
 
 		waymessageDiv.classList.remove("waymessage-menu-hidden");
-		waymessageDiv.style.width = '30%';
-		waymessageMenu.style.width = '100%';
+		waymessageMenu.classList.remove("waymessage-menu-hidden");
 
 		this.updateWaymessageMenuPosition();
 
@@ -418,6 +417,14 @@ class MapComponent extends React.Component {
 				// this.initializeMapMarkers();
 			}, 0)
 		  });
+
+		  const map = new mapboxgl.Map({
+				container: this.mapContainer,
+				style: 'mapbox://styles/mapbox/streets-v11',
+				center: [-73, 40],
+				zoom: 12
+		  });
+
 	}
 
 	componentWillUnmount() {
@@ -493,6 +500,11 @@ class MapComponent extends React.Component {
 		}
 	}
 
+	mountMap(map) {
+		// Initialize all mapbox object needs
+		this.mapObject = map
+	}
+
     render() {
 		const { viewport } = this.state;
 
@@ -512,6 +524,7 @@ class MapComponent extends React.Component {
 						width="100vw"
 						height="100vh"
 						controller={ mapController }
+						ref={ (map) => {this.mountMap(map)} }
 						mapStyle="mapbox://styles/mapbox/streets-v11"
 						mapboxApiAccessToken={MAPBOX_TOKEN}
 						onViewportChange={ this._onViewportChange }
@@ -572,8 +585,9 @@ class MapComponent extends React.Component {
 				:
 					''	
 				}
-				
-				{/* REGULAR MAPBOX <div ref={el => this.mapContainer = el} className="map"></div> */}
+
+				{/* REGULAR MAPBOX  */}
+				{/* <div ref={el => this.mapContainer = el} className="map"></div> */}
 
 				<div className="map-context-menu" id="map-context-menu">
 					{ this.state.showContextMenu ?
