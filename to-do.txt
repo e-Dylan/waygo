@@ -1,6 +1,4 @@
-WAYGO/ALLONS-Y DEVELOPMENT TO-DO LIST
-
-v1.4 September 6, 2020
+﻿WAYGO/ALLONS-Y DEVELOPMENT TO-DO LIST
 
 [FRONTEND]
 
@@ -64,7 +62,7 @@ v1.4 September 6, 2020
 			- onchange method of search bar:
 				-> call api request for best 5 results matching text
 				-> fill array with each 5 items returned from api
-				-> map over array to fill div's with each item in result array.
+				✔-> map over array to fill div's with each item in result array.
 			✔ center map on location lat/lng
 			- place user's active marker on location lat/lng
 			- display card with name of place, image?

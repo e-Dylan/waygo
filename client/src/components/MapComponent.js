@@ -5,6 +5,7 @@ import { Card } from 'reactstrap';
 
 // Css
 import '../App.css';
+import './components-styles/WaymessageMenu.css';
 
 // Dependencies
 import mapboxgl from 'mapbox-gl';
@@ -12,13 +13,13 @@ import ReactMapGL, { GeolocateControl, Marker, Layer, FlyToInterpolator, MapCont
 import Joi from "joi";
 
 // backend api functions
-import * as api from '../api';
+import * as api from '../api'; 
 
 import UserStore from '../stores/UserStore';
 
 // Component Dependencies
 import MapHomeDock from './MapHomeDock';
-import WaymessageFormComponent from './WaymessageFormComponent';
+import WaymessageMenuComponent from './WaymessageMenuComponent';
 import MapContextMenu from './MapContextMenu';
 
 // Icons
@@ -91,6 +92,11 @@ class MapComponent extends React.Component {
 				lng: 0
 			},
 
+			lastClicked: {
+				x: 0,
+				y: 0,
+			},
+
 			userWayMessage: {
 				message: ""
 			},
@@ -99,7 +105,7 @@ class MapComponent extends React.Component {
 			showLocationDataCard: false,
 			showContextMenu: false,
 			showSearchResults: false,
-			showWayMessageForm: false,
+			showWaymessageMenu: false,
 
 			waymessages: [],
 			searchResultLocations: [],
@@ -155,6 +161,15 @@ class MapComponent extends React.Component {
 	}
 
 	clickMap = (event) => {
+		this.setState({
+			lastClicked: {
+				x: event.center.x,
+				y: event.center.y,
+			}
+		});
+		if (!this.state.showWaymessageMenu)
+			this.updateWaymessageMenuPosition();
+
 		if (event.leftButton) {
 			if (this.state.showContextMenu) {
 				this.hideContextMenu();
@@ -202,11 +217,54 @@ class MapComponent extends React.Component {
 		}
 	}
 
+	toggleWaymessageMenu = () => {
+
+		if (!this.state.showWaymessageMenu) {
+			// show form
+			this.showWaymessageMenu();
+		} else {
+			// fade form
+			this.hideWaymessageMenu();
+		}
+	}
+
+	hideWaymessageMenu = () => {
+		const waymessageDiv = document.getElementById("waymessage-menu-div");
+		const waymessageMenu = document.getElementById("waymessage-menu");
+
+		waymessageDiv.classList.add("waymessage-menu-hidden");
+		waymessageDiv.style.width = '0px';
+		waymessageMenu.style.width = '0px';
+		
+		this.setState({ showWaymessageMenu: false });
+	}
+
+	showWaymessageMenu = () => {
+		const waymessageDiv = document.getElementById("waymessage-menu-div");
+		const waymessageMenu = document.getElementById("waymessage-menu");
+
+		waymessageDiv.classList.remove("waymessage-menu-hidden");
+		waymessageDiv.style.width = '30%';
+		waymessageMenu.style.width = '100%';
+
+		this.updateWaymessageMenuPosition();
+
+		this.setState({ showWaymessageMenu: true });
+	}
+
+	updateWaymessageMenuPosition = () => {
+		const waymessageDiv = document.getElementById("waymessage-menu-div");
+		const x = this.state.lastClicked.x;
+		const y = this.state.lastClicked.y;
+
+		waymessageDiv.style.top = `${y}px`;
+		waymessageDiv.style.left = `${x}px`;
+	}
+
 	toggleContextMenu = (event) => {
 		// console.log(event);
 		event.preventDefault();
 
-		const map = document.getElementById('map-div');
 		const menu = document.getElementById('map-context-menu');
 
 		const x = event.center.x;
@@ -365,12 +423,6 @@ class MapComponent extends React.Component {
 	componentWillUnmount() {
 		// destructor
 	}
-	
-	showWayMessageForm = () => {
-		this.setState({
-			showWayMessageForm: true,
-		})
-	}
       
     // Callback whenever user waymessage form values change.
     waymessageValueChanged = (event) => {
@@ -399,9 +451,7 @@ class MapComponent extends React.Component {
 
         if (this.waymessageFormIsValid()) {
             // Request backend API to insert user WayMessage into database.
-            this.setState({
-                showWayMessageForm: false
-            });
+            this.hideWaymessageMenu();
 
             const waymessage = {
 				username: UserStore.username,
@@ -527,7 +577,9 @@ class MapComponent extends React.Component {
 
 				<div className="map-context-menu" id="map-context-menu">
 					{ this.state.showContextMenu ?
-						<MapContextMenu />
+						<MapContextMenu 
+							hideContextMenu={this.hideContextMenu}
+							showWaymessageMenu={this.showWaymessageMenu} />
 					:
 						''
 					}
@@ -630,7 +682,7 @@ class MapComponent extends React.Component {
 						id="map-home-dock"
 						moveHomeDock={this.moveHomeDock}
 						homeDockOpen={this.state.homeDockOpen}
-						showWayMessageForm={this.showWayMessageForm} 
+						toggleWaymessageMenu={this.toggleWaymessageMenu} 
 						waymessageFormSubmit={this.waymessageFormSubmit} 
 						waymessageValueChanged={this.waymessageValueChanged} 
 						waymessageFormIsValid={this.waymessageFormIsValid}
@@ -639,12 +691,20 @@ class MapComponent extends React.Component {
                     ''
                 }
                 
-                { this.state.showWayMessageForm  ?
-                    <WaymessageFormComponent waymessageValueChanged={this.waymessageValueChanged} waymessageFormIsValid={this.waymessageFormIsValid()} waymessageFormSubmit={this.waymessageFormSubmit} />
-                : 
-					''
-                }
-            </div>
+				<div className="waymessage-menu-div waymessage-menu-hidden" id="waymessage-menu-div">
+					<WaymessageMenuComponent 
+						waymessageValueChanged={this.waymessageValueChanged} 
+						waymessageFormIsValid={this.waymessageFormIsValid} 
+						waymessageFormSubmit={this.waymessageFormSubmit}
+						toggleWaymessageMenu={this.toggleWaymessageMenu} 
+					/>
+					{ this.state.showWaymessageMenu  ?
+						''
+					: 
+						''
+					}
+				</div>
+        	</div>
         )
     }
 }

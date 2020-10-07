@@ -128,7 +128,7 @@ class MapHomeDock extends React.Component {
 					<SubmitButton 
 						text="Post a Waymessage"
 						className="btn dock-waymessage-button"
-						onClick={this.props.showWayMessageForm}
+						onClick={this.props.toggleWaymessageMenu}
 					>
 					</SubmitButton>
 				</div>

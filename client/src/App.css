@@ -1,6 +1,8 @@
 /* Fonts */
 /* APP.CSS CONTAINS CSS FOR ALL APP COMPONENTS. */
 
+/* white #ffffff	gray #424242	 blue #7083f1 */
+
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap'); */
 
@@ -8,7 +10,13 @@ body, html, #root, .app, .container {
     width: 100%;
     height: 100%;
     margin: 0px;
-    padding: 0px;
+	padding: 0px;
+}
+
+:root {
+	--white_main: #ffffff;
+	--gray_main: #424242;
+	--blue_main: #7083f1;
 }
 
 /* NAV */
@@ -18,7 +26,7 @@ nav {
     align-items: center;
     min-height: 8vh;
     height: 14vh;
-    background: #A2B0FF;
+    background: #424242;
     color: white;
     z-index: 2;
     margin: 0;
@@ -359,7 +367,7 @@ label {
     width: 80px;
     height: 60px;
     text-decoration: none;
-    color: #25385B;
+    color: var(--white_main);
     transition: 0.15s;
     font-size: 24px;
     font-weight: 700;
@@ -368,7 +376,7 @@ label {
 
 .waygo-logo:hover {
     text-decoration: none;
-    color: #090D37
+    color: var(--blue_main)
 }
 
 .map-hud-cards {
@@ -524,7 +532,7 @@ label {
 }
 .home-dock-title:hover {
 	text-decoration: none;
-	color: #CCA7D1;
+	color: #424242;
 }
 
 .map-home-dock {
@@ -534,7 +542,7 @@ label {
 	top: 0px;
 	left: 0px;
     z-index: 1000;
-    background-color: #A2AFFF;
+    background-color: #424242;
 	color: rgb(255, 255, 255);
 	display: flex;
 	flex-direction: column;
@@ -566,7 +574,6 @@ label {
 .map-home-dock-close-button:hover {
 	width: 28px;
 	height: 32px;
-	color: #A2AFFF;
 }
 .map-home-dock-close-button:focus {
 	outline: none;
@@ -582,13 +589,13 @@ label {
 	background-color: #ffffff; /*#FFCA85;*/
 	outline: none;
 	border-radius: 3px;
-	transition: 200ms all ease-in-out;
+	transition: 60ms all ease-in-out;
 	margin-left: 20px;
 	margin-top: 15px;
 }
 
-.map-home-dock-post-waymessage-button:hover {
-	background-color: #CCA7D1;
+.dock-waymessage-button:hover {
+	background-color: var(--blue_main);
 }
 
 /* MAP HOME DOCK CONTENT */
@@ -619,7 +626,7 @@ label {
 .dock-section-title {
 	margin-bottom: 20px;
 	/* font-family: "Ubuntu" sans-serif; */
-	color: rgb(77, 77, 77);
+	color: var(--blue_main);
 	font-weight: bolder;
 }
 
@@ -636,35 +643,6 @@ label {
 	text-align: center;
 	letter-spacing: 3px;
 	font-weight: bolder;
-}
-
-
-
-.waymessage-form {
-    z-index: 1000;
-    position: absolute;
-    bottom: 8px;
-    right: 10px;
-	width: 30%;
-	max-width: 300px;
-	min-width: 250px;
-    height: 40%;
-	/* background-color: #A2AFFF; */
-	background-color: #A2AFFF;
-    color: #25385B;
-	font-weight: bold;
-	box-shadow: 0px 0px 12px 4px rgba(15, 15, 15, 0.2);
-}
-
-.waymessage-form-button {
-    position: inherit;
-	background-color: #ffffff;
-	color: #25385B;
-	border: none;
-	border-radius: 3px;
-    width: 80px;
-    height: 35px;
-    bottom: 10px;
 }
 
 .hidden {
