@@ -55,7 +55,8 @@ class MapComponent extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.mapObject = React.createRef();
+		this.map = null;
+		this.userMarker = null;
 		this.state = {
 			map: null,
 			viewport: {
@@ -149,52 +150,82 @@ class MapComponent extends React.Component {
 		// 	.setLngLat([this.state.userPosition.lng, this.state.userPosition.lat])
 		// 	.addTo(this.state.map);
 
-		var userMarkerPopup = new mapboxgl.Popup().setText("user location");
+		// this.userMarker = new mapboxgl.Marker()
+		// 	.addTo(this.map);
+	}
 
-		var userMarker = new mapboxgl.Marker()
-			.setLngLat([this.state.userPosition.lng, this.state.userPosition.lat])
-			.setPopup(userMarkerPopup)
-			.addTo(this.state.map);
+	setMarkerVisible(marker, bool) {
+		this.setState({ displayActiveMarker: bool });
 	}
 
 	initializeMap() {
-		const map = document.getElementById('map-div');
+		this.map = new mapboxgl.Map({
+			container: this.mapContainer,
+			style: 'mapbox://styles/mapbox/streets-v11',
+			center: this.state.userPosition,
+			zoom: 12
+		});
+
+		this.map.on('click', (event) => {
+			this.clickMap(event);
+		})
+
+		this.map.on('contextmenu', (event) => {
+			this.toggleContextMenu(event);
+		})
+
+		this.map.on('dblclick', (event) => {
+			this.dblClickMap(event);
+		})
+
+		// Position at user.
+		const geolocate = new mapboxgl.GeolocateControl({
+			positionOptions: {
+				enableHighAccuracy: true,
+			},
+			showUserLocation: true,
+			showAccuracyCircle: false,
+			trackUserLocation: true,
+			auto: true,
+		})
+		this.map.on('load', () => {
+			geolocate.trigger()
+		});
+
+		this.map.addControl(geolocate);
+		
+
 	}
 
 	clickMap = (event) => {
 		this.setState({
 			lastClicked: {
-				x: event.center.x,
-				y: event.center.y,
+				x: event.point.x,
+				y: event.point.y,
 			}
 		});
 		if (!this.state.showWaymessageMenu)
 			this.updateWaymessageMenuPosition();
 
-		if (event.leftButton) {
-			if (this.state.showContextMenu) {
-				this.hideContextMenu();
-			}
-			if (this.state.showSearchResults) {
-				this.hideSearchResults({reset: false});
-			}
+		if (this.state.showContextMenu) {
+			this.hideContextMenu();
 		}
-		
+		if (this.state.showSearchResults) {
+			this.hideSearchResults({reset: false});
+		}
 	}
 
 	dblClickMap = (event) => {
-		if (event.leftButton) {
-			this.placeActiveMarker(event);	
-			this.reverseGeocode(event);
-		}
-		
+		event.preventDefault();
+		this.placeActiveMarker(event);	
+		this.reverseGeocode(event);		
 	}
 
 	placeActiveMarker = (event) => {
 		// console.log(event);
 		const coords = {
-			lng: event.lngLat[0],
-			lat: event.lngLat[1]
+			lng: event.lngLat.lng,
+			lat: event.lngLat.lat
 		};
 	
 		if (!this.state.hasActiveMarker) {
@@ -266,12 +297,19 @@ class MapComponent extends React.Component {
 
 		const menu = document.getElementById('map-context-menu');
 
-		const x = event.center.x;
-		const y = event.center.y;
+		const x = event.point.x;
+		const y = event.point.y;
 
 		menu.style.top = `${y}px`;
 		menu.style.left = `${x}px`;
-		
+
+		this.setState({
+			lastClicked: {
+				x: event.point.x,
+				y: event.point.y,
+			}
+		});
+
 		if (!this.state.showContextMenu) {
 			// make visible
 			menu.classList.remove('hidden');
@@ -313,8 +351,8 @@ class MapComponent extends React.Component {
 
 	reverseGeocode(event) {
 		// get the location/city data using lng/lat to display in a card or popup
-		const lng = event.lngLat[0];
-		const lat = event.lngLat[1];
+		const lng = event.lngLat.lng;
+		const lat = event.lngLat.lat;
 
 		let res = fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?
 		access_token=${MAPBOX_TOKEN}`)
@@ -413,16 +451,9 @@ class MapComponent extends React.Component {
 					hasUserPosition: true,
 					zoom: 13,
 				});
-				this.initializeMap()
-				// this.initializeMapMarkers();
+				this.initializeMap();
+				this.initializeMapMarkers();
 			}, 0)
-		  });
-
-		  const map = new mapboxgl.Map({
-				container: this.mapContainer,
-				style: 'mapbox://styles/mapbox/streets-v11',
-				center: [-73, 40],
-				zoom: 12
 		  });
 
 	}
@@ -484,9 +515,16 @@ class MapComponent extends React.Component {
 			longitude: lng,
 			zoom: zoom,
 			pitch: 0,
-			transitionInterpolator: new FlyToInterpolator(),
-			transitionDuration: 0
 		});
+
+		this.map.flyTo({
+			center: [lng, lat],
+			essential: true,
+			speed: 1,
+			maxDuration: 1,
+		});
+
+
 
 		if (displayActiveMarker) {
 			this.setState({
@@ -498,11 +536,6 @@ class MapComponent extends React.Component {
 			});
 			
 		}
-	}
-
-	mountMap(map) {
-		// Initialize all mapbox object needs
-		this.mapObject = map
 	}
 
     render() {
@@ -517,14 +550,14 @@ class MapComponent extends React.Component {
         return (
             <div className="map" id="map-div">
 
-				{this.state.hasUserPosition ?
+				{!this.state.hasUserPosition ?
 					<ReactMapGL
 						{...viewport}
 						{...settings}
 						width="100vw"
 						height="100vh"
 						controller={ mapController }
-						ref={ (map) => {this.mountMap(map)} }
+						ref={ (map) => {} }
 						mapStyle="mapbox://styles/mapbox/streets-v11"
 						mapboxApiAccessToken={MAPBOX_TOKEN}
 						onViewportChange={ this._onViewportChange }
@@ -587,7 +620,11 @@ class MapComponent extends React.Component {
 				}
 
 				{/* REGULAR MAPBOX  */}
-				{/* <div ref={el => this.mapContainer = el} className="map"></div> */}
+				<div 
+					ref={el => this.mapContainer = el}  
+					className="map-container"
+				>
+				</div>	
 
 				<div className="map-context-menu" id="map-context-menu">
 					{ this.state.showContextMenu ?
@@ -665,6 +702,7 @@ class MapComponent extends React.Component {
 									this.hideSearchResults({reset: false});
 									// call flyTo method to move to this position.
 									if (item != null) {
+										console.log(item);
 										const lng = item.center[0];
 										const lat = item.center[1];
 										this._flyTo({ lng: lng, lat: lat, zoom: 12, displayActiveMarker: true });

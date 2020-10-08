@@ -46,13 +46,14 @@
 	border: none;
 	filter: invert(1);
 	position: absolute;
-	right: 22px;
+	right: 12px;
 }
 
 .waymessage-menu-close-button:hover {
 	width: 30px;
 	height: 25px;
-	right: 20px;
+	right: 10px;
+	top: 8px;
 }
 
 .waymessage-menu-form {

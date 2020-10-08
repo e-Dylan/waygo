@@ -328,7 +328,7 @@ label {
 
 /* MAP COMPONENT */
 
-.mapConatiner {
+.map-container {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -645,7 +645,7 @@ label {
 	font-weight: bolder;
 }
 
-.hidden {
+.display-none {
 	z-index: -1;
 	display: none;
 }
