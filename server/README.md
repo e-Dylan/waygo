@@ -12,7 +12,7 @@ Development utilities:
 
 `eslint (https://www.npmjs.com/package/eslint)`
 
-`mocha (https://www.npmjs.com/package/mocha) ☕️ Simple, flexible, fun JavaScript test framework for Node.js & The Browser`
+`mocha (https://www.npmjs.com/package/mocha) ☕️`
 
 `supertest (https://www.npmjs.com/package/supertest)`
 
