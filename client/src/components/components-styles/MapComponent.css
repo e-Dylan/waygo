@@ -54,7 +54,7 @@
 .map-hud-cards-col {
 	width: 40%;
 	max-width: 420px;
-	min-width: 200px;
+	min-width: 270px;
 	z-index: 999;
 	position: absolute;
 	left: 50px;
@@ -63,6 +63,8 @@
 
 .map-search-bar-card {
 	width: 100%;
+	max-width: 370px;
+	min-width: 270px;
 	height: 30px;
 	display: flex;
 	flex-direction: row;
@@ -129,20 +131,28 @@
 .map-search-bar-search:focus {
 	border: none;
 }
-.dirs-button {
+.dirs-searchbar-button {
+	position: absolute;
+	right: 16px;
+	width: 18px;
+	height: 18px;
+	top: 9px;
+}
+.maps-searchbar-button {
 	position: absolute;
 	right: 16px;
 	width: 18px;
 	height: 18px;
 	top: 13px;
 }
-.dirs-button:hover {
+.dirs-searchbar-button:hover, .maps-searchbar-button:hover {
 	filter: invert(0.4) sepia(1) saturate(5) hue-rotate(175deg);
-	
 }
 
 .map-search-results-bg-card {
 	width: 100%;
+	max-width: 370px;
+	min-width: 270px;
 	min-height: 120px;
 	display: flex;
 	flex-direction: column;
@@ -197,7 +207,8 @@
 
 .map-hud-card {
 	width: 100%;
-	max-width: 340px;
+	max-width: 370px;
+	min-width: 200px;
 	min-height: 250px;
 	display: flex;
 	flex-direction: column;
