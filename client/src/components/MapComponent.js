@@ -60,8 +60,14 @@ class MapComponent extends React.Component {
 		this.map = null;
 		this.destMarker = null;
 		this.originMarker = null;
+
+		// binding this class's function allows it to be passed to child 
+		// components while maintainings its state information
+		this.placeOriginMarker = this.placeOriginMarker.bind(this);
+		this.placeDestMarker = this.placeDestMarker.bind(this);
+		this.placeActiveMarker = this.placeActiveMarker.bind(this);
+
 		this.state = {
-			map: null,
 			viewport: {
 				width: '100vw',
 				height: '100vh',
@@ -317,6 +323,12 @@ class MapComponent extends React.Component {
 	}
 
 	placeActiveMarker(lng, lat) {
+
+		if (lng == 0 && lat == 0) {
+			lng = this.state.lastClicked.lng;
+			lat = this.state.lastClicked.lat;
+		}
+
 		if (!this.state.hasActiveMarker) {
 			// doesn't have marker yet, create one and add it.
 			this.setState({
@@ -348,6 +360,11 @@ class MapComponent extends React.Component {
 	}
 
 	placeDestMarker(lng, lat) {
+
+		if (lng == 0 && lat == 0) {
+			lng = this.state.lastClicked.lng;
+			lat = this.state.lastClicked.lat;
+		}
 
 		if (!this.state.hasDestMarker) {
 			// doesn't have marker yet, create one and add it.
@@ -381,12 +398,13 @@ class MapComponent extends React.Component {
 
 	placeOriginMarker(lng, lat) {
 
-		// IMPLEMENT REDUX TO STORE
-		// ACTIVE LOCATION, ORIGIN, DESTINATION DATA
-		// GLOBALLY TO ACCESS FROM ALL COMPONENTS
-		// (call placeOriginMarker from ContextMenu)
+		// if clicking context menu (or non-map area), set waypoint
+		// at previously clicked position on the map.
+		if (lng == 0 && lat == 0) {
+			lng = this.state.lastClicked.lng;
+			lat = this.state.lastClicked.lat;
+		}
 
-		console.log(this.state);
 		if (!this.state.hasOriginMarker) {
 			// doesn't have marker yet, create one and add it.
 			this.setState({
@@ -397,13 +415,16 @@ class MapComponent extends React.Component {
 				},
 			});
 
+			console.log(this.state);
+
 			const originMarkerSvg = document.createElement('img')
 			originMarkerSvg.setAttribute('class', 'map-marker');
 			originMarkerSvg.setAttribute('src', originIcon);
 			
 			this.originMarker = new mapboxgl.Marker(originMarkerSvg)
 			.setLngLat([this.state.originMarkerPosition.lng, this.state.originMarkerPosition.lat])
-			.addTo(this.map);	
+			.addTo(this.map);
+			console.log(this.map);
 		} else {
 			// user has dest marker, just move it.
 			this.setState({
