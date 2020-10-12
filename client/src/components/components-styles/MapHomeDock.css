@@ -1,0 +1,121 @@
+/* MAP HOME DOCK */
+
+.home-dock-title {
+	text-decoration: none;
+	color: #ffffff;
+	transition: 0.15s all ease-in-out;
+}
+.home-dock-title:hover {
+	text-decoration: none;
+	color: var(--blue_main);
+}
+
+.map-home-dock {
+	position: absolute;
+	width: 300px;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+    z-index: 1000;
+    background-color: #424242;
+	color: rgb(255, 255, 255);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	transform: translateX(-100%);
+	transition: 150ms all ease-in-out;
+	padding: 0px;
+}
+
+.map-home-dock-open {
+	transform: translateX(0%);
+}
+
+.map-home-dock-close-button {
+	z-index: 1000;
+	width: 25px;
+	height: 25px;
+	padding: 2px 0px;
+	border: none;
+	background-color: #ffffff;
+	border-radius: 2px;
+	background: none;
+	transition: all 100ms ease-in-out;
+	cursor: default;
+	position: absolute;
+	top: 28px;
+	right: -37px;
+}
+.map-home-dock-close-button:hover {
+	width: 28px;
+	height: 32px;
+}
+.map-home-dock-close-button:focus {
+	outline: none;
+}
+.map-home-dock-close-button-open {
+	top: 5px;
+	right: 10px;
+}
+
+.dock-waymessage-button {
+	width: 200px;
+	height: 4vh;
+	background-color: #ffffff; /*#FFCA85;*/
+	outline: none;
+	border-radius: 3px;
+	transition: 60ms all ease-in-out;
+	margin-left: 20px;
+	margin-top: 15px;
+}
+
+.dock-waymessage-button:hover {
+	background-color: var(--blue_main);
+}
+
+/* MAP HOME DOCK CONTENT */
+
+.full-width-div {
+	width: 100%;
+	padding: 10px 0 10px 0;
+	border-bottom: 1px solid #d3dae0;
+	display: flex;
+	flex-direction: column;
+}
+.full-width-div text {
+	margin-left: 20px;
+}
+.full-width-div li {
+	margin-left: 20px;
+	list-style: none;
+	margin-bottom: 8px;
+}
+
+.display-my-location-li-div {
+	margin-bottom: 15px;
+	text-align: left;
+	margin-left: 40px;
+	text-decoration: none;
+	list-style: none;
+}
+.dock-section-title {
+	margin-bottom: 20px;
+	/* font-family: "Ubuntu" sans-serif; */
+	color: var(--blue_main);
+	font-weight: bolder;
+}
+
+.dock-toggle-label {
+	display: flex;
+	flex-direction: row;
+}
+.dock-switch {
+	position: absolute;
+	right: 40px;
+}
+
+.text-center {
+	text-align: center;
+	letter-spacing: 3px;
+	font-weight: bolder;
+}

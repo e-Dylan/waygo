@@ -9,7 +9,7 @@ import leftArrow from '../resources/map-home-dock/left-arrow-close.png';
 import rightArrow from '../resources/map-home-dock/right-arrow-open.png';
 
 
-import '../App.css'; // change to components css
+import './components-styles/MapHomeDock.css'; // change to components css
 
 class MapHomeDock extends React.Component {
 

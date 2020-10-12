@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore, compose } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+// import rootReducer from './reducers';
+// import loggerMiddleware from './middleware/logger';
+// import monitorReducerEnhancer from './enhancers/monitorReducer';
+
 import './App.css';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -14,6 +21,11 @@ import UserStore from './stores/UserStore';
 
 import Nav from './components/Nav';
 import LoginRegisterComponent from './components/LoginRegisterComponent';
+
+// const middlewareEnhancer = applyMiddleware(loggerMiddleware, thunkMiddleware);
+// const composedEnhancers = compose(middlewareEnhancer, monitorReducerEnhancer);
+
+// const store = createStore(rootReducer, undefined, composedEnhancers);
 
 const LOGOUT_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/logout" : "production-url-here";
 const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/isLoggedIn" : "production-url-here";
@@ -109,12 +121,14 @@ class App extends Component {
     return(
 	<Router history={history}>
 
-		<div className="app">
-			<Switch>
-				<Route path="/live-map" component={MapComponent} />
-				<Route component={RoutesWithNav} />
-			</Switch>
-		</div>
+		{/* <Provider store={store}> */}
+			<div className="app">
+				<Switch>
+					<Route path="/live-map" component={MapComponent} />
+					<Route component={RoutesWithNav} />
+				</Switch>
+			</div>
+		{/* </Provider> */}
 
 	</Router>
     )
