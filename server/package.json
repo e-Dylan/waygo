@@ -28,7 +28,8 @@
     "joi": "^17.1.1",
     "monk": "^7.3.1",
     "morgan": "^1.10.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "volleyball": "^1.5.1"
   },
   "devDependencies": {
     "eslint": "^7.5.0",
