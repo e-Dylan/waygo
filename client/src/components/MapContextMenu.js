@@ -17,16 +17,19 @@ class MapContextMenu extends React.Component {
     render() {
         return (
             <Card className="map-context-menu-bg-card" onClick={this.props.hideContextMenu}>
-                <div className="context-menu-div">
+                <div className="context-menu-div" 
+					onClick={ () => {
+						this.props.placeOriginMarker(this.props.lastClicked.lng, this.props.lastClicked.lat); 
+					}}>
 					<h1>Set Origin</h1>
                 </div>
-				<div className="context-menu-div">
+				<div className="context-menu-div" 
+					onClick={ () => {
+						this.props.placeDestMarker(this.props.lastClicked.lng, this.props.lastClicked.lat); 
+					}}>
 					<h1>Set Destination</h1>
 				</div>
-				<div 
-					className="context-menu-div"
-					onClick={this.props.showWaymessageMenu}
-				>
+				<div className="context-menu-div" onClick={this.props.showWaymessageMenu}>
 					<h1>Waymessage</h1>
 				</div>
 				<div className="context-menu-div">

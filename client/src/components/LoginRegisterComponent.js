@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import '../App.css';
+import './components-styles/LoginRegisterComponent.css';
 
 import UserStore from '../stores/UserStore';
 
