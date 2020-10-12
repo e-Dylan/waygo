@@ -24,6 +24,7 @@ import WaymessageMenuComponent from './WaymessageMenuComponent';
 import MapContextMenu from './MapContextMenu';
 
 // Icons
+import activeMarkerIcon from '../resources/map/activeMarkerIcon.svg';
 import destIcon from "../resources/map/destIcon.svg";
 import originIcon from '../resources/map/originIcon.svg';
 import waymessageIcon from "../resources/map/waymessage_icon.svg";
@@ -66,69 +67,73 @@ class MapComponent extends React.Component {
 		this.placeOriginMarker = this.placeOriginMarker.bind(this);
 		this.placeDestMarker = this.placeDestMarker.bind(this);
 		this.placeActiveMarker = this.placeActiveMarker.bind(this);
+	}
 
-		this.state = {
-			viewport: {
-				width: '100vw',
-				height: '100vh',
-				latitude: 0,
-				longitude: 0,
-				zoom: 12,
-				pitch: 0,
-			},
+	state = {
+		viewport: {
+			width: '100vw',
+			height: '100vh',
+			latitude: 0,
+			longitude: 0,
+			zoom: 12,
+			pitch: 0,
+		},
 
-			homeDockOpen: false,
+		homeDockOpen: false,
 
-			userPosition: {
-				lat: 0,
-				lng: 0,
-			},
-			hasUserPosition: false,
+		userPosition: {
+			lat: 0,
+			lng: 0,
+		},
+		hasUserPosition: false,
 
-			hasActiveMarker: false,
-			activeMarkerPosition: {
-				lat: 0,
-				lng: 0
-			},
+		hasActiveMarker: false,
+		activeMarkerPosition: {
+			lat: 0,
+			lng: 0
+		},
 
-			hasDest: false,
-			destMarkerPosition: {
-				lat: 0,
-				lng: 0
-			},
-			hasOrigin: false,
-			originMarkerPosition: {
-				lat: 0,
-				lng: 0
-			},
+		hasDest: false,
+		destMarkerPosition: {
+			lat: 0,
+			lng: 0
+		},
+		hasOrigin: false,
+		originMarkerPosition: {
+			lat: 0,
+			lng: 0
+		},
 
-			lastClicked: {
-				x: 0,
-				y: 0,
-			},
+		lastClickedMap: {
+			lng: 0,
+			lat: 0,
+		},
+		lastClickedWin: {
+			x: 0,
+			y: 0,
+		},
 
-			userWayMessage: {
-				message: ""
-			},
+		userWayMessage: {
+			message: ""
+		},
 
-			showHomeDock: true,
-			showSearchBar: true,
-			showLocationDataCard: false,
-			showDirectionsCard: false,
-			showContextMenu: false,
-			showSearchResults: false,
-			showWaymessageMenu: false,
+		showHomeDock: true,
+		showSearchBar: true,
+		showLocationDataCard: false,
+		showDirectionsCard: false,
+		showContextMenu: false,
+		showSearchResults: false,
+		showWaymessageMenu: false,
 
-			waymessages: [],
-			searchResultLocations: [],
-			activeLocationData: {
-				postal_code: "",
-				address: "",
-				city: "",
-				region: "",
-				country: ""
-			},
-		}
+		waymessages: [],
+		searchResultLocations: [],
+		activeLocationData: {
+			postal_code: "",
+			address: "",
+			city: "",
+			region: "",
+			country: ""
+		},
 	}
 
 	compileActiveLocationData(data) {
@@ -297,9 +302,9 @@ class MapComponent extends React.Component {
 
 	clickMap = (event) => {
 		this.setState({
-			lastClicked: {
-				x: event.point.x,
-				y: event.point.y,
+			lastClickedMap: {
+				lng: event.lngLat.lng,
+				lat: event.lngLat.lat,
 			}
 		});
 		if (!this.state.showWaymessageMenu)
@@ -324,9 +329,9 @@ class MapComponent extends React.Component {
 
 	placeActiveMarker(lng, lat) {
 
-		if (lng == 0 && lat == 0) {
-			lng = this.state.lastClicked.lng;
-			lat = this.state.lastClicked.lat;
+		if (lng === 0 && lat === 0) {
+			lng = this.state.lastClickedMap.lng;
+			lat = this.state.lastClickedMap.lat;
 		}
 
 		if (!this.state.hasActiveMarker) {
@@ -341,7 +346,7 @@ class MapComponent extends React.Component {
 
 			const activeMarkerSvg = document.createElement('img')
 			activeMarkerSvg.setAttribute('class', 'map-marker');
-			activeMarkerSvg.setAttribute('src', destIcon);
+			activeMarkerSvg.setAttribute('src', activeMarkerIcon);
 			
 			this.activeMarker = new mapboxgl.Marker(activeMarkerSvg)
 			.setLngLat([this.state.activeMarkerPosition.lng, this.state.activeMarkerPosition.lat])
@@ -357,19 +362,21 @@ class MapComponent extends React.Component {
 
 			this.activeMarker.setLngLat([this.state.activeMarkerPosition.lng, this.state.activeMarkerPosition.lat]);
 		}
+
+		this.showLocationDataCard();
 	}
 
 	placeDestMarker(lng, lat) {
 
-		if (lng == 0 && lat == 0) {
-			lng = this.state.lastClicked.lng;
-			lat = this.state.lastClicked.lat;
+		if (lng === 0 && lat === 0) {
+			lng = this.state.lastClickedMap.lng;
+			lat = this.state.lastClickedMap.lat;
 		}
 
-		if (!this.state.hasDestMarker) {
+		if (!this.state.hasDest) {
 			// doesn't have marker yet, create one and add it.
 			this.setState({
-				hasDestMarker: true,
+				hasDest: true,
 				destMarkerPosition: {
 					lat: lat,
 					lng: lng,
@@ -381,7 +388,7 @@ class MapComponent extends React.Component {
 			destMarkerSvg.setAttribute('src', destIcon);
 			
 			this.destMarker = new mapboxgl.Marker(destMarkerSvg)
-			.setLngLat([this.state.destMarkerPosition.lng, this.state.destMarkerPosition.lat])
+			.setLngLat([lng, lat])
 			.addTo(this.map);	
 		} else {
 			// user has dest marker, just move it.
@@ -392,20 +399,22 @@ class MapComponent extends React.Component {
 				},
 			});
 
-			this.destMarker.setLngLat([this.state.destMarkerPosition.lng, this.state.destMarkerPosition.lat]);
+			this.destMarker.setLngLat([lng, lat]);
 		}
+
+		this.showDirectionsCard();
 	}
 
 	placeOriginMarker(lng, lat) {
 
 		// if clicking context menu (or non-map area), set waypoint
 		// at previously clicked position on the map.
-		if (lng == 0 && lat == 0) {
-			lng = this.state.lastClicked.lng;
-			lat = this.state.lastClicked.lat;
+		if (lng === 0 && lat === 0 && this.state.lastClickedMap.lng != undefined && this.state.lastClickedMap.lat != undefined) {
+			lng = this.state.lastClickedMap.lng;
+			lat = this.state.lastClickedMap.lat;
 		}
 
-		if (!this.state.hasOriginMarker) {
+		if (!this.state.hasOrigin) {
 			// doesn't have marker yet, create one and add it.
 			this.setState({
 				hasOrigin: true,
@@ -415,16 +424,13 @@ class MapComponent extends React.Component {
 				},
 			});
 
-			console.log(this.state);
-
 			const originMarkerSvg = document.createElement('img')
 			originMarkerSvg.setAttribute('class', 'map-marker');
 			originMarkerSvg.setAttribute('src', originIcon);
 			
 			this.originMarker = new mapboxgl.Marker(originMarkerSvg)
-			.setLngLat([this.state.originMarkerPosition.lng, this.state.originMarkerPosition.lat])
+			.setLngLat([lng, lat])
 			.addTo(this.map);
-			console.log(this.map);
 		} else {
 			// user has dest marker, just move it.
 			this.setState({
@@ -434,8 +440,10 @@ class MapComponent extends React.Component {
 				},
 			});
 
-			this.originMarker.setLngLat([this.state.originMarkerPosition.lng, this.state.originMarkerPosition.lat]);
+			this.originMarker.setLngLat([lng, lat]);
 		}
+		
+		this.showDirectionsCard();
 	}
 
 	toggleWaymessageMenu = () => {
@@ -473,8 +481,8 @@ class MapComponent extends React.Component {
 
 	updateWaymessageMenuPosition = () => {
 		const waymessageDiv = document.getElementById("waymessage-menu-div");
-		const x = this.state.lastClicked.x;
-		const y = this.state.lastClicked.y;
+		const x = this.state.lastClickedWin.x;
+		const y = this.state.lastClickedWin.y;
 
 		waymessageDiv.style.top = `${y}px`;
 		waymessageDiv.style.left = `${x}px`;
@@ -486,18 +494,27 @@ class MapComponent extends React.Component {
 
 		const menu = document.getElementById('map-context-menu');
 
-		const x = event.point.x;
-		const y = event.point.y;
+		const winX = event.point.x;
+		const winY = event.point.y;
 
-		menu.style.top = `${y}px`;
-		menu.style.left = `${x}px`;
+		const lng = event.lngLat.lng;
+		const lat = event.lngLat.lat;
 
 		this.setState({
-			lastClicked: {
-				x: event.point.x,
-				y: event.point.y,
-			}
+			// store window click position (for menus)
+			lastClickedMap: {
+				lng: lng,
+				lat: lat,
+			},
+			// store map click position (for markers)
+			lastClickedWin: {
+				x: winX,
+				y: winY,
+			},
 		});
+
+		menu.style.top = `${winY}px`;
+		menu.style.left = `${winX}px`;
 
 		if (!this.state.showContextMenu) {
 			// make visible
@@ -510,12 +527,22 @@ class MapComponent extends React.Component {
 	}
 
 	showLocationDataCard = () => {
+		if (!this.state.showLocationDataCard) {
+			this.setState({
+				showDirectionsCard: false,
+				showSearchBar: true,
+				showSearchResults: false,
+				showLocationDataCard: true,
+			});
+
+			this.hideSearchResults({reset: false});
+		}
+	}
+
+	hideLocationDataCard() {
 		this.setState({
-			showDirectionsCard: false,
-			showSearchBar: true,
-			showSearchResults: false,
-			showLocationDataCard: false,
-		})
+			showLocationDataCard: false
+		});
 	}
 
 	showDirectionsCard = () => {
@@ -525,7 +552,12 @@ class MapComponent extends React.Component {
 			showSearchResults: false,
 			showLocationDataCard: false,
 		 });
+	}
 
+	hideDirectionsCard = () => {
+		this.setState({
+			showDirectionsCard: false
+		});
 	}
 
 	hideContextMenu = () => {
@@ -552,7 +584,7 @@ class MapComponent extends React.Component {
 	}
 
 	removeDestMarker() {
-		if (this.state.hasDestMarker) {
+		if (this.state.hasDest) {
 			this.destMarker.remove();
 		}
 	}
@@ -567,22 +599,8 @@ class MapComponent extends React.Component {
 			.then(res => res.json())
 			.then(data => {
 				this.compileActiveLocationData(data);
-				this.showLocationData(this.state.activeLocationData);
+				this.showLocationDataCard(this.state.activeLocationData);
 			});
-	}
-
-	showLocationData(loc) {
-		// best or most fitting location given the query.
-		this.setState({
-			showLocationDataCard: true,
-		});
-		this.hideSearchResults({reset: false});
-	}
-
-	hideLocationData() {
-		this.setState({
-			showLocationDataCard: false
-		});
 	}
 
 	forwardGeocode = ({ endpoint, query, autocomplete }) => {
@@ -716,7 +734,7 @@ class MapComponent extends React.Component {
 		viewport: { ...this.state.viewport, ...viewport }
 	});
 
-	_flyTo = ({lat, lng, zoom, displayDestMarker}) => {
+	_flyTo = ({lat, lng, zoom, displayActiveMarker}) => {
 		this._onViewportChange({
 			latitude: lat,
 			longitude: lng,
@@ -731,7 +749,7 @@ class MapComponent extends React.Component {
 			maxDuration: 1,
 		});
 
-		if (displayDestMarker) {
+		if (displayActiveMarker) {
 			this.placeDestMarker(lng, lat);
 		}
 	}
@@ -765,7 +783,7 @@ class MapComponent extends React.Component {
 							placeOriginMarker={this.placeOriginMarker}
 							placeDestMarker={this.placeDestMarker}
 							placeActiveMarker={this.placeActiveMarker}
-							lastClicked={this.state.lastClicked}
+							lastClickedMap={this.state.lastClickedMap}
 						/>
 					:
 						''
@@ -797,7 +815,7 @@ class MapComponent extends React.Component {
 											endpoint: "mapbox.places", 
 											query: e.target.value, 
 											autocomplete: true, 
-											displayDestMarker: false
+											displayActiveMarker: false
 										});
 									}
 
@@ -814,7 +832,7 @@ class MapComponent extends React.Component {
 							</input>
 							
 							<div 
-								className="dirs-button"
+								className="dirs-searchbar-button"
 								onClick={this.showDirectionsCard}
 							>
 								<img src={directionsCarIcon}></img>
@@ -830,12 +848,12 @@ class MapComponent extends React.Component {
 
 								<img src={torontoImage} className="location-data-image"></img>
 								<div className="location-title">
-									{this.state.activeLocationData.place_type == "place" ?
+									{this.state.activeLocationData.place_type === "place" ?
 									/* MAKE CARD DESIGN HERE USING SCRAPED DATA (Toronto, ON, CANADA) */
 										this.state.activeLocationData.city
-									: this.state.activeLocationData.place_type == "poi" ?
+									: this.state.activeLocationData.place_type === "poi" ?
 										this.state.activeLocationData.address
-									: this.state.activeLocationData.place_type == "country" ?
+									: this.state.activeLocationData.place_type === "country" ?
 										this.state.activeLocationData.country
 									:
 										''
@@ -870,7 +888,7 @@ class MapComponent extends React.Component {
 									directions
 
 									<div 
-										className="dirs-button"
+										className="maps-searchbar-button"
 										onClick={this.showLocationDataCard}
 									>
 										<img src={directionsBuildingIcon}></img>
@@ -920,12 +938,12 @@ class MapComponent extends React.Component {
 										// console.log(item);
 										const lng = item.center[0];
 										const lat = item.center[1];
-										this._flyTo({ lng: lng, lat: lat, zoom: 12, displayDestMarker: true });
+										this._flyTo({ lng: lng, lat: lat, zoom: 12, displayActiveMarker: true });
 										// ITEM IS FEATURES[i]
 										// scrape location data
 										this.compileActiveLocationData(item);
 										// display location card.
-										this.showLocationData(this.state.activeLocationData);
+										this.showLocationDataCard(this.state.activeLocationData);
 									}
 									
 									// MAKE FUNCTION: DISPLAY LOCATION CARD
