@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { observer } from 'mobx-react';
 
 import './App.css';
@@ -42,7 +43,8 @@ class App extends Component {
 
       let result = await res.json();
       if (result && result.success) {
-        // user is logged in
+		// user is logged in
+		// CHANGE TO REDUX STORE.
         UserStore.loading = false;
         UserStore.isLoggedIn = true;
         UserStore.username = result.username;
@@ -54,8 +56,8 @@ class App extends Component {
       }
     } 
     catch(e) {
-      UserStore.loading = false;
-      UserStore.isLoggedIn = false;
+		UserStore.loading = false;
+		UserStore.isLoggedIn = false;
     }
   }
 
@@ -87,7 +89,7 @@ class App extends Component {
       }
     } 
     catch (e) {
-      UserStore.loading = false;
+		UserStore.loading = false;
       console.log(e);
     }
   }
@@ -118,6 +120,15 @@ class App extends Component {
     )
   }
   
+}
+
+function mapStateToProps(state) {
+	// take any items from the store needed for this component
+	return {
+		loading: state.loading,
+		isLoggedIn: state.isLoggedIn,
+		username: state.username,
+	};
 }
 
 export default observer(App);

@@ -4,7 +4,10 @@
 /* white #ffffff	gray #424242	 blue #7083f1 */
 
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500&display=swap');
+
 
 body, html, #root, .app, .container {
     width: 100%;
@@ -17,6 +20,17 @@ body, html, #root, .app, .container {
 	--white_main: #ffffff;
 	--gray_main: #383838ec;
 	--blue_main: #7083f1;
+}
+
+.bold {
+	font-family: "IBM Plex Sans", sans-serif;
+}
+
+.input-search-bar {
+
+}
+.input-search-bar:focus {
+	outline: none;
 }
 
 /* NAV */

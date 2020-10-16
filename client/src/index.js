@@ -14,16 +14,16 @@ import "bootstrap/dist/css/bootstrap.css"
 
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore, compose } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-// import rootReducer from './reducers';
-// import loggerMiddleware from './middleware/logger';
-// import monitorReducerEnhancer from './enhancers/monitorReducer';
+import { reducer } from './store';
 
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import history from './history';
+
+// returns state object from store
+// const store = createStore(reducer);
 
 // const middlewareEnhancer = applyMiddleware(loggerMiddleware, thunkMiddleware);
 // const composedEnhancers = compose(middlewareEnhancer, monitorReducerEnhancer);

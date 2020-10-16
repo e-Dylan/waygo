@@ -64,9 +64,6 @@ class MapComponent extends React.Component {
 
 		// binding this class's function allows it to be passed to child 
 		// components while maintainings its state information
-		this.placeOriginMarker = this.placeOriginMarker.bind(this);
-		this.placeDestMarker = this.placeDestMarker.bind(this);
-		this.placeActiveMarker = this.placeActiveMarker.bind(this);
 	}
 
 	state = {
@@ -117,16 +114,22 @@ class MapComponent extends React.Component {
 			message: ""
 		},
 
-		showHomeDock: true,
-		showSearchBar: true,
-		showLocationDataCard: false,
+		showLocation: true,
+		showDirections: false,
+
+		showMapSearchBar: true,
+		showLocationCard: false,
 		showDirectionsCard: false,
+
+		showLocationSearchResults: false,
+		showDirsSearchResults: false,
+
+		showHomeDock: true,
 		showContextMenu: false,
-		showSearchResults: false,
 		showWaymessageMenu: false,
 
 		waymessages: [],
-		searchResultLocations: [],
+		searchResultItems: [],
 		activeLocationData: {
 			postal_code: "",
 			address: "",
@@ -312,8 +315,8 @@ class MapComponent extends React.Component {
 
 		this.hideContextMenu();
 
-		if (this.state.showSearchResults) {
-			this.hideSearchResults({reset: false});
+		if (this.state.showLocationSearchResults) {
+			this.hideLocationSearchResults({reset: false});
 		}
 	}
 
@@ -363,7 +366,7 @@ class MapComponent extends React.Component {
 			this.activeMarker.setLngLat([this.state.activeMarkerPosition.lng, this.state.activeMarkerPosition.lat]);
 		}
 
-		this.showLocationDataCard();
+		this.showLocation();
 	}
 
 	placeDestMarker(lng, lat) {
@@ -401,8 +404,6 @@ class MapComponent extends React.Component {
 
 			this.destMarker.setLngLat([lng, lat]);
 		}
-
-		this.showDirectionsCard();
 	}
 
 	placeOriginMarker(lng, lat) {
@@ -526,31 +527,53 @@ class MapComponent extends React.Component {
 		this.setState({ showContextMenu: !this.state.showContextMenu });
 	}
 
-	showLocationDataCard = () => {
-		if (!this.state.showLocationDataCard) {
+	showLocation = () => {
+		this.setState({
+			showLocation: true,
+			showDirections: false
+		});
+	}
+
+	hideLocation = () => {
+		this.setState({ showLocation: false, })
+	}
+
+	showDirections = () => {
+		this.setState({ 
+			showDirections: true,
+			showDirectionsCard: true
+		});
+	}
+
+	hideDirections = () => {
+		this.setState({ showDirections: false });
+	}
+
+	showDirectionsCard = () => {
+		this.setState({
+			showDirectionsCard: true
+		});
+	}
+
+	showLocationCard = () => {
+		if (!this.state.showLocationCard) {
 			this.setState({
-				showDirectionsCard: false,
-				showSearchBar: true,
-				showSearchResults: false,
-				showLocationDataCard: true,
+				showLocationCard: true,
 			});
 
-			this.hideSearchResults({reset: false});
+			this.hideLocationSearchResults({reset: false});
 		}
 	}
 
-	hideLocationDataCard() {
+	hideLocationaCard() {
 		this.setState({
-			showLocationDataCard: false
+			showLocationCard: false
 		});
 	}
 
 	showDirectionsCard = () => {
 		this.setState({ 
 			showDirectionsCard: true,
-			showSearchBar: false,
-			showSearchResults: false,
-			showLocationDataCard: false,
 		 });
 	}
 
@@ -568,25 +591,40 @@ class MapComponent extends React.Component {
 		this.setState({ showContextMenu: true });
 	}
 
-	toggleShowSearchResults = () => {
-		this.setState({ showSearchResults: !this.state.showSearchResults });
+	toggleLocationSearchResults = () => {
+		this.setState({ showLocationSearchResults: !this.state.showLocationSearchResults });
 	}
 
-	hideSearchResults = ({ reset }) => {
-		this.setState({ showSearchResults: false });
+	hideLocationSearchResults = ({ reset }) => {
+		this.setState({ showLocationSearchResults: false });
 		if (reset) {
-			this.setState({ searchResultLocations: [] });
+			this.setState({ searchResultItems: [] });
 		}
 	}
 
-	showSearchResults = () => {
-		this.setState({ showSearchResults: true });
+	showLocationSearchResults = () => {
+		this.setState({ showLocationSearchResults: true });
+	}
+
+	hideDirsSearchResults = ({ reset }) => {
+		this.setState({ showDirsSearchResults: false });
+		if (reset) {
+			this.setState({ searchResultItems: [] });
+		}
+	}
+
+	showDirsSearchResults = () => {
+		this.setState({ showDirsSearchResults: true });
 	}
 
 	removeDestMarker() {
 		if (this.state.hasDest) {
 			this.destMarker.remove();
 		}
+	}
+
+	hideMapSearchBar() {
+		this.setState({ showMapSearchBar: false });
 	}
 
 	reverseGeocode(event) {
@@ -599,7 +637,7 @@ class MapComponent extends React.Component {
 			.then(res => res.json())
 			.then(data => {
 				this.compileActiveLocationData(data);
-				this.showLocationDataCard(this.state.activeLocationData);
+				this.showLocationCard(this.state.activeLocationData);
 			});
 	}
 
@@ -612,18 +650,22 @@ class MapComponent extends React.Component {
 			.then(data => { 
 
 				// fill search results array with this api call on every geocode api request.
-				const tempsearchResultLocations = [];
+				const tempsearchResultItems = [];
 				// console.log(data);
 
 				for (let i = 0; i < 5; i++) {
-					tempsearchResultLocations[i] = data.features[i];
+					tempsearchResultItems[i] = data.features[i];
 				}
 				
 				this.setState({
-					searchResultLocations: tempsearchResultLocations,
+					searchResultItems: tempsearchResultItems,
 				});
-				// console.log(this.state.searchResultLocations);
+				// console.log(this.state.searchResultItems);
 			});
+	}
+
+	getDirections(profile, coords) {
+		
 	}
 
     async componentDidMount() {
@@ -776,23 +818,21 @@ class MapComponent extends React.Component {
 				</div>
 
 				<div className="map-context-menu" id="map-context-menu">
-					{ this.state.showContextMenu ?
+					{ this.state.showContextMenu &&
 						<MapContextMenu 
 							hideContextMenu={this.hideContextMenu}
 							showWaymessageMenu={this.showWaymessageMenu}
-							placeOriginMarker={this.placeOriginMarker}
-							placeDestMarker={this.placeDestMarker}
-							placeActiveMarker={this.placeActiveMarker}
+							placeOriginMarker={this.placeOriginMarker.bind(this)}
+							placeDestMarker={this.placeDestMarker.bind(this)}
+							placeActiveMarker={this.placeActiveMarker.bind(this)}
 							lastClickedMap={this.state.lastClickedMap}
 						/>
-					:
-						''
 					}
 				</div>
 
 				<div className="map-hud-cards-col">
 
-					{ this.state.showSearchBar ?
+					{ this.state.showMapSearchBar && this.state.showLocation &&
 						<Card body className="map-search-bar-card">
 							<div className="search-bar-button"
 								onClick={this.moveHomeDock}>
@@ -800,10 +840,10 @@ class MapComponent extends React.Component {
 							</div>
 							
 							<input 
-								className="map-search-bar-search"
+								className="map-search-bar-search input-search-bar"
+								placeholder="where to?"	
 								onFocus={(e) => {
-									this.showSearchResults();
-									// this.hideLocationData();
+									this.showLocationSearchResults();
 								}}
 								onChange={(e) => {
 									// make api call to get best 5 results using search text,
@@ -821,118 +861,121 @@ class MapComponent extends React.Component {
 
 									if (e.target.value.length < 1) {
 										// If clearing search bar, hide and empty search results.
-										this.hideSearchResults({reset: true});
+										this.hideLocationSearchResults({reset: true});
 									} else {
-										this.showSearchResults();
-										// this.hideLocationData();
+										this.showLocationSearchResults();
 									}
 									
 								}}
 								>
 							</input>
 							
+							{/* SHOW DIRECTIONS SEARCH-BAR BUTTON */}
 							<div 
-								className="dirs-searchbar-button"
-								onClick={this.showDirectionsCard}
+								className="show-dirs-searchbar-button"
+								onClick={() => {
+									this.hideLocation();
+									this.showDirections();
+								}}
 							>
 								<img src={directionsCarIcon}></img>
 							</div>
 						</Card>
-					:
-						''
 					}
 
-					{ this.state.showLocationDataCard && this.state.activeLocationData != null ?
-						<div>
-							<Card body className="map-hud-card"> 
-
-								<img src={torontoImage} className="location-data-image"></img>
-								<div className="location-title">
-									{this.state.activeLocationData.place_type === "place" ?
-									/* MAKE CARD DESIGN HERE USING SCRAPED DATA (Toronto, ON, CANADA) */
-										this.state.activeLocationData.city
-									: this.state.activeLocationData.place_type === "poi" ?
-										this.state.activeLocationData.address
-									: this.state.activeLocationData.place_type === "country" ?
-										this.state.activeLocationData.country
-									:
-										''
-									}
+					{ this.state.showDirectionsCard && this.state.showDirections &&
+						<Card body className="map-hud-card directions-card">
+							<div className="dirs-title">
+								<div className="dirs-burger"
+									onClick={this.moveHomeDock}>
+									<div className="search-bar-button__burger"></div>
 								</div>
-								<div className="location-subtitle">
-									
-								</div>
-								<div className="directions-buttons">
-									<button className="hud-card-button">
-										to here
-									</button>
-									<button className="hud-card-button">
-										from here
-									</button>
-								</div>
-							
-							</Card>
-						</div>
-					:
-						''
-					}
 
-					{ this.state.showDirectionsCard ?
-						<div>
-							<Card body className="map-hud-card">
-								<div className="dirs-title">
-									<div className="dirs-burger"
-										onClick={this.moveHomeDock}>
-										<div className="search-bar-button__burger"></div>
-									</div>
-									directions
-
-									<div 
-										className="maps-searchbar-button"
-										onClick={this.showLocationDataCard}
-									>
-										<img src={directionsBuildingIcon}></img>
-									</div>
-
-								</div>
-								<div className="dirs-fromto">
-									<div className="from-bar">
-										<a className="dirs-label"></a>
-										<input 
-											className="dirs-input-bar"
-											placeholder="from"
-										>
-
-										</input>
-										{/* <img src={directionsCarIcon}></img> */}
-									</div>
-									<div className="to-bar">
-										<a className="dirs-label"></a>
-										<input 
-											className="dirs-input-bar"
-											placeholder="to"
-										>
-										{/* <img src={directionsCarIcon}></img> */}
-											
-
-										</input>
-									</div>
-								</div>
-							</Card>
-						</div>
-					:
-						''
-					}
-
-					{ this.state.showSearchResults ?
-
-						<Card body className="map-search-results-bg-card">
-							{ this.state.searchResultLocations.map(item => 
 								<div 
-								className="map-search-result-div"
+									className="show-loc-searchbar-button"
+									onClick={() => {
+										this.hideDirections();
+										this.showLocation();
+									}}
+								>
+									<img src={directionsBuildingIcon}></img>
+								</div>
+
+							</div>
+							<div className="dirs-fromto">
+								<div className="from-bar">
+									<a className="dirs-label"></a>
+									<input 
+										className="dirs-input-bar"
+										placeholder="from"
+										onChange={(e) => {
+											if (e.target.value.length > 2) {
+												// make request for locations only if 3+ chars
+												this.forwardGeocode({
+													endpoint: "mapbox.places", 
+													query: e.target.value, 
+													autocomplete: true, 
+													displayActiveMarker: false
+												});
+
+												if (e.target.value.length < 1) {
+													// If clearing search bar, hide and empty search results.
+													this.hideDirsSearchResults({ reset: true });
+												} else {
+													this.showDirsSearchResults();
+												}
+											}
+										}}
+									>
+
+									</input>
+									{/* <img src={directionsCarIcon}></img> */}
+								</div>
+								<div className="to-bar">
+									<a className="dirs-label"></a>
+									<input 
+										className="dirs-input-bar"
+										placeholder="to"
+									>
+									{/* <img src={directionsCarIcon}></img> */}
+										
+									</input>
+								</div>
+							</div>
+
+							{ this.state.showDirsSearchResults && this.state.searchResultItems.length > 0 &&
+											
+								<Card className="search-results-bg-card">
+									{ this.state.searchResultItems.map(item =>
+
+										<span 
+										className="search-result-div"
+										onClick={ () => {
+											this.hideDirsSearchResults({ reset: false });
+											// set camera at location on origin marker placement, not item click
+											// dont set cam at destination, calculate route if possible.
+										}}
+										key={Math.random()}
+										title={item.place_name}
+										>
+											
+										</span>
+
+									) }
+								</Card>
+							}
+						</Card>
+					}
+
+					{ this.state.showLocationSearchResults && this.state.showLocation &&
+
+						<Card body className="search-results-bg-card">
+							{ this.state.searchResultItems.map(item => 
+								<div 
+								className="search-result-div"
 								onClick={ () => {						
 									// stop showing search results when location is clicked.
-									this.hideSearchResults({reset: false});
+									this.hideLocationSearchResults({reset: false});
 									// call flyTo method to move to this position.
 									if (item != null) {
 										// console.log(item);
@@ -942,8 +985,7 @@ class MapComponent extends React.Component {
 										// ITEM IS FEATURES[i]
 										// scrape location data
 										this.compileActiveLocationData(item);
-										// display location card.
-										this.showLocationDataCard(this.state.activeLocationData);
+										this.showLocationCard(this.state.activeLocationData);
 									}
 									
 									// MAKE FUNCTION: DISPLAY LOCATION CARD
@@ -953,19 +995,59 @@ class MapComponent extends React.Component {
 									// also displays location marker, instead of _flyTo().
 								}} 
 								key={Math.random()}
+								title={item.place_name}
 								>
-									<img src={ citySearchIcon } className="map-search-result-icon"></img>
-									<h1>{ item.place_name }</h1>
+
+									<div>
+										<img src={ citySearchIcon } className="search-result-icon"></img>
+									</div>
+									<span className="search-result-title" title={item.place_name}>
+										<span className="bold">{item.place_name}</span>
+										{item.place_name}
+									</span>
+									<span className="item-description">
+										{item.place_name}
+										<span className="mark bold">Toronto</span>
+										HBD 24R
+									</span>
+
 								</div>
 							)}
 						</Card>
-					:
-						''
+
+					}
+
+					{ this.state.showLocationCard && this.state.activeLocationData != null && this.state.showLocation &&
+						<Card body className="map-hud-card location-card"> 
+
+							{/* <img src={torontoImage} className="location-data-image"></img> */}
+							
+							<div className="location-title">
+								{this.state.activeLocationData.place_type === "place" ?
+								/* MAKE CARD DESIGN HERE USING SCRAPED DATA (Toronto, ON, CANADA) */
+									this.state.activeLocationData.city
+								: this.state.activeLocationData.place_type === "poi" ?
+									this.state.activeLocationData.address
+								: this.state.activeLocationData.place_type === "country" ?
+									this.state.activeLocationData.country
+								:
+									''
+								}
+							</div>
+							<div className="location-data">
+								<div className="location-title">Toronto</div>
+								<div className="location-subtitle">Ontario, CA</div>
+								<button className="get-dirs-button">
+									directions
+								</button>
+							</div>
+							
+						</Card>
 					}
 					
 				</div>
 
-                { this.state.showHomeDock ?
+                { this.state.showHomeDock &&
                     <MapHomeDock
 						id="map-home-dock"
 						moveHomeDock={this.moveHomeDock}
@@ -975,8 +1057,6 @@ class MapComponent extends React.Component {
 						waymessageValueChanged={this.waymessageValueChanged} 
 						waymessageFormIsValid={this.waymessageFormIsValid}
 					/>
-                :
-                    ''
                 }
                 
 				<div className="waymessage-menu-div waymessage-menu-hidden" id="waymessage-menu-div">
@@ -986,9 +1066,7 @@ class MapComponent extends React.Component {
 						waymessageFormSubmit={this.waymessageFormSubmit}
 						toggleWaymessageMenu={this.toggleWaymessageMenu} 
 					/>
-					{ this.state.showWaymessageMenu  ?
-						''
-					: 
+					{ this.state.showWaymessageMenu  &&
 						''
 					}
 				</div>

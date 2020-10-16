@@ -54,7 +54,7 @@
 .map-hud-cards-col {
 	width: 40%;
 	max-width: 420px;
-	min-width: 270px;
+	min-width: 350px;
 	z-index: 999;
 	position: absolute;
 	left: 50px;
@@ -64,7 +64,7 @@
 .map-search-bar-card {
 	width: 100%;
 	max-width: 370px;
-	min-width: 270px;
+	min-width: 350px;
 	height: 30px;
 	display: flex;
 	flex-direction: row;
@@ -128,28 +128,26 @@
 	font-size: 19px;
 	font-family: "Ubuntu", sans-serif;
 }
-.map-search-bar-search:focus {
-	border: none;
-}
-.dirs-searchbar-button {
+
+.show-dirs-searchbar-button {
 	position: absolute;
 	right: 16px;
 	width: 18px;
 	height: 18px;
 	top: 9px;
 }
-.maps-searchbar-button {
+.show-loc-searchbar-button {
 	position: absolute;
 	right: 16px;
 	width: 18px;
 	height: 18px;
 	top: 13px;
 }
-.dirs-searchbar-button:hover, .maps-searchbar-button:hover {
+.show-dirs-searchbar-button:hover, .show-loc-searchbar-button:hover {
 	filter: invert(0.4) sepia(1) saturate(5) hue-rotate(175deg);
 }
 
-.map-search-results-bg-card {
+.search-results-bg-card {
 	width: 100%;
 	max-width: 370px;
 	min-width: 270px;
@@ -160,68 +158,97 @@
 	align-items: center;
 	background-color: #ffffff;
 	box-shadow: 0px 0px 12px 6px rgba(15, 15, 15, 0.2);
-	border-radius: 6px;
+	border-radius: 2px;
 	min-height: 35%;
+	border-top: solid 1px;
+	border-top-color: rgba(15, 15, 15, 0.4);
 	padding: 0px;
 	padding-bottom: 5px;
-	position: absolute;
-	top: 43px;
+	margin-top: -2px;
 }
-.map-search-result-div {
+.search-result-div {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	height: 45px;
+	height: 3rem;
+	line-height: 3.9rem;
+	overflow: hidden;
+	padding: 0;
+	white-space: nowrap;
 	width: 100%;
 	/* border-top: 1px groove; */
 	background-color: #ffffff;
 	justify-content: flex-start;
 	cursor: pointer;
-	transition: 0.2s all ease-in-out;
+	transition: 0.1s all ease-in-out;
 }
-.map-search-result-div h1 {
-	margin-left: 30px;
+.search-result-div span {
+	margin-left: 12px;
 	margin-bottom: 0px;
 	font-size: 16px;
 }	
-.map-search-result-div:hover {
+.search-result-div:hover {
 	background-color: rgba(180, 229, 252, 0.5);
 }
 
-.map-search-result-icon {
+.search-result-icon {
 	width: 15px;
 	height: 15px;
 	margin-left: 10px;
 }
 
-.location-title {
-	font-size: 16px;
-	font-family: "Ubuntu", sans-serif;
+.location-card {
+	height: auto;
+	margin-top: 20px;
+}
+
+.location-data {
+	display: flex;
+	flex-direction: column;
+	align-content: flex-start;
+	margin: 10px 10px;
+}
+
+.get-dirs-button {
+	height: 25px;
+	background-color: var(--blue_main);
 	color: white;
+	border: none;
+	border-radius: 2px;
+	margin-top: 8px;
+	width: auto%;
+	align-self: flex-start;
+}
+
+.location-title {
+	font-size: 17px;
+	font-family: "Ubuntu", sans-serif;
+	color: rgba(15, 15, 15, 0.8);
+}
+.location-subtitle {
+	font-size: 13px;
+	font-family: "Ubuntu", sans-serif;
+	color: rgba(15, 15, 15, 0.5);
 }
 
 .location-data-image {
-	height: 35%;
+	height: 100px;
 	width: 100%;
 }
 
 .map-hud-card {
 	width: 100%;
 	max-width: 370px;
-	min-width: 200px;
-	min-height: 250px;
+	min-width: 250px;
+	/* min-height: 250px; */
 	display: flex;
 	flex-direction: column;
-	align-content: center;
-	align-items: center;
 	background-color: rgba(255, 255, 255, 1);
 	box-shadow: 0px 0px 12px 6px rgba(15, 15, 15, 0.2);
 	border-radius: 6px;
-	height: 35%;
 	padding: 0px;
 	padding-bottom: 5px;
-	position: absolute;
-	margin-top: 0px;
+	margin-top: 5px;
 }
 
 /* DIRECTIONS CARD */
@@ -237,6 +264,7 @@
 	cursor: pointer;
 	transition: all 0.5s ease-in-out;
 	left: 10px;
+	top: 14px;
 }
 .dirs-burger:hover > .search-bar-button__burger {
 	background: rgb(47, 160, 212);
@@ -248,18 +276,8 @@
 	background: rgb(47, 160, 212);
 }
 
-.dirs-title {
-	font-family: "Ubuntu", sans-serif;
-	display: flex;
-	flex-direction: row;
-	width: 80%;
-	box-sizing: border-box;
-	justify-content: space-around;
-	margin: 15px 15px 0;
-	font-size: 18px;
-	height: 45px;
-	font-weight: 400;
-	color: rgba(15, 15, 15, 0.7);
+.directions-card {
+	align-items: center;
 }
 
 .dirs-label {
@@ -268,19 +286,33 @@
 }
 
 .dirs-fromto {
-	position: relative;
-	display: grid;
-	grid-row-gap: 10px;
+	display: relative;
+	width: 60%;
+	grid-row-gap: 0px;
 	grid-column-gap: 15px;
 	grid-template-rows: auto auto;
 	align-items: center;
-	margin: 0 15px 15px;
+	margin: 0 10px 10px;
+	margin-top: 10px;
+}
+
+.from-bar {
+}
+.to-bar {
+	margin-top: 0px;
+	border-top: 1px solid;
+	border-top-color: rgb(30, 30, 30, 0.3);
 }
 
 .dirs-input-bar {
-	border-radius: 4px;
+	border-radius: 0px;
 	border: 0;
-	background-color: rgba(96, 112, 155, 0.2);
+	/* background-color: rgba(96, 112, 155, 0.2); */
+	background-color: #fff;
+	height: 40px;
+}
+.dirs-input-bar:focus {
+	outline: none;
 }
 
 .directions-buttons {
@@ -300,6 +332,14 @@
 	background: url(../../resources/map/waymessage_icon.svg) no-repeat;
 }
 
+.dirs-search-results {
+	display: flex;
+	flex-direction: column;
+}
+
+.dirs-title {
+	
+}
 
 .hud-card-button {
 	margin: 5px;
