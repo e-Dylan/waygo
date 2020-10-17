@@ -122,7 +122,8 @@ class MapComponent extends React.Component {
 		showDirectionsCard: false,
 
 		showLocationSearchResults: false,
-		showDirsSearchResults: false,
+		showDirsFromSearchResults: false,
+		showDirsToSearchResults: false,
 
 		showHomeDock: true,
 		showContextMenu: false,
@@ -315,9 +316,8 @@ class MapComponent extends React.Component {
 
 		this.hideContextMenu();
 
-		if (this.state.showLocationSearchResults) {
-			this.hideLocationSearchResults({reset: false});
-		}
+		this.hideLocationSearchResults({reset: false});
+		this.hideDirsSearchResults({reset: false});
 	}
 
 	dblClickMap = (event) => {
@@ -547,6 +547,7 @@ class MapComponent extends React.Component {
 
 	hideDirections = () => {
 		this.setState({ showDirections: false });
+		this.hideDirsSearchResults({reset: false});
 	}
 
 	showDirectionsCard = () => {
@@ -606,15 +607,26 @@ class MapComponent extends React.Component {
 		this.setState({ showLocationSearchResults: true });
 	}
 
-	hideDirsSearchResults = ({ reset }) => {
-		this.setState({ showDirsSearchResults: false });
-		if (reset) {
-			this.setState({ searchResultItems: [] });
+	showDirsSearchResults = (args) => {
+		if (args.dir === "from") {
+			this.setState({ 
+				showDirsFromSearchResults: true,
+				showDirsToSearchResults: false 
+			});
+		} else if (args.dir === "to") {
+			this.setState({ 
+				showDirsFromSearchResults: false,
+				showDirsToSearchResults: true,
+			 });
 		}
 	}
 
-	showDirsSearchResults = () => {
-		this.setState({ showDirsSearchResults: true });
+	hideDirsSearchResults = ({ reset }) => {
+		this.setState({ showDirsFromSearchResults: false });
+		this.setState({ showDirsToSearchResults: false });
+		if (reset) {
+			this.setState({ searchResultItems: [] });
+		}
 	}
 
 	removeDestMarker() {
@@ -662,9 +674,9 @@ class MapComponent extends React.Component {
 				});
 				// console.log(this.state.searchResultItems);
 			});
-	}
+		}
 
-	getDirections(profile, coords) {
+		getDirections(profile, coords) {
 		
 	}
 
@@ -908,6 +920,9 @@ class MapComponent extends React.Component {
 									<input 
 										className="dirs-input-bar"
 										placeholder="from"
+										onFocus={(e) => {
+											this.showDirsSearchResults({dir: "from"});
+										}}
 										onChange={(e) => {
 											if (e.target.value.length > 2) {
 												// make request for locations only if 3+ chars
@@ -920,9 +935,9 @@ class MapComponent extends React.Component {
 
 												if (e.target.value.length < 1) {
 													// If clearing search bar, hide and empty search results.
-													this.hideDirsSearchResults({ reset: true });
+													this.hideDirsSearchResults({dir: "from", reset: true });
 												} else {
-													this.showDirsSearchResults();
+													this.showDirsSearchResults({dir: "from"});
 												}
 											}
 										}}
@@ -936,6 +951,27 @@ class MapComponent extends React.Component {
 									<input 
 										className="dirs-input-bar"
 										placeholder="to"
+										onFocus={(e) => {
+											this.showDirsSearchResults({dir: "to"});
+										}}
+										onChange={(e) => {
+											if (e.target.value.length > 2) {
+												// make request for locations only if 3+ chars
+												this.forwardGeocode({
+													endpoint: "mapbox.places", 
+													query: e.target.value, 
+													autocomplete: true, 
+													displayActiveMarker: false
+												});
+
+												if (e.target.value.length < 1) {
+													// If clearing search bar, hide and empty search results.
+													this.hideDirsSearchResults({dir: "to", reset: true });
+												} else {
+													this.showDirsSearchResults({dir: "to"});
+												}
+											}
+										}}
 									>
 									{/* <img src={directionsCarIcon}></img> */}
 										
@@ -943,26 +979,49 @@ class MapComponent extends React.Component {
 								</div>
 							</div>
 
-							{ this.state.showDirsSearchResults && this.state.searchResultItems.length > 0 &&
+							{ this.state.showDirsFromSearchResults && this.state.searchResultItems.length > 0 &&
 											
-								<Card className="search-results-bg-card">
+								<Card className="search-results-bg-card dirs-from-search-results">
 									{ this.state.searchResultItems.map(item =>
 
-										<span 
+										<div 
 										className="search-result-div"
 										onClick={ () => {
-											this.hideDirsSearchResults({ reset: false });
+											this.hideDirsSearchResults({dir: "to", reset: false });
 											// set camera at location on origin marker placement, not item click
-											// dont set cam at destination, calculate route if possible.
+											
 										}}
 										key={Math.random()}
 										title={item.place_name}
 										>
-											
-										</span>
+										{item.place_name}
+										</div>
 
 									) }
 								</Card>
+							}
+
+							{ this.state.showDirsToSearchResults && this.state.searchResultItems.length > 0 &&
+
+								<Card className="search-results-bg-card dirs-to-search-results">
+									{ this.state.searchResultItems.map(item =>
+
+										<div 
+										className="search-result-div"
+										onClick={ () => {
+											this.hideDirsSearchResults({ reset: false });
+											// set camera at location on origin marker placement, not item click
+											
+										}}
+										key={Math.random()}
+										title={item.place_name}
+										>
+										
+										</div>
+
+									) }
+								</Card>
+								
 							}
 						</Card>
 					}
@@ -1003,6 +1062,8 @@ class MapComponent extends React.Component {
 									</div>
 									<span className="search-result-title" title={item.place_name}>
 										<span className="bold">{item.place_name}</span>
+										{/* SCRAPE DATA PROPERLY FROM RETRIEVED PLACE AND
+										DISPLAY IN PROPER FONTS IN SEARCH RESULTS */}
 										{item.place_name}
 									</span>
 									<span className="item-description">
