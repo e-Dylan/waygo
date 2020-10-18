@@ -175,9 +175,9 @@
 	flex-direction: row;
 	align-items: center;
 	height: 20%;
-	line-height: 3.9rem;
+	line-height: 2.3rem;
 	overflow: hidden;
-	padding: 0;
+	padding: 0px;
 	white-space: nowrap;
 	width: 100%;
 	/* border-top: 1px groove; */
@@ -185,14 +185,36 @@
 	justify-content: flex-start;
 	cursor: pointer;
 	transition: 0.1s all ease-in-out;
+	font-family: "Ubuntu Condensed", sans-serif;
 }
 .search-result-div span {
-	margin-left: 12px;
+	margin-left: 4px;
 	margin-bottom: 0px;
-	font-size: 14px;
+	padding-bottom: 0px;
 }	
 .search-result-div:hover {
 	background-color: rgba(180, 229, 252, 0.5);
+}
+
+/* Search Result Div Text Styles */
+.search-result-place {
+	font-size: 16px;
+	font-weight: normal;
+	color: rgba(38, 48, 65, 0.986);
+}
+.search-result-address {
+	color: rgba(44, 51, 65, 0.726);
+	font-size: 14px;
+}
+.item-city {
+	font-size: 14px;
+	color: rgba(44, 51, 65, 0.726);
+	font-weight: normal;
+}
+.region-country {
+	font-size: 14px;
+	color: rgba(44, 51, 65, 0.726);
+	font-weight: normal;
 }
 
 .search-result-icon {
@@ -224,10 +246,15 @@
 	align-self: flex-start;
 }
 
-.location-title {
+.location-place {
 	font-size: 17px;
 	font-family: "Ubuntu", sans-serif;
 	color: rgba(15, 15, 15, 0.8);
+}
+.location-address {
+	font-size: 15px;
+	font-family: "Ubuntu", sans-serif;
+	color: rgba(15, 15, 15, 0.5);
 }
 .location-subtitle {
 	font-size: 13px;

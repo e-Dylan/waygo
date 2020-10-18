@@ -140,51 +140,93 @@ class MapComponent extends React.Component {
 		},
 	}
 
+	compileLocationData(data) {
+		// data coming in will be an array of location items
+		// takes an array of items and scrapes it for an array of object items
+
+		// console.log(data);
+
+		var items = [];
+
+		for (var i = 0; i < data.length; i++) {
+			var place_type;
+			var postal_code;
+			var address;
+			var city;
+			var place;
+			var region;
+			var country;
+			var place_properties;
+			var lat;
+			var lng;
+
+			place = data[i].text;
+			lat = data[i].center[1];
+			lng = data[i].center[0];
+
+			if (data[i].properties != null)
+				place_properties = data[i].properties;
+			if (data[i].properties.address != null)
+				address = data[i].properties.address
+
+			if (data[i].context != null) {
+				for (var j = 0; j < data[i].context.length; j++) {
+					if (data[i].context[j].id.includes("region"))
+						region = data[i].context[j].short_code;
+					else if (data[i].context[j].id.includes("country")) 
+						country = data[i].context[j].text;
+					else if (data[i].context[j].id.includes("postcode"))
+						postal_code = data[i].context[j].text;
+					else if (data[i].context[j].id.includes("place"))
+						city = data[i].context[j].text;
+				}
+			}
+
+			var item = {
+				place_type: place_type,
+				postal_code: postal_code,
+				address: address,
+				city: city,
+				place: place,
+				region: region,
+				country: country,
+				place_properties: place_properties,
+				lat: lat,
+				lng: lng,
+			};
+
+			items.push(item);
+		}
+
+		return items;
+
+	}
+
 	compileActiveLocationData(data) {
-		var place_type;
-		var postal_code;
-		var address;
-		var city;
-		var region;
-		var country;
-		
-		// data coming in will be an individual location item.
-		// possible place_types: ["poi"], ["place"] (city), ["country"]
+		// data coming in will be an api location item.
+		// display: Place (Address) City, Province, Country
+	
+		// check if data is an array, if so, scrape it
+		console.log(data);
+		if (data.length != null)
+			data = this.compileLocationData(data)[0];
 
-		// if (data.place_type[0] == "place") {
-		// 	place_type = "place";
-		// 	for (var i = 0; i < data.context.length; i++) {
-		// 		if (data.context[i].id.includes("country"))
-		// 			country = data.context[i].text;
-		// 		if (data.context[i].id.includes("region"))
-		// 			region = data.context[i].text;
-		// 		if (data.context[i].id.includes("postcode"))
-		// 			postal_code = data.context[i].text;
-		// 		if (data.context[i].id.includes("address"))
-		// 			address = data.context[i].text;
-		// 		if (data.id.includes("place"))
-		// 			city = data.text;
-		// 	}
-		// } else if (data.place_type[0] == "country") {
-		// 	place_type = "country";
+		// if data sent is a pre-scraped json object, just set it.
 
-		// } else if (data.place_type[0] == "poi") {
-		// 	place_type = "poi";
-		// }
-
-		var activeLocationData = {
-			place_type: place_type,
-			postal_code: postal_code,
-			address: address,
-			city: city,
-			region: region,
-			country: country
-		};
 		this.setState({
-			activeLocationData: activeLocationData
+			activeLocationData: data,
 		});
-		console.log(activeLocationData);
 		
+	}
+
+	compileSearchResults(data) {
+		// console.log(data);
+
+		var searchResults = this.compileLocationData(data);
+
+		this.setState({
+			searchResultItems: searchResults,
+		});
 	}
 	
 	moveHomeDock = () => {
@@ -557,13 +599,11 @@ class MapComponent extends React.Component {
 	}
 
 	showLocationCard = () => {
-		if (!this.state.showLocationCard) {
-			this.setState({
-				showLocationCard: true,
-			});
+		this.setState({
+			showLocationCard: true,
+		});
 
-			this.hideLocationSearchResults({reset: false});
-		}
+		this.hideLocationSearchResults({reset: false});
 	}
 
 	hideLocationaCard() {
@@ -648,7 +688,7 @@ class MapComponent extends React.Component {
 		access_token=${MAPBOX_TOKEN}`)
 			.then(res => res.json())
 			.then(data => {
-				this.compileActiveLocationData(data);
+				this.compileActiveLocationData(data.features);
 				this.showLocationCard(this.state.activeLocationData);
 			});
 	}
@@ -669,10 +709,7 @@ class MapComponent extends React.Component {
 					tempsearchResultItems[i] = data.features[i];
 				}
 				
-				this.setState({
-					searchResultItems: tempsearchResultItems,
-				});
-				// console.log(this.state.searchResultItems);
+				this.compileSearchResults(tempsearchResultItems);
 			});
 		}
 
@@ -801,6 +838,10 @@ class MapComponent extends React.Component {
 			essential: true,
 			speed: 1,
 			maxDuration: 1,
+		});
+
+		this.map.zoomTo(zoom, {
+			duration: 1500
 		});
 
 		if (displayActiveMarker) {
@@ -1029,51 +1070,61 @@ class MapComponent extends React.Component {
 					{ this.state.showLocationSearchResults && this.state.showLocation &&
 
 						<Card body className="search-results-bg-card">
-							{ this.state.searchResultItems.map(item => 
-								<div 
-								className="search-result-div"
-								onClick={ () => {						
-									// stop showing search results when location is clicked.
-									this.hideLocationSearchResults({reset: false});
-									// call flyTo method to move to this position.
-									if (item != null) {
-										// console.log(item);
-										const lng = item.center[0];
-										const lat = item.center[1];
-										this._flyTo({ lng: lng, lat: lat, zoom: 12, displayActiveMarker: true });
-										// ITEM IS FEATURES[i]
-										// scrape location data
-										this.compileActiveLocationData(item);
-										this.showLocationCard(this.state.activeLocationData);
-									}
-									
-									// MAKE FUNCTION: DISPLAY LOCATION CARD
-									// used for reverse geocoding AND flyTo search clicks
-									// displays location in a card with image and data using lngLat
-									// can call in both clicking on map, and from here with its lngLat
-									// also displays location marker, instead of _flyTo().
-								}} 
-								key={Math.random()}
-								title={item.place_name}
-								>
 
-									<div>
-										<img src={ citySearchIcon } className="search-result-icon"></img>
+							{ this.state.searchResultItems.map(searchResult =>
+								// scrape api data and fill the state search results array
+								// display state search results in jsx
+									<div 
+									className="search-result-div"
+									onClick={ () => {						
+										// stop showing search results when location is clicked.
+										this.hideLocationSearchResults({reset: false});
+										// call flyTo method to move to this position.
+										if (searchResult != null) {
+											const lng = searchResult.lng;
+											const lat = searchResult.lat;
+											this._flyTo({ lng: lng, lat: lat, zoom: 12, displayActiveMarker: true });
+											// scrape location data
+											this.compileActiveLocationData(searchResult);
+											this.showLocationCard(this.state.activeLocationData);
+										}
+										
+										// MAKE FUNCTION: DISPLAY LOCATION CARD
+										// used for reverse geocoding AND flyTo search clicks
+										// displays location in a card with image and data using lngLat
+										// can call in both clicking on map, and from here with its lngLat
+										// also displays location marker, instead of _flyTo().
+									}} 
+									key={Math.random()}
+									title={searchResult.place}
+									>
+										<div>
+											<img src={ citySearchIcon } className="search-result-icon"></img>
+										</div>
+										{ searchResult.place &&
+											<span className="search-result-place" title={searchResult.place}>
+												{searchResult.place}
+											</span>
+										}
+										{ searchResult.address &&
+											<span className="search-result-address">
+												{searchResult.address}
+											</span>
+										}
+										{ searchResult.city &&
+											<span className="item-city">
+												{searchResult.city}
+											</span>
+										}
+										{ searchResult.country &&
+											<span className="region-country"> 
+													{searchResult.region}, {searchResult.country}
+											</span>
+										}
+
 									</div>
-									<span className="search-result-title" title={item.place_name}>
-										<span className="bold">{item.place_name}</span>
-										{/* SCRAPE DATA PROPERLY FROM RETRIEVED PLACE AND
-										DISPLAY IN PROPER FONTS IN SEARCH RESULTS */}
-										{item.place_name}
-									</span>
-									<span className="item-description">
-										{item.place_name}
-										<span className="mark bold">Toronto</span>
-										HBD 24R
-									</span>
-
-								</div>
-							)}
+								)
+							}
 						</Card>
 
 					}
@@ -1083,21 +1134,13 @@ class MapComponent extends React.Component {
 
 							{/* <img src={torontoImage} className="location-data-image"></img> */}
 							
-							<div className="location-title">
-								{this.state.activeLocationData.place_type === "place" ?
-								/* MAKE CARD DESIGN HERE USING SCRAPED DATA (Toronto, ON, CANADA) */
-									this.state.activeLocationData.city
-								: this.state.activeLocationData.place_type === "poi" ?
-									this.state.activeLocationData.address
-								: this.state.activeLocationData.place_type === "country" ?
-									this.state.activeLocationData.country
-								:
-									''
-								}
+							<div className="location-data-title">
+								
 							</div>
 							<div className="location-data">
-								<div className="location-title">Toronto</div>
-								<div className="location-subtitle">Ontario, CA</div>
+								<div className="location-place">{this.state.activeLocationData.place}</div>
+								<div className="location-address">{this.state.activeLocationData.address}</div>
+								<div className="location-subtitle">{this.state.activeLocationData.city} {this.state.activeLocationData.region}</div>
 								<button className="get-dirs-button">
 									directions
 								</button>
