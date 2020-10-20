@@ -14,7 +14,8 @@ import ReactMapGL, { GeolocateControl, Marker, Layer, FlyToInterpolator, MapCont
 import Joi from "joi";
 
 // backend api functions
-import * as api from '../api'; 
+import * as api from '../api';
+import * as mapApi from '../mapApi';
 
 import UserStore from '../stores/UserStore';
 
@@ -22,6 +23,9 @@ import UserStore from '../stores/UserStore';
 import MapHomeDock from './MapHomeDock';
 import WaymessageMenuComponent from './WaymessageMenuComponent';
 import MapContextMenu from './MapContextMenu';
+import MapSearchBar from './MapSearchBar';
+import MapLocationCard from './MapLocationCard';
+import DirectionsCard from './DirectionsCard';
 
 // Icons
 import activeMarkerIcon from '../resources/map/activeMarkerIcon.svg';
@@ -91,15 +95,19 @@ class MapComponent extends React.Component {
 		},
 
 		hasDest: false,
+		activeDest: {},
 		destMarkerPosition: {
-			lat: 0,
-			lng: 0
+			lat: -84.512023,
+			lng: 39.102779,
 		},
 		hasOrigin: false,
+		activeOrigin: {},
 		originMarkerPosition: {
-			lat: 0,
-			lng: 0
+			lat: -84.518641,
+			lng: 39.134270
 		},
+		
+		activeProfile: "driving",
 
 		lastClickedMap: {
 			lng: 0,
@@ -140,68 +148,6 @@ class MapComponent extends React.Component {
 		},
 	}
 
-	compileLocationData(data) {
-		// data coming in will be an array of location items
-		// takes an array of items and scrapes it for an array of object items
-
-		// console.log(data);
-
-		var items = [];
-
-		for (var i = 0; i < data.length; i++) {
-			var place_type;
-			var postal_code;
-			var address;
-			var city;
-			var place;
-			var region;
-			var country;
-			var place_properties;
-			var lat;
-			var lng;
-
-			place = data[i].text;
-			lat = data[i].center[1];
-			lng = data[i].center[0];
-
-			if (data[i].properties != null)
-				place_properties = data[i].properties;
-			if (data[i].properties.address != null)
-				address = data[i].properties.address
-
-			if (data[i].context != null) {
-				for (var j = 0; j < data[i].context.length; j++) {
-					if (data[i].context[j].id.includes("region"))
-						region = data[i].context[j].short_code;
-					else if (data[i].context[j].id.includes("country")) 
-						country = data[i].context[j].text;
-					else if (data[i].context[j].id.includes("postcode"))
-						postal_code = data[i].context[j].text;
-					else if (data[i].context[j].id.includes("place"))
-						city = data[i].context[j].text;
-				}
-			}
-
-			var item = {
-				place_type: place_type,
-				postal_code: postal_code,
-				address: address,
-				city: city,
-				place: place,
-				region: region,
-				country: country,
-				place_properties: place_properties,
-				lat: lat,
-				lng: lng,
-			};
-
-			items.push(item);
-		}
-
-		return items;
-
-	}
-
 	compileActiveLocationData(data) {
 		// data coming in will be an api location item.
 		// display: Place (Address) City, Province, Country
@@ -209,24 +155,24 @@ class MapComponent extends React.Component {
 		// check if data is an array, if so, scrape it
 		console.log(data);
 		if (data.length != null)
-			data = this.compileLocationData(data)[0];
+			data = mapApi.compileLocationData(data)[0];
 
 		// if data sent is a pre-scraped json object, just set it.
 
 		this.setState({
 			activeLocationData: data,
 		});
-		
 	}
 
 	compileSearchResults(data) {
 		// console.log(data);
+		if (data != null) {
+			var searchResults = mapApi.compileLocationData(data);
 
-		var searchResults = this.compileLocationData(data);
-
-		this.setState({
-			searchResultItems: searchResults,
-		});
+			this.setState({
+				searchResultItems: searchResults,
+			});
+		}
 	}
 	
 	moveHomeDock = () => {
@@ -254,10 +200,6 @@ class MapComponent extends React.Component {
 			// move close button
 			dockCloseButton.classList.add("map-home-dock-close-button-open");
 		}
-	}
-
-	initializeMapMarkers() {
-
 	}
 
 	initializeMap() {
@@ -411,6 +353,15 @@ class MapComponent extends React.Component {
 		this.showLocation();
 	}
 
+	removeActiveMarker() {
+		this.activeMarker.remove();
+		this.setState({ hasActiveMarker: false, activeMarkerPosition: {lat: 0, lng: 0} });
+	}
+
+	setActiveDest(locationData) {
+		this.setState({activeDest: locationData});
+	}
+
 	placeDestMarker(lng, lat) {
 
 		if (lng === 0 && lat === 0) {
@@ -446,6 +397,10 @@ class MapComponent extends React.Component {
 
 			this.destMarker.setLngLat([lng, lat]);
 		}
+	}
+
+	setActiveOrigin(locationData) {
+		this.setState({activeORigin: locationData});
 	}
 
 	placeOriginMarker(lng, lat) {
@@ -569,6 +524,8 @@ class MapComponent extends React.Component {
 		this.setState({ showContextMenu: !this.state.showContextMenu });
 	}
 
+	//#region Map Helpers
+
 	showLocation = () => {
 		this.setState({
 			showLocation: true,
@@ -596,6 +553,20 @@ class MapComponent extends React.Component {
 		this.setState({
 			showDirectionsCard: true
 		});
+	}
+
+	setFromValue = (query) => {
+		setTimeout(() => {
+			const fromBar = document.getElementById('from-dirs-bar');
+			fromBar.value = query;
+		}, 0)
+	}
+	
+	setToValue = (query) => {
+		setTimeout(() => {
+			const toBar = document.getElementById('to-dirs-bar');
+			toBar.value = query;
+		}, 0)
 	}
 
 	showLocationCard = () => {
@@ -679,6 +650,8 @@ class MapComponent extends React.Component {
 		this.setState({ showMapSearchBar: false });
 	}
 
+	//#endregion
+
 	reverseGeocode(event) {
 		// get the location/city data using lng/lat to display in a card or popup
 		const lng = event.lngLat.lng;
@@ -698,23 +671,32 @@ class MapComponent extends React.Component {
 			`https://api.mapbox.com/geocoding/v5/${endpoint}/${query}.json?
 			access_token=${MAPBOX_TOKEN}&autocomplete=${autocomplete}`
 		)
-			.then(res => res.json())
-			.then(data => { 
+		.then(res => res.json())
+		.then(data => { 
 
-				// fill search results array with this api call on every geocode api request.
-				const tempsearchResultItems = [];
-				// console.log(data);
+			// fill search results array with this api call on every geocode api request.
+			const tempsearchResultItems = [];
+			// console.log(data);
 
-				for (let i = 0; i < 5; i++) {
-					tempsearchResultItems[i] = data.features[i];
-				}
-				
-				this.compileSearchResults(tempsearchResultItems);
-			});
-		}
+			for (let i = 0; i < 5; i++) {
+				tempsearchResultItems[i] = data.features[i];
+			}
+			
+			this.compileSearchResults(tempsearchResultItems);
+		});
+	}
 
-		getDirections(profile, coords) {
-		
+	getDirections = (origin, destination, profile) => {
+		console.log(origin);
+		// https://api.mapbox.com/directions/v5/mapbox/cycling/-84.518641,39.134270;-84.512023,39.102779?
+		fetch(
+			`https://api.mapbox.com/directions/v5/mapbox/${profile}/
+			 ${origin.lng},${origin.lat};${destination.lng},${destination.lat}?access_token=${MAPBOX_TOKEN}`
+		)
+		.then(res => res.json())
+		.then(data => {
+			console.log(data);
+		});
 	}
 
     async componentDidMount() {
@@ -768,7 +750,6 @@ class MapComponent extends React.Component {
 					zoom: 13,
 				});
 				this.initializeMap();
-				this.initializeMapMarkers();
 			}, 0)
 		  });
 
@@ -886,267 +867,16 @@ class MapComponent extends React.Component {
 				<div className="map-hud-cards-col">
 
 					{ this.state.showMapSearchBar && this.state.showLocation &&
-						<Card body className="map-search-bar-card">
-							<div className="search-bar-button"
-								onClick={this.moveHomeDock}>
-								<div className="search-bar-button__burger"></div>
-							</div>
-							
-							<input 
-								className="map-search-bar-search input-search-bar"
-								placeholder="where to?"	
-								onFocus={(e) => {
-									this.showLocationSearchResults();
-								}}
-								onChange={(e) => {
-									// make api call to get best 5 results using search text,
-									// set search result text to response data.
-									
-									if (e.target.value.length > 2) {
-										// only send api request if query is >= 3 chars.
-										this.forwardGeocode({
-											endpoint: "mapbox.places", 
-											query: e.target.value, 
-											autocomplete: true, 
-											displayActiveMarker: false
-										});
-									}
-
-									if (e.target.value.length < 1) {
-										// If clearing search bar, hide and empty search results.
-										this.hideLocationSearchResults({reset: true});
-									} else {
-										this.showLocationSearchResults();
-									}
-									
-								}}
-								>
-							</input>
-							
-							{/* SHOW DIRECTIONS SEARCH-BAR BUTTON */}
-							<div 
-								className="show-dirs-searchbar-button"
-								onClick={() => {
-									this.hideLocation();
-									this.showDirections();
-								}}
-							>
-								<img src={directionsCarIcon}></img>
-							</div>
-						</Card>
+						// Search bar contains map searchbar and search results components.
+						<MapSearchBar mapComponent={this} />
 					}
 
 					{ this.state.showDirectionsCard && this.state.showDirections &&
-						<Card body className="map-hud-card directions-card">
-							<div className="dirs-title">
-								<div className="dirs-burger"
-									onClick={this.moveHomeDock}>
-									<div className="search-bar-button__burger"></div>
-								</div>
-
-								<div 
-									className="show-loc-searchbar-button"
-									onClick={() => {
-										this.hideDirections();
-										this.showLocation();
-									}}
-								>
-									<img src={directionsBuildingIcon}></img>
-								</div>
-
-							</div>
-							<div className="dirs-fromto">
-								<div className="from-bar">
-									<a className="dirs-label"></a>
-									<input 
-										className="dirs-input-bar"
-										placeholder="from"
-										onFocus={(e) => {
-											this.showDirsSearchResults({dir: "from"});
-										}}
-										onChange={(e) => {
-											if (e.target.value.length > 2) {
-												// make request for locations only if 3+ chars
-												this.forwardGeocode({
-													endpoint: "mapbox.places", 
-													query: e.target.value, 
-													autocomplete: true, 
-													displayActiveMarker: false
-												});
-
-												if (e.target.value.length < 1) {
-													// If clearing search bar, hide and empty search results.
-													this.hideDirsSearchResults({dir: "from", reset: true });
-												} else {
-													this.showDirsSearchResults({dir: "from"});
-												}
-											}
-										}}
-									>
-
-									</input>
-									{/* <img src={directionsCarIcon}></img> */}
-								</div>
-								<div className="to-bar">
-									<a className="dirs-label"></a>
-									<input 
-										className="dirs-input-bar"
-										placeholder="to"
-										onFocus={(e) => {
-											this.showDirsSearchResults({dir: "to"});
-										}}
-										onChange={(e) => {
-											if (e.target.value.length > 2) {
-												// make request for locations only if 3+ chars
-												this.forwardGeocode({
-													endpoint: "mapbox.places", 
-													query: e.target.value, 
-													autocomplete: true, 
-													displayActiveMarker: false
-												});
-
-												if (e.target.value.length < 1) {
-													// If clearing search bar, hide and empty search results.
-													this.hideDirsSearchResults({dir: "to", reset: true });
-												} else {
-													this.showDirsSearchResults({dir: "to"});
-												}
-											}
-										}}
-									>
-									{/* <img src={directionsCarIcon}></img> */}
-										
-									</input>
-								</div>
-							</div>
-
-							{ this.state.showDirsFromSearchResults && this.state.searchResultItems.length > 0 &&
-											
-								<Card className="search-results-bg-card dirs-from-search-results">
-									{ this.state.searchResultItems.map(item =>
-
-										<div 
-										className="search-result-div"
-										onClick={ () => {
-											this.hideDirsSearchResults({dir: "to", reset: false });
-											// set camera at location on origin marker placement, not item click
-											
-										}}
-										key={Math.random()}
-										title={item.place_name}
-										>
-										{item.place_name}
-										</div>
-
-									) }
-								</Card>
-							}
-
-							{ this.state.showDirsToSearchResults && this.state.searchResultItems.length > 0 &&
-
-								<Card className="search-results-bg-card dirs-to-search-results">
-									{ this.state.searchResultItems.map(item =>
-
-										<div 
-										className="search-result-div"
-										onClick={ () => {
-											this.hideDirsSearchResults({ reset: false });
-											// set camera at location on origin marker placement, not item click
-											
-										}}
-										key={Math.random()}
-										title={item.place_name}
-										>
-										
-										</div>
-
-									) }
-								</Card>
-								
-							}
-						</Card>
-					}
-
-					{ this.state.showLocationSearchResults && this.state.showLocation &&
-
-						<Card body className="search-results-bg-card">
-
-							{ this.state.searchResultItems.map(searchResult =>
-								// scrape api data and fill the state search results array
-								// display state search results in jsx
-									<div 
-									className="search-result-div"
-									onClick={ () => {						
-										// stop showing search results when location is clicked.
-										this.hideLocationSearchResults({reset: false});
-										// call flyTo method to move to this position.
-										if (searchResult != null) {
-											const lng = searchResult.lng;
-											const lat = searchResult.lat;
-											this._flyTo({ lng: lng, lat: lat, zoom: 12, displayActiveMarker: true });
-											// scrape location data
-											this.compileActiveLocationData(searchResult);
-											this.showLocationCard(this.state.activeLocationData);
-										}
-										
-										// MAKE FUNCTION: DISPLAY LOCATION CARD
-										// used for reverse geocoding AND flyTo search clicks
-										// displays location in a card with image and data using lngLat
-										// can call in both clicking on map, and from here with its lngLat
-										// also displays location marker, instead of _flyTo().
-									}} 
-									key={Math.random()}
-									title={searchResult.place}
-									>
-										<div>
-											<img src={ citySearchIcon } className="search-result-icon"></img>
-										</div>
-										{ searchResult.place &&
-											<span className="search-result-place" title={searchResult.place}>
-												{searchResult.place}
-											</span>
-										}
-										{ searchResult.address &&
-											<span className="search-result-address">
-												{searchResult.address}
-											</span>
-										}
-										{ searchResult.city &&
-											<span className="item-city">
-												{searchResult.city}
-											</span>
-										}
-										{ searchResult.country &&
-											<span className="region-country"> 
-													{searchResult.region}, {searchResult.country}
-											</span>
-										}
-
-									</div>
-								)
-							}
-						</Card>
-
+						<DirectionsCard mapComponent={this} />
 					}
 
 					{ this.state.showLocationCard && this.state.activeLocationData != null && this.state.showLocation &&
-						<Card body className="map-hud-card location-card"> 
-
-							{/* <img src={torontoImage} className="location-data-image"></img> */}
-							
-							<div className="location-data-title">
-								
-							</div>
-							<div className="location-data">
-								<div className="location-place">{this.state.activeLocationData.place}</div>
-								<div className="location-address">{this.state.activeLocationData.address}</div>
-								<div className="location-subtitle">{this.state.activeLocationData.city} {this.state.activeLocationData.region}</div>
-								<button className="get-dirs-button">
-									directions
-								</button>
-							</div>
-							
-						</Card>
+						<MapLocationCard mapComponent={this} />
 					}
 					
 				</div>
