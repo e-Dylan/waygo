@@ -15,6 +15,40 @@ class MapLocationCard extends React.Component {
 
 	};
 
+	
+	setRouteProperties = () => {
+		const actLocation = this.mc.state.activeLocationData;
+
+		// No origin, no destination set. Only active marker shows location data.
+		if (!this.mc.state.hasOrigin && !this.mc.state.hasDest) {
+			this.mc.placeDestMarker(actLocation.lng, actLocation.lat);
+			this.mc.setActiveDest(actLocation);
+
+			// prompt to insert a 'from' location.
+			this.mc.setToValue(actLocation.full_place);
+			this.mc.highlightFromToBars(true);
+		}
+
+		// No origin set, has a destination.
+		// Can calculate a final route.
+		if (!this.mc.state.hasOrigin && this.mc.state.hasDest) {
+			// prompt to set their origin in directions card.
+			this.mc.setFromValue(actLocation.full_place);
+			this.mc.highlightFromToBars(false);
+		}
+
+		// Origin set, set the destination and find the route.
+		if (this.mc.state.hasOrigin && !this.mc.state.hasDest) {
+			this.mc.setToValue(actLocation.full_place);
+			this.mc.highlightFromToBars(false);
+		}
+
+		if (this.mc.state.hasActiveMarker)
+			this.mc.removeActiveMarker();
+
+		this.mc.showDirections();
+	}
+
 	render() {
 		return(
 			<div>
@@ -31,24 +65,16 @@ class MapLocationCard extends React.Component {
 					<div className="location-subtitle">{this.mc.state.activeLocationData.city} {this.mc.state.activeLocationData.region}</div>
 					<button className="get-dirs-button" onClick={ () => {
 						if (this.mc.state.activeLocationData != null) {
-							var actLocation = this.mc.state.activeLocationData
-
-							this.mc.placeDestMarker(actLocation.lng, actLocation.lat);
-							this.mc.setActiveDest(actLocation);
-							if (this.mc.state.hasActiveMarker)
-								this.mc.removeActiveMarker();
 						
 							// state doesn't get updated before other calls are made,
 							// setTimeout(0) acts to delay until state can be updated with
 							// new destination information that was just set.
-							setTimeout(() => {
-								if (!this.mc.state.hasOrigin && this.mc.state.hasDest) {
-									// user doesn't have an origin, has already set their destination through search.
-									// prompt to set their origin in directions card.
-									this.mc.showDirections();
-									this.mc.setToValue(actLocation.full_place);
-								}
-							}, 0);
+							this.setRouteProperties();
+							
+							// Calculate the route.
+							if (this.mc.state.hasOrigin && this.mc.state.hasDest) {
+								
+							}
 							
 							// this.mc.getDirections({lat: this.mc.state.originMarkerPosition})
 						}

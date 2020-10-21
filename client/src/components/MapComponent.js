@@ -153,7 +153,7 @@ class MapComponent extends React.Component {
 		// display: Place (Address) City, Province, Country
 	
 		// check if data is an array, if so, scrape it
-		console.log(data);
+		// console.log(data);
 		if (data.length != null)
 			data = mapApi.compileLocationData(data)[0];
 
@@ -209,6 +209,8 @@ class MapComponent extends React.Component {
 			center: this.state.userPosition,
 			zoom: 12
 		});
+
+		const canvas = this.map.getCanvasContainer();
 
 		this.map.on('click', (event) => {
 			this.clickMap(event);
@@ -336,7 +338,7 @@ class MapComponent extends React.Component {
 			activeMarkerSvg.setAttribute('src', activeMarkerIcon);
 			
 			this.activeMarker = new mapboxgl.Marker(activeMarkerSvg)
-			.setLngLat([this.state.activeMarkerPosition.lng, this.state.activeMarkerPosition.lat])
+			.setLngLat([lng, lat])
 			.addTo(this.map);	
 		} else {
 			// user has dest marker, just move it.
@@ -347,7 +349,7 @@ class MapComponent extends React.Component {
 				},
 			});
 
-			this.activeMarker.setLngLat([this.state.activeMarkerPosition.lng, this.state.activeMarkerPosition.lat]);
+			this.activeMarker.setLngLat([lng, lat]);
 		}
 
 		this.showLocation();
@@ -359,7 +361,10 @@ class MapComponent extends React.Component {
 	}
 
 	setActiveDest(locationData) {
-		this.setState({activeDest: locationData});
+		this.setState({activeDest: locationData}, () => {
+			console.log(this.state.activeDest);
+			this.checkCalculateRoute();
+		});
 	}
 
 	placeDestMarker(lng, lat) {
@@ -397,13 +402,24 @@ class MapComponent extends React.Component {
 
 			this.destMarker.setLngLat([lng, lat]);
 		}
+
+		// Set state's active destination position data.
+		this.reverseGeocodeCoords(lng, lat, "dest")
+			// .then(loc => this.setActiveDest(loc));
+		// this.setActiveDest(this.reverseGeocodeCoords(lng, lat, "dest"));
 	}
 
 	setActiveOrigin(locationData) {
-		this.setState({activeORigin: locationData});
+		this.setState({activeOrigin: locationData}, () => {
+			console.log(this.state.activeOrigin);
+			this.checkCalculateRoute();
+		});
 	}
 
 	placeOriginMarker(lng, lat) {
+
+		// TAKE IN ORIGIN LOCATION DATA TO SET STATE ACTIVEORIGIN POSITION INSTEAD OF JUST LNGLAT
+		// set active origin position in directions card ALSO DO FOR DESTINATION<
 
 		// if clicking context menu (or non-map area), set waypoint
 		// at previously clicked position on the map.
@@ -441,7 +457,8 @@ class MapComponent extends React.Component {
 			this.originMarker.setLngLat([lng, lat]);
 		}
 		
-		this.showDirectionsCard();
+		// Set state's active origin position data.
+		this.reverseGeocodeCoords(lng, lat, "origin");
 	}
 
 	toggleWaymessageMenu = () => {
@@ -542,6 +559,7 @@ class MapComponent extends React.Component {
 			showDirections: true,
 			showDirectionsCard: true
 		});
+		// this.hideMapSearchBar();
 	}
 
 	hideDirections = () => {
@@ -607,6 +625,17 @@ class MapComponent extends React.Component {
 		this.setState({ showLocationSearchResults: !this.state.showLocationSearchResults });
 	}
 
+	highlightFromToBars = (toggle) => {
+		const borderLine = document.querySelector(".to-bar");
+
+		if (borderLine) {
+			if (toggle)
+			borderLine.style.borderTopColor = "rgba(47, 160, 212, 0.8)";
+		else
+			borderLine.style.borderTopColor = "rgba(30, 30, 30, 0.3)";
+		}
+	}
+
 	hideLocationSearchResults = ({ reset }) => {
 		this.setState({ showLocationSearchResults: false });
 		if (reset) {
@@ -652,6 +681,31 @@ class MapComponent extends React.Component {
 
 	//#endregion
 
+	// Fetches location data for lng,lat, compiles into scraped data to be stored in state.
+	async reverseGeocodeCoords(lng, lat, loc) {
+		let res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?
+		access_token=${MAPBOX_TOKEN}`)
+			.then(res => res.json())
+			.then(data => {
+				var location = [data.features[0]]
+				var locData = mapApi.compileLocationData(location)[0];
+				
+				if (loc === "origin") {
+					this.setActiveOrigin(locData)
+					this.setFromValue(locData.full_place);
+					this.showDirections();
+					this.hideLocation();
+					this.showDirectionsCard();
+				} else if (loc === "dest") {
+					this.setActiveDest(locData);
+					this.setToValue(locData.full_place);
+					this.showDirections();
+					this.hideLocation();
+					this.showDirectionsCard();
+				}
+			});
+	}
+
 	reverseGeocode(event) {
 		// get the location/city data using lng/lat to display in a card or popup
 		const lng = event.lngLat.lng;
@@ -686,17 +740,76 @@ class MapComponent extends React.Component {
 		});
 	}
 
-	getDirections = (origin, destination, profile) => {
-		console.log(origin);
+	checkCalculateRoute = () => {
+		if (this.state.activeOrigin.lat != null && this.state.activeDest.lat != null) {
+			this.calculateRoute(
+				{
+					lat: this.state.activeOrigin.lat, lng: this.state.activeOrigin.lng, 
+				},
+				{
+					lat: this.state.activeDest.lat, lng: this.state.activeDest.lng
+				},
+				this.state.activeProfile || "driving");
+		}
+	}
+
+	calculateRoute = (origin, destination, profile) => {
+
+		if (origin === null || destination === null)
+			return;
+
+		if (profile === null)
+			profile = this.state.activeProfile;
+
 		// https://api.mapbox.com/directions/v5/mapbox/cycling/-84.518641,39.134270;-84.512023,39.102779?
 		fetch(
 			`https://api.mapbox.com/directions/v5/mapbox/${profile}/
-			 ${origin.lng},${origin.lat};${destination.lng},${destination.lat}?access_token=${MAPBOX_TOKEN}`
+			 ${origin.lng},${origin.lat};${destination.lng},${destination.lat}?geometries=geojson&access_token=${MAPBOX_TOKEN}`
 		)
 		.then(res => res.json())
 		.then(data => {
 			console.log(data);
-		});
+
+			var route = data.routes[0].geometry.coordinates;
+			var geojson = {
+				type: 'Feature',
+				properties: {},
+				geometry: {
+					type: 'LineString',
+					coordinates: route
+				}
+			};
+			// if the route already exists on the map, reset it using setData
+			if (this.map.getSource('route')) {
+				this.map.getSource('route').setData(geojson);
+			  } else { // otherwise, make a new request
+				this.map.addLayer({
+				  id: 'route',
+				  type: 'line',
+				  source: {
+					type: 'geojson',
+					data: {
+					  type: 'Feature',
+					  properties: {},
+					  geometry: {
+						type: 'LineString',
+						coordinates: geojson
+					  }
+					}
+				  },
+				  layout: {
+					'line-join': 'round',
+					'line-cap': 'round'
+				  },
+				  paint: {
+					'line-color': '#3887be',
+					'line-width': 5,
+					'line-opacity': 0.75
+				  }
+				});
+			  }
+			  // add turn instructions here at the end
+			});
 	}
 
     async componentDidMount() {
@@ -826,7 +939,7 @@ class MapComponent extends React.Component {
 		});
 
 		if (displayActiveMarker) {
-			this.placeDestMarker(lng, lat);
+			this.placeActiveMarker(lng, lat);
 		}
 	}
 

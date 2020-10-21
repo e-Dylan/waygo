@@ -242,7 +242,7 @@
 	border: none;
 	border-radius: 2px;
 	margin-top: 8px;
-	width: auto%;
+	width: auto;
 	align-self: flex-start;
 }
 
@@ -309,16 +309,18 @@
 
 .directions-card {
 	align-items: center;
-	height: 7rem;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	/* height: 6.5rem; */
+	height: 100%;
 }
 
 .dirs-label {
 	font-family: "Ubuntu", sans-serif;
-	margin: 10px;
 }
 
 .dirs-fromto {
-	display: relative;
 	width: 60%;
 	grid-row-gap: 0px;
 	grid-column-gap: 15px;
@@ -326,25 +328,29 @@
 	align-items: center;
 	margin: 0 10px 10px;
 	margin-top: 10px;
-}
-
-.from-bar {
-}
-.to-bar {
-	margin-top: 0px;
-	border-top: 1px solid;
-	border-top-color: rgb(30, 30, 30, 0.3);
+	height: 85%;
 }
 
 .dirs-input-bar {
 	border-radius: 0px;
 	border: 0;
+	width: 100%;
 	/* background-color: rgba(96, 112, 155, 0.2); */
 	background-color: #fff;
-	height: 40px;
+	height: 2.25rem;
 }
 .dirs-input-bar:focus {
 	outline: none;
+}
+
+.from-bar {
+	margin-top: 0px;
+}
+.to-bar {
+	margin-top: 0px;
+	border-top: 1px solid;
+	border-top-color: rgba(30, 30, 30, 0.3);
+	transition: 0.25s all ease-in-out;
 }
 
 .directions-buttons {
@@ -376,7 +382,6 @@
 }
 
 .dirs-title {
-	
 }
 
 .hud-card-button {

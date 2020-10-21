@@ -46,6 +46,10 @@ class DirectionsCard extends React.Component {
 							placeholder="from"
 							onFocus={(e) => {
 								this.props.mapComponent.showDirsSearchResults({dir: "from"});
+								this.props.mapComponent.highlightFromToBars(true);
+							}}
+							onBlur={(e) => {
+								this.props.mapComponent.highlightFromToBars(false);
 							}}
 							onChange={(e) => {
 								if (e.target.value.length > 2) {
@@ -78,6 +82,10 @@ class DirectionsCard extends React.Component {
 							placeholder="to"
 							onFocus={(e) => {
 								this.props.mapComponent.showDirsSearchResults({dir: "to"});
+								this.props.mapComponent.highlightFromToBars(true);
+							}}
+							onBlur={(e) => {
+								this.props.mapComponent.highlightFromToBars(false);
 							}}
 							onChange={(e) => {
 								if (e.target.value.length > 2) {
