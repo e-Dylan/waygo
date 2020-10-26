@@ -21,11 +21,6 @@ body, html, #root, .app, .container {
 	--white_main: #ffffff;
 	--gray_main: #383838ec;
 	--blue_main: #7083f1;
-	--home_dock_bg: #34343b;
-}
-
-.hidden {
-	display: none;
 }
 
 .bold {
