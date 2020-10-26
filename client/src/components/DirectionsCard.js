@@ -2,6 +2,8 @@ import React from "react";
 
 import { Card } from 'reactstrap';
 
+import directionsCarIcon from "../resources/maki-icons/car-15.svg";
+import citySearchIcon from "../resources/maki-icons/building-alt1-15.svg";
 import directionsBuildingIcon from "../resources/maki-icons/building-alt1-15.svg";
 
 import '../App.css'
@@ -14,7 +16,6 @@ class DirectionsCard extends React.Component {
 	}
 
 	state = {
-
 	}
 
 	render() {
@@ -115,7 +116,7 @@ class DirectionsCard extends React.Component {
 				{ this.props.mapComponent.state.showDirsFromSearchResults && this.props.mapComponent.state.searchResultItems.length > 0 &&
 								
 					<Card className="search-results-bg-card dirs-from-search-results">
-						{ this.props.mapComponent.state.searchResultItems.map(item =>
+						{ this.props.mapComponent.state.searchResultItems.map(searchResult =>
 
 							<div 
 							className="search-result-div"
@@ -123,11 +124,39 @@ class DirectionsCard extends React.Component {
 								this.props.mapComponent.hideDirsSearchResults({dir: "to", reset: false });
 								// set camera at location on origin marker placement, not item click
 								
+								if (searchResult != null) {
+									const lng = searchResult.lng;
+									const lat = searchResult.lat;
+									this.props.mapComponent._flyTo({ lng: lng, lat: lat, zoom: 12, displayActiveMarker: false });
+									this.props.mapComponent.placeOriginMarker(searchResult.lng, searchResult.lat);
+								}
 							}}
 							key={Math.random()}
-							title={item.place_name}
+							title={searchResult.place_name}
 							>
-							{item.place_name}
+								<div>
+									<img src={ citySearchIcon } className="search-result-icon"></img>
+								</div>
+								{ searchResult.place &&
+									<span className="search-result-place" title={searchResult.place}>
+										{searchResult.place}
+									</span>
+								}
+								{ searchResult.address &&
+									<span className="search-result-address">
+										{searchResult.address}
+									</span>
+								}
+								{ searchResult.city &&
+									<span className="item-city">
+										{searchResult.city}
+									</span>
+								}
+								{ searchResult.country &&
+									<span className="region-country"> 
+											{searchResult.region}, {searchResult.country}
+									</span>
+								}
 							</div>
 
 						) }
@@ -137,7 +166,7 @@ class DirectionsCard extends React.Component {
 				{ this.props.mapComponent.state.showDirsToSearchResults && this.props.mapComponent.state.searchResultItems.length > 0 &&
 
 					<Card className="search-results-bg-card dirs-to-search-results">
-						{ this.props.mapComponent.state.searchResultItems.map(item =>
+						{ this.props.mapComponent.state.searchResultItems.map(searchResult =>
 
 							<div 
 							className="search-result-div"
@@ -145,11 +174,40 @@ class DirectionsCard extends React.Component {
 								this.props.mapComponent.hideDirsSearchResults({ reset: false });
 								// set camera at location on origin marker placement, not item click
 								
+								if (searchResult != null) {
+									const lng = searchResult.lng;
+									const lat = searchResult.lat;
+									this.props.mapComponent._flyTo({ lng: lng, lat: lat, zoom: 12, displayActiveMarker: false });
+									this.props.mapComponent.placeDestMarker(searchResult.lng, searchResult.lat);
+								}
+
 							}}
 							key={Math.random()}
-							title={item.place_name}
+							title={searchResult.place_name}
 							>
-							
+								<div>
+									<img src={ citySearchIcon } className="search-result-icon"></img>
+								</div>
+								{ searchResult.place &&
+									<span className="search-result-place" title={searchResult.place}>
+										{searchResult.place}
+									</span>
+								}
+								{ searchResult.address &&
+									<span className="search-result-address">
+										{searchResult.address}
+									</span>
+								}
+								{ searchResult.city &&
+									<span className="item-city">
+										{searchResult.city}
+									</span>
+								}
+								{ searchResult.country &&
+									<span className="region-country"> 
+											{searchResult.region}, {searchResult.country}
+									</span>
+								}
 							</div>
 
 						) }

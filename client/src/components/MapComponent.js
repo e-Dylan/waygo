@@ -241,6 +241,8 @@ class MapComponent extends React.Component {
 		this.map.on('load', () => {
 			geolocate.trigger();
 
+			// #region Set 3d map layer.
+
 			// Insert the layer beneath any symbol layer.
 			var layers = this.map.getStyle().layers;
 			
@@ -287,6 +289,7 @@ class MapComponent extends React.Component {
 				},
 				labelLayerId
 			);
+			// #endregion
 		});
 	}
 
@@ -365,6 +368,9 @@ class MapComponent extends React.Component {
 			console.log(this.state.activeDest);
 			this.checkCalculateRoute();
 		});
+
+		// set active to-value in dirs card to active destination whenever set.
+		this.setToValue(locationData.full_place);
 	}
 
 	placeDestMarker(lng, lat) {
@@ -404,9 +410,7 @@ class MapComponent extends React.Component {
 		}
 
 		// Set state's active destination position data.
-		this.reverseGeocodeCoords(lng, lat, "dest")
-			// .then(loc => this.setActiveDest(loc));
-		// this.setActiveDest(this.reverseGeocodeCoords(lng, lat, "dest"));
+		this.reverseGeocodeLoc(lng, lat, "dest")
 	}
 
 	setActiveOrigin(locationData) {
@@ -414,6 +418,9 @@ class MapComponent extends React.Component {
 			console.log(this.state.activeOrigin);
 			this.checkCalculateRoute();
 		});
+		
+		// Set current directions card to the active origin.
+		this.setFromValue(locationData.full_place);
 	}
 
 	placeOriginMarker(lng, lat) {
@@ -458,7 +465,7 @@ class MapComponent extends React.Component {
 		}
 		
 		// Set state's active origin position data.
-		this.reverseGeocodeCoords(lng, lat, "origin");
+		this.reverseGeocodeLoc(lng, lat, "origin");
 	}
 
 	toggleWaymessageMenu = () => {
@@ -682,7 +689,7 @@ class MapComponent extends React.Component {
 	//#endregion
 
 	// Fetches location data for lng,lat, compiles into scraped data to be stored in state.
-	async reverseGeocodeCoords(lng, lat, loc) {
+	async reverseGeocodeLoc(lng, lat, loc) {
 		let res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?
 		access_token=${MAPBOX_TOKEN}`)
 			.then(res => res.json())
@@ -755,16 +762,27 @@ class MapComponent extends React.Component {
 
 	calculateRoute = (origin, destination, profile) => {
 
-		if (origin === null || destination === null)
+		if (origin === null || destination === null) 
 			return;
 
 		if (profile === null)
 			profile = this.state.activeProfile;
 
+		console.log(profile);
+
+			
+		var travelColour;
+		switch (profile) {
+			case "driving": travelColour = "#4b30c2"; break;
+			case "walking": travelColour = "#2283bf"; break;
+			case "cycling": travelColour = "#30c25a"; break;
+			default: travelColour = "#333333"; break;
+		}
+
 		// https://api.mapbox.com/directions/v5/mapbox/cycling/-84.518641,39.134270;-84.512023,39.102779?
 		fetch(
 			`https://api.mapbox.com/directions/v5/mapbox/${profile}/
-			 ${origin.lng},${origin.lat};${destination.lng},${destination.lat}?geometries=geojson&access_token=${MAPBOX_TOKEN}`
+			 ${origin.lng},${origin.lat};${destination.lng},${destination.lat}?steps=true&geometries=geojson&access_token=${MAPBOX_TOKEN}`
 		)
 		.then(res => res.json())
 		.then(data => {
@@ -779,37 +797,43 @@ class MapComponent extends React.Component {
 					coordinates: route
 				}
 			};
-			// if the route already exists on the map, reset it using setData
+	
 			if (this.map.getSource('route')) {
+				// if the route already exists on the map, reset it using setData
 				this.map.getSource('route').setData(geojson);
-			  } else { // otherwise, make a new request
+			} else { // otherwise, make a new request
+				
 				this.map.addLayer({
-				  id: 'route',
-				  type: 'line',
-				  source: {
-					type: 'geojson',
-					data: {
-					  type: 'Feature',
-					  properties: {},
-					  geometry: {
-						type: 'LineString',
-						coordinates: geojson
-					  }
+					id: 'route',
+					type: 'line',
+					source: {
+						type: 'geojson',
+						data: {
+						type: 'Feature',
+						properties: {},
+						geometry: {
+							type: 'LineString',
+							coordinates: geojson
+						}
+						}
+					},
+					layout: {
+						'line-join': 'round',
+						'line-cap': 'round'
+					},
+					paint: {
+						'line-color': travelColour,
+						'line-width': 5,
+						'line-opacity': 0.75
 					}
-				  },
-				  layout: {
-					'line-join': 'round',
-					'line-cap': 'round'
-				  },
-				  paint: {
-					'line-color': '#3887be',
-					'line-width': 5,
-					'line-opacity': 0.75
-				  }
-				});
-			  }
-			  // add turn instructions here at the end
-			});
+				});	
+				
+				// Set layer data to geojson line once added.
+				this.map.getSource('route').setData(geojson);
+			}
+			// add turn instructions here at the end
+
+		});
 	}
 
     async componentDidMount() {
