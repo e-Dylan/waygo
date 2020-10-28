@@ -176,6 +176,7 @@ ul {
 	align-content: center;
 	align-items: center;
 	width: 100%;
+	margin-top: 15px;
 }
 
 .places-tab-button {
@@ -183,10 +184,36 @@ ul {
 	border: none;
 	outline: none;
 	width: 80%;
+
+	&:hover {
+		background-color: rgba(200, 200, 200, 0.5);
+	}
+	&:focus {
+		outline: none;
+	}
+
 }
-.places-tab-button:hover {
-	background-color: rgba(200, 200, 200, 0.4);
-}
-.places-tab-button:focus {
-	outline: none;
+
+.saved-place-div {
+	display: flex;
+	flex-direction: column;
+	overflow: normal;
+	padding: 0px;
+	white-space: nowrap;
+	margin-left: 30px;
+	margin-top: 5px;
+	cursor: pointer;
+	padding: 2px;
+
+	.saved-location-title {
+		font-size: 15px;
+	}
+
+	.saved-location-place {
+		font-size: 13px;
+	}
+
+	&:hover {
+		background-color: rgba(200, 200, 200, 0.6);
+	}
 }

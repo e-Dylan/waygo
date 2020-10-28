@@ -146,6 +146,10 @@ class MapComponent extends React.Component {
 			region: "",
 			country: ""
 		},
+		savedLocations: [
+			{ title: "Home", place_name: "447 Nelson Ave, Burlington, Ontario", lat: 43.3220767, lng: -79.8013343 },
+			{ title: "Work", place_name: "Toronto, Ontario, Canada", lat: 43.6529, lng: -79.3849 },
+		],
 	}
 
 	compileActiveLocationData(data) {
@@ -1027,6 +1031,7 @@ class MapComponent extends React.Component {
 						waymessageFormSubmit={this.waymessageFormSubmit} 
 						waymessageValueChanged={this.waymessageValueChanged} 
 						waymessageFormIsValid={this.waymessageFormIsValid}
+						mapComponent={this}
 					/>
                 }
                 
