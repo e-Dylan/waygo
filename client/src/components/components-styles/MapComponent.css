@@ -226,6 +226,7 @@
 .location-card {
 	height: auto;
 	margin-top: 20px;
+	z-index: 2050;
 }
 
 .location-data {
@@ -235,7 +236,12 @@
 	margin: 10px 10px;
 }
 
-.get-dirs-button {
+.location-buttons {
+	display: flex;
+	flex-direction: row;
+}
+
+.location-card-button {
 	height: 25px;
 	background-color: var(--blue_main);
 	color: white;
@@ -244,6 +250,7 @@
 	margin-top: 8px;
 	width: auto;
 	align-self: flex-start;
+	margin-right: 8px;
 }
 
 .location-place {
@@ -408,3 +415,4 @@
 	top: -10px;
 	z-index: 1000;
 }
+

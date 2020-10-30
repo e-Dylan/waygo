@@ -7,6 +7,7 @@ import { Card } from 'reactstrap';
 import '../App.css';
 import './components-styles/MapComponent.css';
 import './components-styles/WaymessageMenu.css';
+import './components-styles/SaveLocationDialogue.scss';
 
 // Dependencies
 import mapboxgl from 'mapbox-gl';
@@ -26,6 +27,7 @@ import MapContextMenu from './MapContextMenu';
 import MapSearchBar from './MapSearchBar';
 import MapLocationCard from './MapLocationCard';
 import DirectionsCard from './DirectionsCard';
+import SaveLocationDialogue from './SaveLocationDialogue';
 
 // Icons
 import activeMarkerIcon from '../resources/map/activeMarkerIcon.svg';
@@ -136,10 +138,18 @@ class MapComponent extends React.Component {
 		showHomeDock: true,
 		showContextMenu: false,
 		showWaymessageMenu: false,
+		showSaveLocationDialogue: true,
 
 		waymessages: [],
 		searchResultItems: [],
 		activeLocationData: {
+			postal_code: "",
+			address: "",
+			city: "",
+			region: "",
+			country: ""
+		},
+		savingLocationData: {
 			postal_code: "",
 			address: "",
 			city: "",
@@ -434,7 +444,7 @@ class MapComponent extends React.Component {
 
 		// if clicking context menu (or non-map area), set waypoint
 		// at previously clicked position on the map.
-		if (lng === 0 && lat === 0 && this.state.lastClickedMap.lng != undefined && this.state.lastClickedMap.lat != undefined) {
+		if (lng === 0 && lat === 0 && this.state.lastClickedMap.lng !== undefined && this.state.lastClickedMap.lat !== undefined) {
 			lng = this.state.lastClickedMap.lng;
 			lat = this.state.lastClickedMap.lat;
 		}
@@ -786,7 +796,7 @@ class MapComponent extends React.Component {
 		// https://api.mapbox.com/directions/v5/mapbox/cycling/-84.518641,39.134270;-84.512023,39.102779?
 		fetch(
 			`https://api.mapbox.com/directions/v5/mapbox/${profile}/
-			 ${origin.lng},${origin.lat};${destination.lng},${destination.lat}?steps=true&geometries=geojson&access_token=${MAPBOX_TOKEN}`
+			 ${origin.lng},${origin.lat};${destination.lng},${destination.lat}?steps=true&overview=full&alternatives=true&geometries=geojson&access_token=${MAPBOX_TOKEN}`
 		)
 		.then(res => res.json())
 		.then(data => {
@@ -838,6 +848,53 @@ class MapComponent extends React.Component {
 			// add turn instructions here at the end
 
 		});
+	}
+
+
+	/**
+	 * Prompts the user with a dialogue to fill in a user-defined title for the location.
+	 * Can be called with locationData (from a map location), which will auto-fill the form,
+	 * or just by adding a user-input place, in which locationData should be passed as null.
+	 */
+	promptSaveLocationDialogue = (locationData) => {
+
+		if (locationData)
+			this.setState({ savingLocationData: locationData });
+		else
+			this.setState({ savingLocationData: {} });
+		
+		// show the saveLocation dialogue component
+		this.setState({ showSaveLocationDialogue: true }, () => {
+			// set classes on dialogue after they're rendered
+			const dialogue = document.querySelector(".save-location-dialogue-div");
+			dialogue.classList.remove("div-hidden");
+
+			// fill location dialogue with any information passed.
+			const dialogueTitleInput = document.getElementById("title-input-bar");
+			const dialogueAddressInput = document.getElementById("address-input-bar");
+			if (locationData) {
+				dialogueAddressInput.value = locationData.full_place;
+			}
+		});
+	}
+	
+	hideSaveLocationDialogue = () => {
+		this.setState({ savingLocationData: {}, showSaveLocationDialogue: false }, () => {
+			const dialogue = document.querySelector(".save-location-dialogue-div");
+			dialogue.classList.add("div-hidden");
+		});
+	}
+
+	/**
+	 * User function to save specific destinations to the user's profile.
+	 * 
+	 * @param { locationData } Data object containing address, lng,lat. 
+	 */
+	saveLocation = (locationData) => {
+		if (locationData === null) return;
+		console.log(locationData);
+
+		this.hideSaveLocationDialogue();
 	}
 
     async componentDidMount() {
@@ -1046,6 +1103,15 @@ class MapComponent extends React.Component {
 						''
 					}
 				</div>
+
+				<div className="save-location-dialogue-div div-hidden">
+					{/* { this.state.showSaveLocationDialogue && */}
+						<SaveLocationDialogue mapComponent={this} />
+					{/* } */}
+				</div>
+				
+				
+
         	</div>
         )
     }

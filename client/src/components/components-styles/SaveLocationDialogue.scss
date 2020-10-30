@@ -1,0 +1,65 @@
+/* Save Location Dialogue */
+.save-location-dialogue-div {
+	display: normal;
+	opacity: 1;
+	transition: 250ms all ease-in-out;
+}
+
+.div-hidden {
+	opacity: 0;
+	transition: 250ms all ease-in-out;
+	pointer-events: none;
+}
+
+// .save-location-dialogue-div {
+// 	display: normal;
+// }
+
+.save-location-dialogue-bg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: rgba(77, 77, 77, 0.6);
+}
+
+.save-location-dialogue {
+	z-index: 1050;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -100%);
+	width: 40%;
+	max-width: 22rem;
+	min-width: 18rem;
+}
+
+.location-input-fields {
+	display: flex;
+	flex-direction: column;
+}
+
+.location-input-bar {
+	margin-top: 25px;
+
+	&:focus {
+		outline-color: var(--blue_main);
+	}
+}
+
+.save-location-button {
+	height: 2.3rem;
+	background-color: var(--blue_main);
+	color: white;
+	border: none;
+	border-radius: 2px;
+	margin-top: 20px;
+	width: auto;
+	align-self: flex-start;
+	margin-right: 8px;
+	width: 100%;
+	transition: 120ms all ease-in-out;
+
+	&:hover {
+		background-color: #677df7;
+	}
+}

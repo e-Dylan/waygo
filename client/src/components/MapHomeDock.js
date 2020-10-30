@@ -96,13 +96,13 @@ class MapHomeDock extends React.Component {
 						<div className="dock-tab-section" id="map-tab">
 							<li>
 								<div className="dock-toggle-label">
-									<text>show traffic</text>
+									<a>show traffic</a>
 									<input className="dock-switch" type="checkbox" />
 								</div>
 							</li>
 							<li>
 								<div className="dock-toggle-label">
-									<text>show issues</text>
+									<a>show issues</a>
 									<span className="dock-switch">
 										<input type="checkbox" />
 										<span className="dock-slider"></span>
@@ -120,7 +120,7 @@ class MapHomeDock extends React.Component {
 						<div className="dock-tab-section" id="public-tab">
 							<li>
 								<div className="dock-toggle-label" id="public-tab">
-									<text>show waymessages</text>
+									<a>show waymessages</a>
 									<span className="dock-switch">
 										<input type="checkbox" />
 										<span className="dock-slider"></span>
@@ -129,7 +129,7 @@ class MapHomeDock extends React.Component {
 							</li>
 							<li>
 								<div className="dock-toggle-label">
-									<text>show other</text>
+									<a>show other</a>
 									<span className="dock-switch">
 										<input type="checkbox" />
 										<span className="dock-slider"></span>
@@ -147,7 +147,7 @@ class MapHomeDock extends React.Component {
 						<div className="dock-tab-section" id="friends-tab">
 							<li>
 								<div className="dock-toggle-label">
-									<text>Dislay my Location</text>
+									<a>Dislay my Location</a>
 									<span className="dock-switch">
 										<input type="checkbox" />
 										<span className="dock-slider"></span>
@@ -157,7 +157,7 @@ class MapHomeDock extends React.Component {
 							<div className="display-my-location-li-div">
 								<li>
 									<div className="dock-toggle-label">
-										<text>to all friends</text>
+										<a>to all friends</a>
 										<span className="dock-switch">
 											<input type="checkbox" />
 											<span className="dock-slider"></span>
@@ -166,7 +166,7 @@ class MapHomeDock extends React.Component {
 								</li>
 								<li>
 									<div className="dock-toggle-label">
-										<text>to certain people</text>
+										<a>to certain people</a>
 										<span className="dock-switch">
 											<input type="checkbox" />
 											<span className="dock-slider"></span>
@@ -177,7 +177,7 @@ class MapHomeDock extends React.Component {
 							
 							<li>
 								<div className="dock-toggle-label">
-										<text>show visable friends</text>
+										<a>show visable friends</a>
 										<span className="dock-switch">
 											<input type="checkbox" />
 											<span className="dock-slider"></span>
@@ -186,7 +186,7 @@ class MapHomeDock extends React.Component {
 								</li>
 							<li>
 								<div className="dock-toggle-label">
-									<text>show friend waymessages</text>
+									<a>show friend waymessages</a>
 									<span className="dock-switch">
 										<input type="checkbox" />
 										<span className="dock-slider"></span>
@@ -226,35 +226,18 @@ class MapHomeDock extends React.Component {
 							<div className="places-tab-button-div">
 								<button className="places-tab-button" onClick={() => {
 									console.log(this.props.mapComponent.state.savedLocations);
+									this.props.mapComponent.promptSaveLocationDialogue();
+									this.props.mapComponent.moveHomeDock();
 								}}>
 									<span>+ Add Place</span>
 								</button>
 							</div>
-							
-							{/* <li>
-								<div className="dock-toggle-label" id="places-tab">
-									<text>Home</text>
-									<span className="dock-switch">
-										<input type="checkbox" />
-										<span className="dock-slider"></span>
-									</span>
-								</div>
-							</li>
-							<li>
-								<div className="dock-toggle-label">
-									<text>Work</text>
-									<span className="dock-switch">
-										<input type="checkbox" />
-										<span className="dock-slider"></span>
-									</span>
-								</div>
-							</li> */}
 						</div>
 					</ul>
 
 				</div>
 				<div className="full-width-div">
-					<text>Post a Waymessage</text>
+					<a>Post a Waymessage</a>
 					<SubmitButton 
 						text="Post a Waymessage"
 						className="btn dock-waymessage-button"
