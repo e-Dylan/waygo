@@ -159,7 +159,7 @@ class MapComponent extends React.Component {
 			country: ""
 		},
 		savedLocations: [
-			{ title: "Home", place_name: "447 Nelson Ave, Burlington, Ontario", lat: 43.3220767, lng: -79.8013343 },
+			{ title: "Home", place_name: "101 Brant Street, Burlington, Ontario", lat: 43.3220767, lng: -79.8013343 },
 			{ title: "Work", place_name: "Toronto, Ontario, Canada", lat: 43.6529, lng: -79.3849 },
 		],
 	}
