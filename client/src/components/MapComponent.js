@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { setUserState } from '../redux/actions/setUserState';
 
 // import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
 import { Card } from 'reactstrap';
@@ -17,8 +21,6 @@ import Joi from "joi";
 // backend api functions
 import * as api from '../api';
 import * as mapApi from '../mapApi';
-
-import UserStore from '../stores/UserStore';
 
 // Component Dependencies
 import MapHomeDock from './MapHomeDock';
@@ -897,39 +899,48 @@ class MapComponent extends React.Component {
 		this.hideSaveLocationDialogue();
 	}
 
-    async componentDidMount() {
+    componentDidMount() {
 
         // isLoggedIn check on Map load	
-        try {
           // fetch isLoggedIn api
 
-          let res = await fetch(ISLOGGEDIN_API_URL, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            }
-		  });
-    
-          let result = await res.json();
-          if (result && result.success) {
-            // user is logged in
-            UserStore.loading = false;
-            UserStore.isLoggedIn = true;
-            UserStore.username = result.username;
-          } else { 
-            // user isn't logged in on the page
-            UserStore.loading = false;
-            UserStore.isLoggedIn = false;
-            UserStore.username = '';
-          }
-        } 
-        catch(e) {
-          UserStore.loading = false;
-          UserStore.isLoggedIn = false;
-		}
-    
+		var userState = {}; 
+		let res = fetch(ISLOGGEDIN_API_URL, {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			}
+		})
+		.then(res => res.json())
+		.then(result => {
+			try {
+				if (result && result.success) {
+					// user is logged in
+					userState = {
+						username: result.username,
+						email: result.email,
+						isLoggedIn: true,
+						loading: false,
+					}
+				} else { 
+					// user isn't logged in on the page
+					userState = {
+						username: '',
+						email: '',
+						isLoggedIn: false,
+						loading: false,
+					}
+				}
+				// call action of setting user state.
+				// reducer listens and updates the store with this data.
+				this.props.setUserState(userState);
+			} catch(e) {
+				
+			}
+		})
+
         // Fetch all waymessages from backend db
         api.fetchWayMessages()
           .then(waymessages => {
@@ -970,7 +981,7 @@ class MapComponent extends React.Component {
 	
 	waymessageFormIsValid = () => {
         const userMessage = {
-            username: UserStore.username,
+            username: "fix with redux",
             message: this.state.userWayMessage.message,
         };
         const result = waymessage_schema.validate(userMessage)
@@ -987,7 +998,7 @@ class MapComponent extends React.Component {
             this.hideWaymessageMenu();
 
             const waymessage = {
-				username: UserStore.username,
+				username: this.props.userState.username,
 				message: this.state.userWayMessage.message,
 				latitude: this.state.userPosition.lat,
 				longitude: this.state.userPosition.lng,
@@ -1028,12 +1039,14 @@ class MapComponent extends React.Component {
 		}
 	}
 
+	
+
     render() {
 		const { viewport } = this.state;
 
 		const mapController = new MapController();
-
-        return (
+		
+		return (
             <div className="map" id="map-div">
 
 					{/* {...viewport}
@@ -1117,4 +1130,16 @@ class MapComponent extends React.Component {
     }
 }
 
-export default MapComponent
+function mapStateToProps(globalState) {
+	// Retrieve any data contained in redux global store.
+	return {
+		globalState
+	};
+}
+
+function matchDispatchToProps(dispatch) {
+	
+	return bindActionCreators({ setUserState: setUserState }, dispatch);
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(MapComponent)

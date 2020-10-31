@@ -1,15 +1,13 @@
 import React from 'react';
 import '../App.css';
 
-import UserStore from '../stores/UserStore';
-
 class Nav extends React.Component {
 
     render() {
        // console.log(UserStore.isLoggedIn); // calling before isLoggedIn UserStore is set.
         return (
             <div>
-                { UserStore.isLoggedIn ?
+                {/* { UserStore.isLoggedIn ?
                 
                 <nav>
                     <div className="nav-container">
@@ -26,8 +24,8 @@ class Nav extends React.Component {
 
                     </div>
                 </nav>
-                :
-                // User is not logged in, display login/register links in nav.
+                : */}
+                {/* // User is not logged in, display login/register links in nav. */}
                 <nav>
                     <div className="nav-container">
                         <div className="nav-left">

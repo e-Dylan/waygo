@@ -2,6 +2,8 @@ import React from 'react';
 // import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
 import { Card } from 'reactstrap';
 
+import { connect } from 'react-redux';
+
 import $ from 'jquery';
 
 import SubmitButton from './SubmitButton';
@@ -26,6 +28,8 @@ class MapHomeDock extends React.Component {
 		const friendsTab = document.getElementById("friends-tab");
 		const placesTab = document.getElementById("places-tab");
 
+		console.log(this.props.globalState);
+		
 		switch (tab) {
 			case "map":
 				if (mapTab != null) {
@@ -229,7 +233,11 @@ class MapHomeDock extends React.Component {
 									this.props.mapComponent.promptSaveLocationDialogue();
 									this.props.mapComponent.moveHomeDock();
 								}}>
-									<span>+ Add Place</span>
+									
+									{ this.props.globalState.userState.isLoggedIn &&
+										<span>+ Add Place</span>
+									}
+									
 								</button>
 							</div>
 						</div>
@@ -251,4 +259,11 @@ class MapHomeDock extends React.Component {
 
 }
 
-export default MapHomeDock
+function mapStateToProps(globalState) {
+	// Retrieve any data contained in redux global store.
+	return {
+		globalState
+	};
+}
+
+export default connect(mapStateToProps)(MapHomeDock)

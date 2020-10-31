@@ -12,15 +12,21 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import "leaflet/dist/leaflet.css"
 import "bootstrap/dist/css/bootstrap.css"
 
-import { Provider } from 'react-redux';
 import { applyMiddleware, createStore, compose } from 'redux';
-import { reducer } from './store';
+import { Provider } from 'react-redux';
+import allReducers from './redux/reducers/main';
+
 
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import history from './history';
+
+const store = createStore(
+	allReducers,
+	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()	
+);
 
 // returns state object from store
 // const store = createStore(reducer);
@@ -45,9 +51,9 @@ import history from './history';
 */
 
 ReactDOM.render(
-	// <Provider store={store}>
-		<App />,
-	// </Provider>,
+	<Provider store={store}>
+		<App />
+	</Provider>,
 
   document.getElementById('root')
 );

@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import '../App.css';
 import './components-styles/LoginRegisterComponent.css';
 
-import UserStore from '../stores/UserStore';
-
 import InputField from './InputField'
 import SubmitButton from './SubmitButton'
 
@@ -126,8 +124,9 @@ class LoginRegisterComponent extends Component {
             // backend will respond success if the user matches any, not if no user.
             let result = await res.json();
             if (result && result.success) {
-                UserStore.isLoggedIn = true;
-                UserStore.username = result.username;
+				// FIX WITH REDUX INCLUDES
+                // UserStore.isLoggedIn = true;
+                // UserStore.username = result.username;
                 window.location.replace(WEBSITE_URL);
             } else if (result && result.success === false) {
                 // User tried to log in, no account match found, login failed.

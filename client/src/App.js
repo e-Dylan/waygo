@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { observer } from 'mobx-react';
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { setUserState } from './redux/actions/setUserState';
 
 import './App.css';
 
@@ -11,8 +14,7 @@ import MapComponent from './components/MapComponent';
 
 import history from './history';
 
-import UserStore from './stores/UserStore';
-
+import HomePage from './components/HomePage';
 import Nav from './components/Nav';
 import LoginRegisterComponent from './components/LoginRegisterComponent';
 
@@ -26,73 +28,85 @@ class App extends Component {
 	
   };
 
-  async componentDidMount() {
+	componentDidMount() {
+		// Check if user is logged in on application load
+		var userState = {}; 
+		let res = fetch(ISLOGGEDIN_API_URL, {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			}
+		})
+		.then(res => res.json())
+		.then(result => {
+			try {
+				if (result && result.success) {
+					// user is logged in
+					userState = {
+						username: result.username,
+						email: result.email,
+						isLoggedIn: true,
+						loading: false,
+					}
+				} else { 
+					// user isn't logged in on the page
+					userState = {
+						username: '',
+						email: '',
+						isLoggedIn: false,
+						loading: false,
+					}
+				}
+				// call action of setting user state.
+				// reducer listens and updates the store with this data.
+				this.props.setUserState(userState);
+			} catch(e) {
+				
+			}
+		});
+	}
 
-    // Check if user is logged in on application load
-    try {
-      // fetch isLoggedIn api
+  doLogout() {
+	  console.log("logging out");
 
-      let res = await fetch(ISLOGGEDIN_API_URL, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      });
-
-      let result = await res.json();
-      if (result && result.success) {
-		// user is logged in
-		// CHANGE TO REDUX STORE.
-        UserStore.loading = false;
-        UserStore.isLoggedIn = true;
-        UserStore.username = result.username;
-      } else { 
-        // user isn't logged in on the page
-        UserStore.loading = false;
-        UserStore.isLoggedIn = false;
-        UserStore.username = '';
-      }
-    } 
-    catch(e) {
-		UserStore.loading = false;
-		UserStore.isLoggedIn = false;
-    }
-  }
-
-  async doLogout() {
-    console.log("logging out");
-    console.log("logged:"+UserStore.isLoggedIn);
-
-    try {
-      let res = await fetch(LOGOUT_API_URL, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      });
-
-      let result = await res.json();
-      if (result && result.success) {
-        // user has logged out
-        UserStore.loading = false;
-        UserStore.isLoggedIn = false;
-        UserStore.username = '';
-        alert(result.msg);
-      } else {
-        // stay logged out, error for some reason
-        UserStore.loading = false;
-        alert(result.msg);
-      }
-    } 
-    catch (e) {
-		UserStore.loading = false;
-      console.log(e);
-    }
-  }
+	  var userState = {}; 
+	  let res = fetch(LOGOUT_API_URL, {
+		  method: 'POST',
+		  credentials: 'include',
+		  headers: {
+			  'Accept': 'application/json',
+			  'Content-Type': 'application/json',
+		  }
+	  })
+	  .then(res => res.json())
+	  .then(result => {
+		  try {
+			  if (result && result.success) {
+				  // user is logged in
+				  userState = {
+					  username: "",
+					  email: "",
+					  isLoggedIn: false,
+					  loading: false,
+				  }
+			  } else { 
+				  // user isn't logged in on the page
+				  userState = {
+					  loading: false,
+				  }
+			  }
+			  // call action of setting user state.
+			  // reducer listens and updates the store with this data.
+			  this.props.setUserState(userState);
+			  alert(result.msg);
+		  } catch(e) {
+			  this.props.setUserState({ loading: false });
+			  console.log(e);
+		  }
+	  });
+	}
 
   render() {
 
@@ -101,7 +115,7 @@ class App extends Component {
 			<div>
 				<Nav doLogout={this.doLogout} />
 				<Switch>
-					<Route exact path="/" />
+					<Route exact path="/" component={HomePage} />
 					<Route path="/account/login" component={LoginRegisterComponent} />
 				</Switch>
 			</div>
@@ -122,13 +136,18 @@ class App extends Component {
   
 }
 
-function mapStateToProps(state) {
-	// take any items from the store needed for this component
+// export default observer(App);
+
+function mapStateToProps(globalState) {
+	// Retrieve any data contained in redux global store.
 	return {
-		loading: state.loading,
-		isLoggedIn: state.isLoggedIn,
-		username: state.username,
+		globalState,
 	};
 }
 
-export default observer(App);
+function matchDispatchToProps(dispatch) {
+	
+	return bindActionCreators({ setUserState: setUserState }, dispatch);
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(App)
