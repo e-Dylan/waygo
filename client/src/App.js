@@ -123,14 +123,14 @@ class App extends Component {
 	}
 
     return(
-	<Router history={history}>
-		<div className="app">
-			<Switch>
-				<Route path="/live-map" component={MapComponent} />
-				<Route component={RoutesWithNav} />
-			</Switch>
-		</div>
-	</Router>
+		<Router history={history}>
+			<div className="app">
+				<Switch>
+					<Route path="/live-map" component={MapComponent} />
+					<Route component={RoutesWithNav} />
+				</Switch>
+			</div>
+		</Router>
     )
   }
   

@@ -227,19 +227,18 @@ class MapHomeDock extends React.Component {
 
 									</div>
 								) }
-							<div className="places-tab-button-div">
-								<button className="places-tab-button" onClick={() => {
-									console.log(this.props.mapComponent.state.savedLocations);
-									this.props.mapComponent.promptSaveLocationDialogue();
-									this.props.mapComponent.moveHomeDock();
-								}}>
-									
-									{ this.props.globalState.userState.isLoggedIn &&
+							{ this.props.globalState.userState.isLoggedIn &&
+								<div className="add-place-tab-button-div">
+									<button className="add-place-tab-button" onClick={() => {
+										console.log(this.props.mapComponent.state.savedLocations);
+										this.props.mapComponent.promptSaveLocationDialogue();
+										this.props.mapComponent.moveHomeDock();
+									}}>
 										<span>+ Add Place</span>
-									}
-									
-								</button>
-							</div>
+
+									</button>
+								</div>
+							}
 						</div>
 					</ul>
 

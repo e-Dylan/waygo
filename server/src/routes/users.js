@@ -196,10 +196,6 @@ router.post('/login', (req, res) => {
     }
     else // User has no session id.
     {
-  
-      // FIX HERE. REQ.SESSION.USERID ISNT BEING SET WHEN RELOADING PAGE
-      // LOGS USER OUT WHEN REFRESH.
-      // SET SESSION.USERID IN REQ PROPERLY WHEN LOGGING IN.
       res.json({
         success: false
       });

@@ -7,9 +7,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import "leaflet/dist/leaflet.css"
 import "bootstrap/dist/css/bootstrap.css"
 
 import { applyMiddleware, createStore, compose } from 'redux';
@@ -27,15 +25,6 @@ const store = createStore(
 	allReducers,
 	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()	
 );
-
-// returns state object from store
-// const store = createStore(reducer);
-
-// const middlewareEnhancer = applyMiddleware(loggerMiddleware, thunkMiddleware);
-// const composedEnhancers = compose(middlewareEnhancer, monitorReducerEnhancer);
-
-// const store = createStore(rootReducer, undefined, composedEnhancers);
-
 
 /*
 

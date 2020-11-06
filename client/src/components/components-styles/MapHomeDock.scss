@@ -170,28 +170,28 @@ ul {
 
 
 /* PLACES TAB */
-.places-tab-button-div {
+.add-place-tab-button-div {
 	display: flex;
 	flex-direction: column;
 	align-content: center;
 	align-items: center;
 	width: 100%;
-	margin-top: 15px;
 }
 
-.places-tab-button {
+.add-place-tab-button {
 	background-color: transparent;
 	border: none;
 	outline: none;
 	width: 80%;
+	margin-top: 12px;
 
 	&:hover {
-		background-color: rgba(200, 200, 200, 0.5);
+		background-color: rgba(200, 200, 200, 0.4);
 	}
+
 	&:focus {
 		outline: none;
 	}
-
 }
 
 .saved-place-div {
