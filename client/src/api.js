@@ -1,5 +1,47 @@
 const WAYMESSAGE_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/waymessages" : "production-url-here";
+const SAVE_LOCATION_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/saveLocation" : "produced-url-here";
+const GET_SAVED_LOCATIONS_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/reqSavedLocations" : "produced-url-here";
 
+export function saveLocationToApi(locationData) {
+	// CURRENT LOCATION OBJECT FORMAT:
+	// {title: "", place_name: "", lat: , lng: }
+
+	var res = fetch(SAVE_LOCATION_API_URL, {
+		method: 'POST',
+		credentials: 'include',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+		},
+		body: locationData,
+	})
+	.then(res => res.json())
+	.then(result => {
+		// console.log(result);
+
+		// UPDATE REDUX STORE WITH UPDATED SAVED LOCATIONS.
+	})
+}
+
+	
+export function getSavedLocationsFromApi() {	
+	var savedLocations = {};
+	var res = fetch(GET_SAVED_LOCATIONS_API_URL, {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+		},
+	})
+	.then(res => res.json())
+	.then(result => {
+		// Saved locations are stored in mysql db as an array of json objects for each location.
+		// parse them back into an array.
+		return result;
+		// console.log(JSON.parse(result.savedLocations));
+	})
+}
 
 export function fetchWayMessages() {
     // Get user's location, load waymessages from db into user's state

@@ -61,8 +61,6 @@ const waymessage_schema = Joi.object({
 })
 
 const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/isLoggedIn" : "production-url-here";
-const GET_SAVED_LOCATIONS_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/reqSavedLocations" : "produced-url-here";
-const SAVE_LOCATION_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/saveLocation" : "produced-url-here";
 
 class MapComponent extends React.Component {
 
@@ -903,47 +901,30 @@ class MapComponent extends React.Component {
 	 * @param { locationData } Data object containing address, lng,lat. 
 	 */
 	saveLocation = (locationData) => {
+		/*
+		savedLocationData format:
+		JSON.stringify({
+				title: "Home",
+				place_name: "101 Brant Street, Burlington, Ontario",
+				lat: 43.3220767,
+				lng: -79.8013343
+		})
+		*/
+
+		const lng = 43.322;
+		const lat = -79.801;
+
+		locationData = JSON.stringify({
+			...locationData,
+			lng: lng,
+			lat: lat
+		});
+
 		if (locationData === null) return;
-		console.log(locationData);
+		// console.log(locationData);
+		api.saveLocationToApi(locationData);
 
 		this.hideSaveLocationDialogue();
-	}
-	
-	getSavedLocationsApi() {	
-		var savedLocations = {};
-		var res = fetch(GET_SAVED_LOCATIONS_API_URL, {
-			method: 'GET',
-			credentials: 'include',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-		})
-		.then(res => res.json())
-		.then(result => {
-			// Saved locations are stored in mysql db as an array of json objects for each location.
-			// parse them back into an array.
-			// console.log(JSON.parse(result.savedLocations));
-		})
-	}
-
-	saveLocationToApi(location) {
-		// CURRENT LOCATION OBJECT FORMAT:
-		// {title: "", place_name: "", lat: , lng: }
-
-		var res = fetch(SAVE_LOCATION_API_URL, {
-			method: 'POST',
-			credentials: 'include',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: location,
-		})
-		.then(res => res.json())
-		.then(result => {
-			console.log(result);
-		})
 	}
 
     componentDidMount() {
@@ -971,6 +952,12 @@ class MapComponent extends React.Component {
 						isLoggedIn: true,
 						loading: false,
 					}
+
+
+					// If user is logged in, fetch their saved locations and store
+					// in redux state.
+					api.getSavedLocationsFromApi();
+
 				} else { 
 					// user isn't logged in on the page
 					userState = {
@@ -987,13 +974,6 @@ class MapComponent extends React.Component {
 				
 			}
 		})
-
-		// Fetch all user's saved locations from db if logged in
-		this.getSavedLocationsApi();
-
-		this.saveLocationToApi(JSON.stringify({
-			title: "Home", place_name: "101 Brant Street, Burlington, Ontario", lat: 43.3220767, lng: -79.8013343
-		}));
 
         // Fetch all waymessages from backend db
         api.fetchWayMessages()

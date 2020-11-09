@@ -22,7 +22,7 @@ class SaveLocationDialogue extends React.Component {
 					<div>
 						<span>Save a destination.</span>
 					</div>
-					
+
 					<div className="location-input-fields">
 						<input 
 							className="location-input-bar"
@@ -39,9 +39,12 @@ class SaveLocationDialogue extends React.Component {
 
 						<button className="save-location-button" onClick={ () => {
 							
-							const titleInput = document.getElementById("location-input-bar");
-							const addressInput = document.getElementById("address-input-bar");
-							this.props.mapComponent.saveLocation(this.props.mapComponent.state.savingLocationData);
+							const titleInput = document.getElementById("title-input-bar").value;
+							const addressInput = document.getElementById("address-input-bar").value;
+							this.props.mapComponent.saveLocation({
+								title: titleInput,
+								address: addressInput,
+							});
 
 						} }>Save</button>
 					</div>
