@@ -3,6 +3,8 @@ import React, { useState, useContext } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { setUserState } from '../redux/actions/setUserState';
+import { setUserSavedLocationsState } from '../redux/actions/setUserSavedLocationsState';
+import { addUserSavedLocation } from '../redux/actions/addUserSavedLocation';
 
 // import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
 import { Card } from 'reactstrap';
@@ -158,18 +160,6 @@ class MapComponent extends React.Component {
 			region: "",
 			country: ""
 		},
-		// Database savedlocation format:
-		// [
-		// 	{"EmployeeId": "EMP-101", "EmployeeName": "Chris"}, 
-		// 	{"EmployeeId": "EMP-102", "EmployeeName": "David"}
-		// ]
-
-		// [{"EmployeeId": "EMP-101", "EmployeeName": "Chris"}, {"EmployeeId": "EMP-102", "EmployeeName": "David"}, {"EmployeeId": "EMP-103", "EmployeeName": "Sam"}]
-
-		savedLocations: [
-			{ title: "Home", place_name: "101 Brant Street, Burlington, Ontario", lat: 43.3220767, lng: -79.8013343 },
-			{ title: "Work", place_name: "Toronto, Ontario, Canada", lat: 43.6529, lng: -79.3849 },
-		],
 	}
 
 	compileActiveLocationData(data) {
@@ -902,7 +892,7 @@ class MapComponent extends React.Component {
 	 */
 	saveLocation = (locationData) => {
 		/*
-		savedLocationData format:
+		savedLocationData [FORMAT]:
 		JSON.stringify({
 				title: "Home",
 				place_name: "101 Brant Street, Burlington, Ontario",
@@ -922,7 +912,12 @@ class MapComponent extends React.Component {
 
 		if (locationData === null) return;
 		// console.log(locationData);
-		api.saveLocationToApi(locationData);
+		var response = api.saveLocationToApi(locationData)
+			.then(res => {
+				console.log(res);
+				var addedLocation = res.addedLocation;
+				this.props.addUserSavedLocation(addedLocation);
+			});
 
 		this.hideSaveLocationDialogue();
 	}
@@ -953,11 +948,16 @@ class MapComponent extends React.Component {
 						loading: false,
 					}
 
-
 					// If user is logged in, fetch their saved locations and store
 					// in redux state.
-					api.getSavedLocationsFromApi();
-
+					api.getSavedLocationsFromApi()
+					.then(result => {
+						var savedLocationsState = result;
+						this.setState({
+							savedLocations: savedLocationsState
+						})
+						this.props.setUserSavedLocationsState(savedLocationsState)
+					})
 				} else { 
 					// user isn't logged in on the page
 					userState = {
@@ -1172,8 +1172,11 @@ function mapStateToProps(globalState) {
 }
 
 function matchDispatchToProps(dispatch) {
-	
-	return bindActionCreators({ setUserState: setUserState }, dispatch);
+	return bindActionCreators({ 
+		setUserState: setUserState, 
+		setUserSavedLocationsState: setUserSavedLocationsState,
+		addUserSavedLocation: addUserSavedLocation,
+	}, dispatch);
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapComponent)

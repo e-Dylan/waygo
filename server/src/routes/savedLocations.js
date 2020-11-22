@@ -53,14 +53,15 @@ router.post('/saveLocation', async (req, res) => {
 
 			if (JSON.parse(data[0].savedlocs) != null) {
 				// data returned is not null, savedlocs already has data in it.
-				console.log(data);
+				// console.log(data);
 				
 				var savedData = JSON.parse(data[0].savedlocs)
 				// append savedlocs array with new location (stringified)
 				savedData.push(locationData);
-				savedData = JSON.stringify(savedData);
 
-				values = [savedData, uid] // user savedlocs array
+				var savedDataString = JSON.stringify(savedData);
+
+				values = [savedDataString, uid] // user savedlocs array
 				
 				// overwrite db with that new array.
 				sql_db.query('UPDATE user SET savedlocs = ? WHERE id = ?', values, (err, data, fields) => {
@@ -72,77 +73,33 @@ router.post('/saveLocation', async (req, res) => {
 					} else {
 						res.json({
 							success: true,
-							msg: "Successfully inserted user saved location into database. updated existing array."
+							msg: "Successfully inserted user saved location into database. updated existing array.",
+							savedLocations: savedData,
 						});
 					}
 				});
 			} else {
 				// savedlocs is null, make a new array and save that.
-				var toSave = JSON.stringify([locationData]);
+				var newSavedLocs = [locationData] // array that will be the DB, return this on set.
+				var toSave = JSON.stringify(newSavedLocs);
 				values = [toSave, uid]
 				sql_db.query('UPDATE user SET savedlocs = ? WHERE id = ?', values, (err, data, fields) => {
 					if (err) {
 						res.json({
 							success: false,
-							msg: "Error inserting user saved location into database - attempted to set new on a null value."
+							msg: "Error inserting user saved location into database - attempted to set new on a null value.",
 						});
 					} else {
 						res.json({
 							success: true,
-							msg: "Successfully inserted user saved location into database. Inserted into null initial value."
+							msg: "Successfully inserted user saved location into database. Inserted into null initial value.",
+							savedLocations: newSavedLocs
 						});
 					}
 				});
 			}
 
 		});
-
-		
-
-		// sql_db.query('SELECT * FROM user WHERE id = ? LIMIT 1', uid, (err, data, fields) => {
-		// 	// already has saved locations, and an array initialized in db.
-		// 	if (data) { // savedlocs cell already has data in it.
-		// 		// let currentLocationsArr = JSON.parse(data[0].savedlocs);
-				
-
-		// 		/*
-		// 			TAKE ARRAY OUT OF THE CELL, PARSE BACK INTO ARRAY
-		// 			PUSH NEW LOCATION OBJECT INTO IT
-		// 			OVERWRITE (REPLACE) CURRENT CELL DATA WITH UPDATED CELL.
-					
-		// 			SAME THING TO REMOVE LOCATION OBJECTS.
-		// 		*/
-
-		// 		// insert saved location object into database array
-		// 		sql_db.query('SET ', (err, data, fields) => {
-		// 			if (err) {
-		// 				res.json({
-		// 					success: false,
-		// 					msg: "Error inserting saved location into database."
-		// 				})
-		// 				return;
-		// 			}
-
-		// 			console.log(values);
-
-		// 			// data == [id, user, email, password, savedlocs] from user's row in db.
-		// 			if (data) { // data was returned from sql query.
-		// 				res.json({
-		// 					success: true,
-		// 					msg: "Successfully saved user location into database.",
-		// 					savedLocation: req.body,
-		// 				})
-		// 				// for server-side terminal
-		// 				console.log("Successfully saved location for id: ${req.session.userID}");
-		// 			}
-		// 		});
-		// 	} else { // new user, no saved locations prior, no array yet. col is still NULL.
-		// 		// make a new array with saved location
-				
-		// 		// insert into db
-
-		// 	}
-		// });
 	}
 
 });
@@ -173,7 +130,7 @@ router.get('/reqSavedLocations', (req, res) => {
 	} else { // user has no session id, not logged in.
 		res.json({
 			success: false,
-			msg: "User had no session id - not logged in."
+			msg: "User had no session id - not logged in.",
 		});
 	}
 

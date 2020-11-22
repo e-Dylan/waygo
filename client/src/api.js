@@ -6,7 +6,7 @@ export function saveLocationToApi(locationData) {
 	// CURRENT LOCATION OBJECT FORMAT:
 	// {title: "", place_name: "", lat: , lng: }
 
-	var res = fetch(SAVE_LOCATION_API_URL, {
+	return fetch(SAVE_LOCATION_API_URL, {
 		method: 'POST',
 		credentials: 'include',
 		headers: {
@@ -20,13 +20,22 @@ export function saveLocationToApi(locationData) {
 		// console.log(result);
 
 		// UPDATE REDUX STORE WITH UPDATED SAVED LOCATIONS.
+		// console.log(result)
+
+		/* respond to map component with:
+			added location
+			all location data in db.
+		*/
+		return {
+			addedLocation: JSON.parse(locationData),
+			locationData: result.savedLocations,
+		};;
 	})
 }
 
 	
 export function getSavedLocationsFromApi() {	
-	var savedLocations = {};
-	var res = fetch(GET_SAVED_LOCATIONS_API_URL, {
+	return fetch(GET_SAVED_LOCATIONS_API_URL, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
@@ -38,7 +47,7 @@ export function getSavedLocationsFromApi() {
 	.then(result => {
 		// Saved locations are stored in mysql db as an array of json objects for each location.
 		// parse them back into an array.
-		return result;
+		return(JSON.parse(result.savedLocations));
 		// console.log(JSON.parse(result.savedLocations));
 	})
 }

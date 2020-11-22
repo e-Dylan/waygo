@@ -206,8 +206,8 @@ class MapHomeDock extends React.Component {
 						}}
 						>Places</button>
 						<div className="dock-tab-section" id="places-tab">
-								{ this.props.mapComponent.state.savedLocations.map(place =>
-									<div className="saved-place-div" key={Math.random()} title={place.place_name}>
+								{ this.props.globalState.userSavedLocationsState.map(place =>
+									<div className="saved-place-div" key={Math.random()} title={place.address || Math.random()}>
 									
 										{/* <div>
 											<img className="saved-location-icon"></img>
@@ -219,9 +219,9 @@ class MapHomeDock extends React.Component {
 											</span>
 										}
 
-										{ place.place_name &&
+										{ place.address &&
 											<span className="saved-location-place">
-												{place.place_name}
+												{place.address}
 											</span>
 										}
 

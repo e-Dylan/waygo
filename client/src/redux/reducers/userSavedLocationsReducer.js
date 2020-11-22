@@ -7,14 +7,15 @@
  * @param { action } Action that alerts this reducer to update the store, called when user logs in. 
  */
 
-var stateInit = {
-
-};
+var stateInit = [];
 
 const userSavedLocationsReducer = (state = stateInit, action) => {
 	switch (action.type) {
 		case "SET_USER_SAVED_LOCATIONS":
 			state.savedLocations = action.payload;
+			return state.savedLocations;
+		case "ADD_USER_SAVED_LOCATION":
+			state.savedLocations = [...state, action.payload]
 			return state.savedLocations;
 		default: 
 			return state;

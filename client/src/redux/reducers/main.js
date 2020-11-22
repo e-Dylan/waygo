@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
-import UserStateReducer from './userStateReducer';
+import UserReducer from './userReducer';
+import UserSavedLocationsReducer from './userSavedLocationsReducer';
 
 // Combine all reducers into single reducer object
 // Export all modules from this directory.
@@ -9,7 +10,8 @@ import UserStateReducer from './userStateReducer';
 
 
 const allReducers = combineReducers({
-	userState: UserStateReducer
+	userState: UserReducer,
+	userSavedLocationsState: UserSavedLocationsReducer
 });
 
 export default allReducers;
