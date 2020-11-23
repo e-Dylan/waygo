@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { addUserSavedLocation } from '../actions/addUserSavedLocation';
 import UserReducer from './userReducer';
 import UserSavedLocationsReducer from './userSavedLocationsReducer';
 
@@ -11,7 +12,8 @@ import UserSavedLocationsReducer from './userSavedLocationsReducer';
 
 const allReducers = combineReducers({
 	userState: UserReducer,
-	userSavedLocationsState: UserSavedLocationsReducer
+	userSavedLocationsState: UserSavedLocationsReducer,
+	addUserSavedLocation: addUserSavedLocation,
 });
 
 export default allReducers;

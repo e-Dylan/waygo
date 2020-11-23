@@ -118,8 +118,14 @@ router.post('/login', (req, res) => {
               if (err) {
                 console.log(err);
               }
-            });
-            console.log(req.session);
+			});
+			const userData = {
+				username: data[0].username,
+				password: password,
+				email: data[0].email,
+				session: req.session,
+			}
+            console.log(`User successfully logging in: ${JSON.stringify(userData, null, 4)}`);
   
             res.json({
               success: true,
@@ -150,26 +156,38 @@ router.post('/login', (req, res) => {
     });
   })
   
-  router.post('/logout', (req, res) => {
-    console.log("logging out: session id: " + req.session);
-    // If user is signed in, destroy session
-    if (req.session.userID) {
-      req.session.destroy();
-      res.json({
-        success: true,
-        msg: "Successfuly logged out.",
-      });
-      return true;
-    } else {
-      console.log("no session id: \n" + req.session.userID);
-      // User was not signed in
-      res.json({
-        success: false,
-        msg: "Error: Failed to logout - user is not logged in."
-      });
-      return false;
-    }
-  });
+router.post('/logout', (req, res) => {
+	var cols = [req.session.userID];
+	sql_db.query('SELECT * FROM user WHERE id = ? LIMIT 1', cols, (err, data, fields) => {		
+		// If user is signed in, destroy session
+		if (req.session.userID) {
+			var sessionID = req.session;
+			req.session.destroy();
+
+			const userData = {
+				username: data[0].username,
+				password: data[0].password,
+				email: data[0].email,
+				session: sessionID,
+			}
+			console.log(`User logged out: ${JSON.stringify(userData, null, 4)}`);
+
+			res.json({
+				success: true,
+				msg: "Successfuly logged out.",
+			});
+			return true;
+		} else {
+			console.log("no session id: \n" + req.session.userID);
+			// User was not signed in
+			res.json({
+				success: false,
+				msg: "Error: Failed to logout - user is not logged in."
+			});
+			return false;
+		}
+	});
+});
   
   router.post('/isLoggedIn', (req, res) => {
     // session.userID is set to db id to the req when user logs in.

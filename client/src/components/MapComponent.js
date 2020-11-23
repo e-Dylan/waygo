@@ -953,10 +953,15 @@ class MapComponent extends React.Component {
 					api.getSavedLocationsFromApi()
 					.then(result => {
 						var savedLocationsState = result;
-						this.setState({
-							savedLocations: savedLocationsState
-						})
-						this.props.setUserSavedLocationsState(savedLocationsState)
+						if (savedLocationsState != null) {
+							// saved locations state in DB will initialize as null, 
+							// until first loc is added.
+							// reducer of global state will stay default init as [] until non-null is returned.
+							this.setState({
+								savedLocations: savedLocationsState
+							})
+							this.props.setUserSavedLocationsState(savedLocationsState)
+						}
 					})
 				} else { 
 					// user isn't logged in on the page
