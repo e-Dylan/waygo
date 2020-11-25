@@ -1,6 +1,7 @@
 const WAYMESSAGE_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/waymessages" : "production-url-here";
 const SAVE_LOCATION_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/saveLocation" : "produced-url-here";
 const GET_SAVED_LOCATIONS_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/reqSavedLocations" : "produced-url-here";
+const DELETE_SAVED_LOCATION_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/deleteSavedLocation" : "production-url-here";
 
 export function saveLocationToApi(locationData) {
 	// CURRENT LOCATION OBJECT FORMAT:
@@ -49,6 +50,22 @@ export function getSavedLocationsFromApi() {
 		// parse them back into an array.
 		return(JSON.parse(result.savedLocations));
 		// console.log(JSON.parse(result.savedLocations));
+	})
+}
+
+export function deleteSavedLocationFromApi(index) {
+	return fetch(DELETE_SAVED_LOCATION_API_URL, {
+		method: 'POST',
+		credentials: 'include',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+		},
+		body: index
+	})
+	.then(res => res.json())
+	.then(result => {
+		console.log(result);
 	})
 }
 

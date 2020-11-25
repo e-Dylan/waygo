@@ -196,24 +196,54 @@ ul {
 
 .saved-place-div {
 	display: flex;
-	flex-direction: column;
-	overflow: normal;
-	padding: 0px;
-	white-space: nowrap;
-	margin-left: 30px;
-	margin-top: 5px;
-	cursor: pointer;
-	padding: 2px;
-
-	.saved-location-title {
-		font-size: 15px;
-	}
-
-	.saved-location-place {
-		font-size: 13px;
-	}
+	flex-direction: row;
+	margin-left: 10%;
+	justify-content: space-between;
 
 	&:hover {
 		background-color: rgba(200, 200, 200, 0.6);
+	}
+
+	.location-data {
+		overflow: normal;
+		padding: 0px;
+		margin: 5px;
+		white-space: nowrap;
+		cursor: pointer;
+
+		.saved-location-title {
+			font-size: 15px;
+		}
+
+		.saved-location-place {
+			font-size: 13px;
+		}
+	}
+
+	
+
+	.loc-remove-button-div {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+
+		.loc-remove-button {
+			border-radius: 2px;
+			background-color: rgba(197, 197, 197, 0);
+			color: rgb(151, 151, 151);
+			text-align: center;
+			padding: 0px 6px;
+			border: 1px solid rgba(200, 200, 200, 0.6);
+			transition: 150ms all ease-in-out;
+			margin-right: 1rem;
+
+			&:hover {
+				color: #fff;
+				background-color: var(--blue_main);
+			}
+			&:focus {
+				outline: none;
+			}
+		}
 	}
 }

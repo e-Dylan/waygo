@@ -39,7 +39,7 @@ router.post('/saveLocation', async (req, res) => {
 	if (req.session.userID) {
 		let uid = [req.session.userID];
 
-		var values = [uid];
+		var values;
 
 		sql_db.query('SELECT savedlocs FROM user WHERE id = ? LIMIT 1', uid, (err, data, fields) => {
 		
@@ -135,5 +135,73 @@ router.get('/reqSavedLocations', (req, res) => {
 	}
 
 });
+
+router.post('/deleteSavedLocation', (req, res) => {
+	// Called to delete a saved location by array index from user's savedlocs col in database.
+	// req.body: index -> comes as stringified object
+	const index = JSON.parse(req.body.index);
+	console.log(index);
+
+	if (req.session.userID) {
+
+		let uid = [req.session.userID];
+
+		sql_db.query('SELECT savedlocs FROM user WHERE id = ? LIMIT 1', uid, (err, data, fields) => {
+		
+			// user should never be able to call delete if they have no locations,
+			// but check if their locs array isn't defined yet, or empty.
+			if (err || data[0].savedlocs === null || data[0].savedlocs.length <= 0) {
+				res.json({
+					success: false,
+					msg: "Error fetching user data from the database."
+				});
+				return;
+			}
+
+			// delete index in current data array
+			var savedData = JSON.parse(data[0].savedlocs);
+			savedData.splice(index, 1);
+
+			var savedDataString = JSON.stringify(savedData);
+
+			// overwrite db with new locations array
+			var values = [savedDataString, uid]
+			sql_db.query('UPDATE user SET savedlocs = ? WHERE id = ?', values, (err, data, fields) => {
+				if (err) {
+					res.json({
+						success: false,
+						msg: "Error deleting location from user account."
+					})
+				} else {
+					// user successfully overwrote their savedlocs array:
+					res.json({
+						success: true,
+						msg: "Successfully deleted location from user account.",
+						savedLocations: savedData,
+					});
+				}
+			});
+
+			// 	values = [savedDataString, uid] // user savedlocs array
+				
+			// 	overwrite db with that new array.
+			// 	sql_db.query('UPDATE user SET savedlocs = ? WHERE id = ?', values, (err, data, fields) => {
+			// 		if (err) {
+			// 			res.json({
+			// 				success: false,
+			// 				msg: "Error inserting user saved location into database - updated existing array."
+			// 			});
+			// 		} else {
+			// 			res.json({
+			// 				success: true,
+			// 				msg: "Successfully inserted user saved location into database. updated existing array.",
+			// 				savedLocations: savedData,
+			// 			});
+			// 		}
+			// 	});
+			// } 
+		});
+	}
+})
 
 module.exports = router;

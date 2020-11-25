@@ -4,6 +4,8 @@ import { Card } from 'reactstrap';
 
 import { connect } from 'react-redux';
 
+import * as api from '../api';
+
 import $ from 'jquery';
 
 import SubmitButton from './SubmitButton';
@@ -206,24 +208,37 @@ class MapHomeDock extends React.Component {
 						}}
 						>Places</button>
 						<div className="dock-tab-section" id="places-tab">
-								{ this.props.globalState.userSavedLocationsState.map(place =>
+								{ this.props.globalState.userSavedLocationsState.map((place, index) =>
 									<div className="saved-place-div" key={Math.random()} title={place.address || Math.random()}>
-									
-										{/* <div>
-											<img className="saved-location-icon"></img>
-										</div> */}
+										<div className="location-data">
+											{/* <div>
+												<img className="saved-location-icon"></img>
+											</div> */}
 
-										{ place.title &&
-											<span className="saved-location-title">
-												{place.title}
-											</span>
-										}
+											{ place.title &&
+												<span className="saved-location-title">
+													{place.title}
+												</span>
+											}
 
-										{ place.address &&
-											<span className="saved-location-place">
-												{place.address}
-											</span>
-										}
+											{ place.address &&
+												<span className="saved-location-place">
+													{place.address}
+												</span>
+											}
+											
+											
+										</div>
+										<div className="loc-remove-button-div">
+											<button className="loc-remove-button" onClick={() => {
+												index = JSON.stringify({
+													index: index
+												});
+												api.deleteSavedLocationFromApi(index);
+											}}>
+												X
+											</button>
+										</div>
 
 									</div>
 								) }
