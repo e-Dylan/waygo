@@ -60,15 +60,20 @@ class SaveLocationDialogue extends React.Component {
 						</div>
 						
 					</div>
-					<button className="save-location-button" onClick={ () => {		
-						const titleInput = document.getElementById("title-input-bar").value;
-						const addressInput = document.getElementById("address-input-bar").value;
+					<button className="save-location-button" onClick={ () => {	
+						const titleInputBar = document.getElementById('title-input-bar')
+						const addressInputBar = document.getElementById('address-input-bar')
+
 						// ADD NULL CHECK.
 
 						this.props.mapComponent.saveLocation({
-							title: titleInput,
-							address: addressInput,
+							title: titleInputBar.value,
+							address: addressInputBar.value,
 						});
+
+						titleInputBar.value = ""
+						addressInputBar.value = ""
+
 
 					} }>Save</button>
 				</Card>

@@ -2,8 +2,6 @@ import React from 'react';
 // import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
 import { Card } from 'reactstrap';
 
-import { connect } from 'react-redux';
-
 import * as api from '../api';
 
 import $ from 'jquery';
@@ -12,16 +10,19 @@ import SubmitButton from './SubmitButton';
 import leftArrow from '../resources/map-home-dock/left-arrow-close.png';
 import rightArrow from '../resources/map-home-dock/right-arrow-open.png';
 
-
 import './components-styles/MapHomeDock.scss'; // change to components css
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { setUserSavedLocationsState } from '../redux/actions/setUserSavedLocationsState';
+
 class MapHomeDock extends React.Component {
+	constructor(props) {
+		super(props);
+	}
 
 	state = {	
 		activeTab: "",
-		savedLocations: {
-
-		},
 	}
 
 	toggleTab(tab) {
@@ -30,7 +31,7 @@ class MapHomeDock extends React.Component {
 		const friendsTab = document.getElementById("friends-tab");
 		const placesTab = document.getElementById("places-tab");
 
-		console.log(this.props.globalState);
+		// console.log(this.props.globalState);
 		
 		switch (tab) {
 			case "map":
@@ -73,6 +74,11 @@ class MapHomeDock extends React.Component {
 				break;
 		}
 	}
+	
+	handleMouseHover() {
+		
+	}
+	
 
     render() {
 
@@ -209,7 +215,14 @@ class MapHomeDock extends React.Component {
 						>Places</button>
 						<div className="dock-tab-section" id="places-tab">
 								{ this.props.globalState.userSavedLocationsState.map((place, index) =>
-									<div className="saved-place-div" key={Math.random()} title={place.address || Math.random()}>
+									<div 
+										className="saved-place-div" 
+										key={Math.random()} 
+										title={place.address || Math.random()} 
+										onMouseEnter={this.handleMouseHover}
+										onMouseLeave={this.handleMouseHover}
+									>
+
 										<div className="location-data">
 											{/* <div>
 												<img className="saved-location-icon"></img>
@@ -230,11 +243,17 @@ class MapHomeDock extends React.Component {
 											
 										</div>
 										<div className="loc-remove-button-div">
-											<button className="loc-remove-button" onClick={() => {
+											<button className="loc-remove-button" onClick={async () => {
 												index = JSON.stringify({
 													index: index
 												});
-												api.deleteSavedLocationFromApi(index);
+												// Delete clicked location from user's locs in DB
+												// returns their NEW savedLocs with deletion.
+												const newSavedLocs = await api.deleteSavedLocationFromApi(index);
+												
+												// Update redux state savedLocations with new DB data.
+												this.props.setUserSavedLocationsState(newSavedLocs);
+												console.log(newSavedLocs);
 											}}>
 												X
 											</button>
@@ -280,4 +299,10 @@ function mapStateToProps(globalState) {
 	};
 }
 
-export default connect(mapStateToProps)(MapHomeDock)
+function matchDispatchToProps(dispatch) {
+	return bindActionCreators({ 
+		setUserSavedLocationsState: setUserSavedLocationsState,
+	}, dispatch);
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(MapHomeDock)

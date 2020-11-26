@@ -65,7 +65,9 @@ export function deleteSavedLocationFromApi(index) {
 	})
 	.then(res => res.json())
 	.then(result => {
-		console.log(result);
+		// console.log(result);
+		// return new saved locations array.
+		return(result.savedLocations);
 	})
 }
 
