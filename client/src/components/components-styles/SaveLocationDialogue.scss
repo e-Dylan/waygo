@@ -133,4 +133,17 @@
 	&:hover {
 		background-color: #677df7;
 	}
+	&:focus {
+		outline: none;
+	}
+}
+
+.search-results-bg-card {
+	position: absolute;
+	transform: translateY(100%);
+	width: 100%;
+}
+
+.outline-error {
+	border: 1px solid rgb(240, 100, 100) !important;
 }

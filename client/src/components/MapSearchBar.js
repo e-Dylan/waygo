@@ -38,11 +38,14 @@ class MapSearchBar extends React.Component {
 							
 							if (e.target.value.length > 2) {
 								// only send api request if query is >= 3 chars.
-								this.props.mapComponent.forwardGeocode({
+								var tempSearchResults = this.props.mapComponent.forwardGeocode({
 									endpoint: "mapbox.places", 
 									query: e.target.value, 
 									autocomplete: true, 
 									displayActiveMarker: false
+								})
+								.then(tempSearchResults => {
+									this.props.mapComponent.saveSearchResultsToMapState(tempSearchResults)
 								});
 							}
 

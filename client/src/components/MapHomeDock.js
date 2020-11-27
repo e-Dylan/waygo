@@ -253,7 +253,7 @@ class MapHomeDock extends React.Component {
 												
 												// Update redux state savedLocations with new DB data.
 												this.props.setUserSavedLocationsState(newSavedLocs);
-												console.log(newSavedLocs);
+												// console.log(newSavedLocs);
 											}}>
 												X
 											</button>
@@ -264,7 +264,7 @@ class MapHomeDock extends React.Component {
 							{ this.props.globalState.userState.isLoggedIn &&
 								<div className="add-place-tab-button-div">
 									<button className="add-place-tab-button" onClick={() => {
-										console.log(this.props.mapComponent.state.savedLocations);
+										// console.log(this.props.mapComponent.state.savedLocations);
 										this.props.mapComponent.promptSaveLocationDialogue();
 										this.props.mapComponent.moveHomeDock();
 									}}>

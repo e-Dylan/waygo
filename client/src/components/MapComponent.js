@@ -178,7 +178,14 @@ class MapComponent extends React.Component {
 		});
 	}
 
-	compileSearchResults(data) {
+	/**
+	 * Takes an array of mapbox api results for a search query,
+	 * extracts necessary data from them (mapApi.compileLocationData),
+	 * saves this data to the map state as compiled search results.
+	 * 
+	 * @param { data } array (len 5) of mapbox api returned locations from search query. 
+	 */
+	saveSearchResultsToMapState(data) {
 		// console.log(data);
 		if (data != null) {
 			var searchResults = mapApi.compileLocationData(data);
@@ -741,8 +748,10 @@ class MapComponent extends React.Component {
 			});
 	}
 
+	// @param ret: return compiled search results to caller. if false, results will only save to map component's state.
+	// 					if true, results will not save to map component, only be returned.
 	forwardGeocode = ({ endpoint, query, autocomplete }) => {
-		fetch(
+		return fetch(
 			`https://api.mapbox.com/geocoding/v5/${endpoint}/${query}.json?
 			access_token=${MAPBOX_TOKEN}&autocomplete=${autocomplete}`
 		)
@@ -756,8 +765,9 @@ class MapComponent extends React.Component {
 			for (let i = 0; i < 5; i++) {
 				tempsearchResultItems[i] = data.features[i];
 			}
-			
-			this.compileSearchResults(tempsearchResultItems);
+
+			return tempsearchResultItems;
+			// this.compileSearchResults(tempsearchResultItems);
 		});
 	}
 
@@ -914,7 +924,7 @@ class MapComponent extends React.Component {
 		// console.log(locationData);
 		var response = api.saveLocationToApi(locationData)
 			.then(res => {
-				console.log(res);
+				// console.log(res);
 				var addedLocation = res.addedLocation;
 				this.props.addUserSavedLocation(addedLocation);
 			});

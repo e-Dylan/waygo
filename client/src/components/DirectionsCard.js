@@ -55,11 +55,14 @@ class DirectionsCard extends React.Component {
 							onChange={(e) => {
 								if (e.target.value.length > 2) {
 									// make request for locations only if 3+ chars
-									this.props.mapComponent.forwardGeocode({
+									var tempSearchResults = this.props.mapComponent.forwardGeocode({
 										endpoint: "mapbox.places", 
 										query: e.target.value, 
 										autocomplete: true, 
 										displayActiveMarker: false
+									})
+									.then(tempSearchResults => {
+										this.props.mapComponent.saveSearchResultsToMapState(tempSearchResults)
 									});
 
 									if (e.target.value.length < 1) {
@@ -91,11 +94,14 @@ class DirectionsCard extends React.Component {
 							onChange={(e) => {
 								if (e.target.value.length > 2) {
 									// make request for locations only if 3+ chars
-									this.props.mapComponent.forwardGeocode({
+									var tempSearchResults = this.props.mapComponent.forwardGeocode({
 										endpoint: "mapbox.places", 
 										query: e.target.value, 
 										autocomplete: true, 
 										displayActiveMarker: false
+									})
+									.then(tempSearchResults => {
+										this.props.mapComponent.saveSearchResultsToMapState(tempSearchResults)
 									});
 
 									if (e.target.value.length < 1) {

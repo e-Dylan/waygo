@@ -181,25 +181,6 @@ router.post('/deleteSavedLocation', (req, res) => {
 					});
 				}
 			});
-
-			// 	values = [savedDataString, uid] // user savedlocs array
-				
-			// 	overwrite db with that new array.
-			// 	sql_db.query('UPDATE user SET savedlocs = ? WHERE id = ?', values, (err, data, fields) => {
-			// 		if (err) {
-			// 			res.json({
-			// 				success: false,
-			// 				msg: "Error inserting user saved location into database - updated existing array."
-			// 			});
-			// 		} else {
-			// 			res.json({
-			// 				success: true,
-			// 				msg: "Successfully inserted user saved location into database. updated existing array.",
-			// 				savedLocations: savedData,
-			// 			});
-			// 		}
-			// 	});
-			// } 
 		});
 	}
 })

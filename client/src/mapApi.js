@@ -1,4 +1,11 @@
 
+/**
+ * Extracts data from a mapbox API location query and returns
+ * array with objects each containing relavent location data.
+ * 
+ * @param { data } array (len 5) of mapbox api returns for search results location query.
+ */
+
 export function compileLocationData(data) {
 	// data coming in will be an array of location items
 	// takes an array of items and scrapes it for an array of object items
@@ -21,6 +28,8 @@ export function compileLocationData(data) {
 			var lng;
 			var full_place;
 
+			// console.log(data);
+
 			if (data[i] != null) {
 				place = data[i].text;
 				full_place = data[i].place_name;
@@ -30,8 +39,10 @@ export function compileLocationData(data) {
 
 				if (data[i].properties != null)
 					place_properties = data[i].properties;
-				if (data[i].properties.address != null)
+				if (data[i].properties.address != null) // address is sometimes under properties.
 					address = data[i].properties.address
+				if (data[i].address != null) // address is sometimes just in data[i].address
+					address = data[i].address;
 
 				if (data[i].context != null) {
 					for (var j = 0; j < data[i].context.length; j++) {
