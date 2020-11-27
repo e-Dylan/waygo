@@ -902,7 +902,7 @@ class MapComponent extends React.Component {
 	 */
 	saveLocation = (locationData) => {
 		/*
-		savedLocationData [FORMAT]:
+		savedLocationData (FORMAT):
 		JSON.stringify({
 				title: "Home",
 				place_name: "101 Brant Street, Burlington, Ontario",
@@ -911,14 +911,7 @@ class MapComponent extends React.Component {
 		})
 		*/
 
-		const lng = 43.322;
-		const lat = -79.801;
-
-		locationData = JSON.stringify({
-			...locationData,
-			lng: lng,
-			lat: lat
-		});
+		locationData = JSON.stringify(locationData);
 
 		if (locationData === null) return;
 		// console.log(locationData);

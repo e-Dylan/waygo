@@ -25,7 +25,9 @@ class SaveLocationDialogue extends React.Component {
 	state = {
 		addressSearchResultItems: [],
 		
-		showAddressSearchResults: false
+		showAddressSearchResults: false,
+		
+		activeLocationToBeSaved: {},
 	};
 
 	hideAddressSearchResults = ({reset}) => {
@@ -41,6 +43,21 @@ class SaveLocationDialogue extends React.Component {
 		this.setState({
 			showAddressSearchResults: true,
 		});
+	}
+
+	updateActiveLocationToBeSaved(activeLocationData) {
+		this.setState({ activeLocationToBeSaved: {
+			title: activeLocationData.title,
+			address: activeLocationData.full_place,
+			lng: activeLocationData.lng,
+			lat: activeLocationData.lat,
+		} }, () => {
+			console.log(this.state);
+		});
+	}
+
+	clearActiveLocationToBeSaved() {
+		this.setState({ activeLocationData: {}})
 	}
 
 	render() {
@@ -99,11 +116,21 @@ class SaveLocationDialogue extends React.Component {
 											this.setState({
 												addressSearchResultItems: compiledSearchResults
 											});
+
+											var bestLocation = compiledSearchResults[0]
+											bestLocation.title = document.getElementById('title-input-bar').value;
+											this.updateActiveLocationToBeSaved(bestLocation);
 										});
 									} else if (e.target.value.length < 1) {
 										// search bar is emptied, erase search results.
 										this.hideAddressSearchResults({reset: true});
 									}
+
+									// SET ACTIVE USER LOCATION TO BE SAVED
+									// EVERY ONCHANGE, AND ON PRESSING THE SAVE BUTTON
+									// USE THE TOP RELAVENT SEARCH RESULT RETURNED
+									// ONLY ALLOW TO SAVE IF ACTIVE TOBESAVED HAS A VALID
+									// LNGLAT.
 								}}
 							>
 							</input>
@@ -157,10 +184,16 @@ class SaveLocationDialogue extends React.Component {
 						// ADD NULL CHECK.
 
 						if (titleInputBar.value.length > 0 && addressInputBar.value.length > 0) {
-							this.props.mapComponent.saveLocation({
-								title: titleInputBar.value,
-								address: addressInputBar.value,
-							});
+							// Add title to saving location.
+							this.setState({
+								activeLocationToBeSaved: {
+									...this.state.activeLocationToBeSaved,
+									title: titleInputBar.value
+								},
+							}, console.log(this.state));
+							
+							// Save final location to database.
+							this.props.mapComponent.saveLocation(this.state.activeLocationToBeSaved);
 
 							titleInputBar.value = ""
 							addressInputBar.value = ""
