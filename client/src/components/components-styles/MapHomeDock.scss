@@ -194,6 +194,11 @@ ul {
 	}
 }
 
+.hidden-button {
+	opacity: 0;
+	pointer-events: none;
+}
+
 .saved-place-div {
 	display: flex;
 	flex-direction: row;
@@ -220,8 +225,6 @@ ul {
 		}
 	}
 
-	
-
 	.loc-remove-button-div {
 		display: flex;
 		flex-direction: column;
@@ -237,6 +240,8 @@ ul {
 			border: 1px solid rgba(200, 200, 200, 0.6);
 			transition: 150ms all ease-in-out;
 			margin-right: 1rem;
+			position: absolute;
+			right: 5px;
 
 			&:hover {
 				color: #fff;

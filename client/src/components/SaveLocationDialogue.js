@@ -52,7 +52,7 @@ class SaveLocationDialogue extends React.Component {
 			lng: activeLocationData.lng,
 			lat: activeLocationData.lat,
 		} }, () => {
-			console.log(this.state);
+			// console.log(this.state);
 		});
 	}
 
@@ -92,18 +92,19 @@ class SaveLocationDialogue extends React.Component {
 							<a className="fa fa-user icon">
 								<img src={addressIcon}></img>
 							</a>
-							<input 
+							<input
 								className="location-input-bar"
 								id="address-input-bar"
 								placeholder="location address."
-								autocomplete="off"
+								autoComplete="off"
 								onFocus={() => {
 									this.showAddressSearchResults();
 								}}
 								onBlur={() => {
-									this.hideAddressSearchResults({reset: false});
+									// this.hideAddressSearchResults({reset: false});
 								}}
 								onChange={(e) => {
+									const addressInputBar = document.getElementById('address-input-bar');
 									if (e.target.value.length > 2) {
 										// fetch search result items
 										var searchResults = this.props.mapComponent.forwardGeocode({
@@ -120,6 +121,9 @@ class SaveLocationDialogue extends React.Component {
 											var bestLocation = compiledSearchResults[0]
 											bestLocation.title = document.getElementById('title-input-bar').value;
 											this.updateActiveLocationToBeSaved(bestLocation);
+
+											// Set placeholder with autocomplete location
+											// addressInputBar.placeholder = bestLocation.full_place
 										});
 									} else if (e.target.value.length < 1) {
 										// search bar is emptied, erase search results.
@@ -135,16 +139,18 @@ class SaveLocationDialogue extends React.Component {
 							>
 							</input>
 							{ this.state.showAddressSearchResults && this.state.addressSearchResultItems.length > 0 &&
-								<Card className="search-results-bg-card dirs-from-search-results">
+								<Card className="search-results-bg-card search-results-bg-card-saveloc-dialogue dirs-from-search-results">
 									{ this.state.addressSearchResultItems.map(searchResult =>
 
 										<div 
-										className="search-result-div"
-										onClick={ () => {
-											this.hideAddressSearchResults({reset: false });
-										}}
-										key={Math.random()}
-										title={searchResult.place_name}
+											className="search-result-div"
+											onClick={ (e) => {
+												const addressInputBar = document.getElementById('address-input-bar')
+												addressInputBar.value = searchResult.full_place
+												this.hideAddressSearchResults({reset: false });
+											}}
+											key={Math.random()}
+											title={searchResult.place_name}
 										>
 											<div>
 												<img src={ citySearchIcon } className="search-result-icon"></img>
@@ -190,8 +196,14 @@ class SaveLocationDialogue extends React.Component {
 									...this.state.activeLocationToBeSaved,
 									title: titleInputBar.value
 								},
-							}, console.log(this.state));
+							});
 							
+							// Ensure lng/lat.
+							if (this.state.activeLocationToBeSaved.lng == null || this.state.activeLocationToBeSaved.lat == null) {
+								alert('Failed to save location: invalid location.');
+								return;
+							}
+
 							// Save final location to database.
 							this.props.mapComponent.saveLocation(this.state.activeLocationToBeSaved);
 
@@ -203,7 +215,6 @@ class SaveLocationDialogue extends React.Component {
 								titleInputBar.classList.add('outline-error');
 							if (addressInputBar.value.length < 1)
 								addressInputBar.classList.add('outline-error');
-								console.log('s')
 
 							setTimeout(() => {
 								titleInputBar.classList.remove('outline-error');

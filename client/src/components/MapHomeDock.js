@@ -217,10 +217,18 @@ class MapHomeDock extends React.Component {
 								{ this.props.globalState.userSavedLocationsState.map((place, index) =>
 									<div 
 										className="saved-place-div" 
-										key={Math.random()} 
+										key={Math.random()}
+										id={"location-div-"+index}
 										title={place.address || Math.random()} 
-										onMouseEnter={this.handleMouseHover}
-										onMouseLeave={this.handleMouseHover}
+										onMouseEnter={() => {
+											const closeButton = document.getElementById("location-div-remove-button-"+index)
+											closeButton.classList.remove('hidden-button');
+										}}
+										onMouseLeave={() => {
+											// const closeButton = document.childNodes[0];
+											const closeButton = document.getElementById("location-div-remove-button-"+index)
+											closeButton.classList.add('hidden-button');
+										}}
 									>
 
 										<div className="location-data">
@@ -243,7 +251,7 @@ class MapHomeDock extends React.Component {
 											
 										</div>
 										<div className="loc-remove-button-div">
-											<button className="loc-remove-button" onClick={async () => {
+											<button className="loc-remove-button hidden-button" id={"location-div-remove-button-"+index} onClick={async () => {
 												index = JSON.stringify({
 													index: index
 												});
