@@ -6,7 +6,7 @@ import directionsCarIcon from "../resources/maki-icons/car-15.svg";
 import citySearchIcon from "../resources/maki-icons/building-alt1-15.svg";
 
 import '../App.css'
-import './components-styles/MapComponent.css';
+import './components-styles/MapComponent.scss';
 
 class MapSearchBar extends React.Component {
 	constructor(props) {

@@ -7,7 +7,7 @@ import citySearchIcon from "../resources/maki-icons/building-alt1-15.svg";
 import directionsBuildingIcon from "../resources/maki-icons/building-alt1-15.svg";
 
 import '../App.css'
-import './components-styles/MapComponent.css';
+import './components-styles/MapComponent.scss';
 
 class DirectionsCard extends React.Component {
 

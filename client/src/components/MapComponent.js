@@ -11,7 +11,7 @@ import { Card } from 'reactstrap';
 
 // Css
 import '../App.css';
-import './components-styles/MapComponent.css';
+import './components-styles/MapComponent.scss';
 import './components-styles/WaymessageMenu.css';
 import './components-styles/SaveLocationDialogue.scss';
 
@@ -31,6 +31,7 @@ import MapContextMenu from './MapContextMenu';
 import MapSearchBar from './MapSearchBar';
 import MapLocationCard from './MapLocationCard';
 import DirectionsCard from './DirectionsCard';
+import RoutesCard from './RoutesCard';
 import SaveLocationDialogue from './SaveLocationDialogue';
 
 // Icons
@@ -134,6 +135,7 @@ class MapComponent extends React.Component {
 		showMapSearchBar: true,
 		showLocationCard: false,
 		showDirectionsCard: false,
+		showRoutesCard: true,
 
 		showLocationSearchResults: false,
 		showDirsFromSearchResults: false,
@@ -160,6 +162,10 @@ class MapComponent extends React.Component {
 			region: "",
 			country: ""
 		},
+
+		displayingRoutes: [
+			{title: "Route title", origin: "Burlington", destination: "Toronto"}
+		],
 	}
 
 	compileActiveLocationData(data) {
@@ -1130,6 +1136,10 @@ class MapComponent extends React.Component {
 
 					{ this.state.showLocationCard && this.state.activeLocationData != null && this.state.showLocation &&
 						<MapLocationCard mapComponent={this} />
+					}
+
+					{ this.state.showRoutesCard && this.state.displayingRoutes.length > 0 &&
+						<RoutesCard mapComponent={this} />
 					}
 					
 				</div>

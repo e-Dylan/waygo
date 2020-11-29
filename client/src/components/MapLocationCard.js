@@ -3,7 +3,7 @@ import React from "react";
 import { Card } from 'reactstrap';
 
 import '../App.css'
-import './components-styles/MapComponent.css';
+import './components-styles/MapComponent.scss';
 
 class MapLocationCard extends React.Component {
 	constructor(props) {
