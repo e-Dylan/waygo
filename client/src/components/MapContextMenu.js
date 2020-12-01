@@ -24,7 +24,6 @@ class MapContextMenu extends React.Component {
 				<div className="context-menu-div" 
 					onClick={ () => {
 						this.props.placeDestMarker(this.props.lastClickedMap.lng, this.props.lastClickedMap.lat); 
-						console.log(this.props);
 					}}>
 					<h1>Set Destination</h1>
 				</div>

@@ -41,6 +41,44 @@
 		width: 100%;
 		height: auto;
 		background: #fff;
+		margin: 10px;
+	}
+
+}
+
+.route-option {
+	display: flex;
+	flex-direction: row;
+	padding: 10px;
+
+	.route-icon {
+		margin: 0 10px;
+	}
+
+	.route-data {
+		margin-left: 10px;
+		display: flex;
+		flex-direction: column;
+		overflow-x: nowrap;
+		
+		.highlight {
+			color: var(--blue_main);
+		}
+
+		.route-top {
+
+		}
+
+		.route-bottom {
+			display: flex;
+			flex-direction: row;
+			font-size: 8pt;
+			justify-content: space-between;
+
+			div {
+				margin-right: 1rem;
+			}
+		}
 	}
 }
 
@@ -50,8 +88,4 @@
 	padding: 6px 10px;
 	background-color: rgba(219, 218, 218, 0.2);
 	width: 100%;
-}
-
-.routes-container {
-	margin: 10px;
 }

@@ -163,8 +163,8 @@ class MapComponent extends React.Component {
 			country: ""
 		},
 
-		displayingRoutes: [
-			{title: "Route title", origin: "Burlington", destination: "Toronto"}
+		activeDisplayingRoutes: [
+			
 		],
 	}
 
@@ -241,6 +241,8 @@ class MapComponent extends React.Component {
 
 		this.map.on('click', (event) => {
 			this.clickMap(event);
+			// REMOVE, TESTING DRAWING ROUTES
+			console.log(this.state.activeDisplayingRoutes);
 		})
 
 		this.map.on('contextmenu', (event) => {
@@ -392,8 +394,8 @@ class MapComponent extends React.Component {
 
 	setActiveDest(locationData) {
 		this.setState({activeDest: locationData}, () => {
-			console.log(this.state.activeDest);
-			this.checkCalculateRoute();
+			// console.log(this.state.activeDest);
+			this.checkCalculateRoutes();
 		});
 
 		// set active to-value in dirs card to active destination whenever set.
@@ -442,8 +444,7 @@ class MapComponent extends React.Component {
 
 	setActiveOrigin(locationData) {
 		this.setState({activeOrigin: locationData}, () => {
-			console.log(this.state.activeOrigin);
-			this.checkCalculateRoute();
+			this.checkCalculateRoutes();
 		});
 		
 		// Set current directions card to the active origin.
@@ -777,9 +778,9 @@ class MapComponent extends React.Component {
 		});
 	}
 
-	checkCalculateRoute = () => {
+	checkCalculateRoutes = () => {
 		if (this.state.activeOrigin.lat != null && this.state.activeDest.lat != null) {
-			this.calculateRoute(
+			this.calculateRoutes(
 				{
 					lat: this.state.activeOrigin.lat, lng: this.state.activeOrigin.lng, 
 				},
@@ -790,7 +791,7 @@ class MapComponent extends React.Component {
 		}
 	}
 
-	calculateRoute = (origin, destination, profile) => {
+	calculateRoutes = (origin, destination, profile) => {
 
 		if (origin === null || destination === null) 
 			return;
@@ -799,7 +800,6 @@ class MapComponent extends React.Component {
 			profile = this.state.activeProfile;
 
 		console.log(profile);
-
 			
 		var travelColour;
 		switch (profile) {
@@ -810,60 +810,73 @@ class MapComponent extends React.Component {
 		}
 
 		// https://api.mapbox.com/directions/v5/mapbox/cycling/-84.518641,39.134270;-84.512023,39.102779?
+		
+
+		// ADD PROMISE.ALL TO FETCH MULTIPLE DIFFERENT PROFILES AT ONCE FOR ALL RECC ROUTES.
+		//https://stackoverflow.com/questions/59037553/fetch-multiple-urls-at-the-same-time
+
 		fetch(
-			`https://api.mapbox.com/directions/v5/mapbox/${profile}/
-			 ${origin.lng},${origin.lat};${destination.lng},${destination.lat}?steps=true&overview=full&alternatives=true&geometries=geojson&access_token=${MAPBOX_TOKEN}`
+			`https://api.mapbox.com/directions/v5/mapbox/${profile}/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?steps=true&overview=full&alternatives=true&geometries=geojson&access_token=${MAPBOX_TOKEN}`
 		)
 		.then(res => res.json())
 		.then(data => {
-			console.log(data);
+			console.log(data.routes);
 
-			var route = data.routes[0].geometry.coordinates;
-			var geojson = {
-				type: 'Feature',
-				properties: {},
-				geometry: {
-					type: 'LineString',
-					coordinates: route
-				}
-			};
-	
-			if (this.map.getSource('route')) {
-				// if the route already exists on the map, reset it using setData
-				this.map.getSource('route').setData(geojson);
-			} else { // otherwise, make a new request
-				
-				this.map.addLayer({
-					id: 'route',
-					type: 'line',
-					source: {
-						type: 'geojson',
-						data: {
-						type: 'Feature',
-						properties: {},
-						geometry: {
-							type: 'LineString',
-							coordinates: geojson
-						}
-						}
-					},
-					layout: {
-						'line-join': 'round',
-						'line-cap': 'round'
-					},
-					paint: {
-						'line-color': travelColour,
-						'line-width': 5,
-						'line-opacity': 0.75
-					}
-				});	
-				
-				// Set layer data to geojson line once added.
-				this.map.getSource('route').setData(geojson);
+			if (data.routes != null) {
+				this.setState({
+					showRoutesCard: true,
+					activeDisplayingRoutes: data.routes,
+				});
 			}
-			// add turn instructions here at the end
+			// var route = data.routes[0].geometry.coordinates;
 
 		});
+	}
+
+	drawRoute = (route, travelColour) => {
+		var geojson = {
+			type: 'Feature',
+			properties: {},
+			geometry: {
+				type: 'LineString',
+				coordinates: route.geometry.coordinates
+			}
+		};
+
+		if (this.map.getSource('route')) {
+			// if the route already exists on the map, reset it using setData
+			this.map.getSource('route').setData(geojson);
+		} else { // otherwise, make a new request
+			
+			this.map.addLayer({
+				id: 'route',
+				type: 'line',
+				source: {
+					type: 'geojson',
+					data: {
+					type: 'Feature',
+					properties: {},
+					geometry: {
+						type: 'LineString',
+						coordinates: geojson
+					}
+					}
+				},
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round'
+				},
+				paint: {
+					'line-color': travelColour,
+					'line-width': 5,
+					'line-opacity': 0.75
+				}
+			});	
+			
+			// Set layer data to geojson line once added.
+			this.map.getSource('route').setData(geojson);
+		}
+		// add turn instructions here at the end
 	}
 
 
@@ -1138,7 +1151,7 @@ class MapComponent extends React.Component {
 						<MapLocationCard mapComponent={this} />
 					}
 
-					{ this.state.showRoutesCard && this.state.displayingRoutes.length > 0 &&
+					{ this.state.showRoutesCard &&
 						<RoutesCard mapComponent={this} />
 					}
 					
