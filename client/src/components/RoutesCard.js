@@ -105,7 +105,7 @@ class RoutesCard extends React.Component {
 												{/* Return icon specific to route profile type */}
 												switch (route.weight_name) {
 													case "auto": return <img src={carIcon} />
-													case "routability": return <img src={trafficIcon} />
+													case "routability": return <img src={carIcon} />
 													case "walkability": return <img src={walkIcon} />
 													case "cyclability": return <img src={cycleIcon} />
 												}
