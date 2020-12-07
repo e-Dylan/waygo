@@ -7,7 +7,13 @@ Waygo <br/>
 
 [![Website](https://img.shields.io/website?label=Waygo-App&style=for-the-badge&url=https%3A%2F%2Fe-dylan.github.io/waygo/)](https://e-dylan.github.io/waygo/)
 ---
-[Waygo](https://e-dylan.github.io/waygo/) is a web and mobile application.
+[Waygo](https://e-dylan.github.io/waygo/) is a web and mobile application that allows you to find the most time-optimal routes for navigation and travel. Access it on your phone while in the car to track your trip and use one of the many features it provides to make your trip easier.
+
+- Automatically update your route using live traffic in your area.
+- Be alerted to speed limits on the road you are on.
+- See live information about closures or accidents happening nearby.
+- Save destinations to your account so you can easily use them again.
+- And more.
 
 <a href="https://dylansmith.vercel.app/">
     <img src="/demo/waygo-app-demo.gif" alt="Website Logo" title="Logo" align="right" height="700" width="1000" />
