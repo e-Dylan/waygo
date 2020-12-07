@@ -8,6 +8,7 @@
 ---
 [Waygo](https://e-dylan.github.io/waygo/) is a web and mobile application that allows you to find the most time-optimal routes for navigation and travel. Access it on your phone while in the car to track your trip and use one of the many features it provides to make your trip easier.
 
+### Features
 - Automatically update your route using live traffic in your area.
 - Be alerted to speed limits on the road you are on.
 - See live information about closures or accidents happening nearby.
@@ -20,6 +21,9 @@
 
 <br/>
 <br/>
+
+### In Development
+This application is still in development - it is not yet hosted in live deployment.
 
 ### Build:
 <img align="left" alt="HTML5" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/html/html.png" />
