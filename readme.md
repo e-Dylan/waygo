@@ -1,5 +1,5 @@
 <p href="https://dylansmith.vercel.app/" align="center">
-    <img src="/client/src/resources/logo/waygo.png" height="170" width="170" />
+    <img src="https://github.com/e-Dylan/waygo/blob/master/client/src/resources/logo/waygo.png" height="170" width="170" />
 </p>
 
 --------------------------------------------------------------------
