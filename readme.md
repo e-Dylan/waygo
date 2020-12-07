@@ -16,7 +16,7 @@
 - And more.
 
 <a href="https://dylansmith.vercel.app/">
-    <img src="/demo/waygo-app-demo.gif" alt="Website Logo" title="Logo" align="right" height="700" width="1000" />
+    <img src="/demo/waygo-demo.gif" alt="Website Logo" title="Logo" align="right" height="700" width="1000" />
 </a>
 
 <br/>
