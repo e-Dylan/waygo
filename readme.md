@@ -9,6 +9,10 @@ Waygo <br/>
 ---
 [Waygo](https://e-dylan.github.io/waygo/) is a web and mobile application.
 
+<a href="https://dylansmith.vercel.app/">
+    <img src="/demo/waygo-app-demo.gif" alt="Website Logo" title="Logo" align="right" height="700" width="1000" />
+</a>
+
 <br/>
 <br/>
 
