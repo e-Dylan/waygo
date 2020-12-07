@@ -2,8 +2,7 @@
     <img src="/client/src/resources/logo/waygo.png" height="150" width="150" />
 </a>
 
-Waygo <br/>
-==========================================
+--------------------------------------------------------------------
 
 [![Website](https://img.shields.io/website?label=Waygo-App&style=for-the-badge&url=https%3A%2F%2Fe-dylan.github.io/waygo/)](https://e-dylan.github.io/waygo/)
 ---
