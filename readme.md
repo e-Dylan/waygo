@@ -1,5 +1,5 @@
 <a href="https://dylansmith.vercel.app/">
-    <img src="/client/src/resources/logo/waygo.png" alt="App Logo" title="Logo" align="right" height="250" width="250" />
+    <img src="/client/src/resources/logo/waygo.png" alt="App Logo" title="Logo" align="right" height="150" width="150" />
 </a>
 
 Waygo <br/>
