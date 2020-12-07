@@ -1,6 +1,6 @@
-<a href="https://dylansmith.vercel.app/" align="center">
+<p href="https://dylansmith.vercel.app/" align="center">
     <img src="/client/src/resources/logo/waygo.png" height="150" width="150" />
-</a>
+</p>
 
 --------------------------------------------------------------------
 
