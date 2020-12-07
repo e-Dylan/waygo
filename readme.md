@@ -5,7 +5,7 @@
 Waygo <br/>
 ==========================================
 
-[![Live App](https://img.shields.io/website?label=Waygo App&style=for-the-badge&url=https%3A%2F%e-dylan.github.io/waygo/)](https://e-dylan.github.io/waygo/)
+[![Website](https://img.shields.io/website?label=Waygo&style=for-the-badge&url=https%3A%2F%2Fdylansmith.vercel.app)](https://e-dylan.github.io/waygo/)
 ---
 [Waygo](https://e-dylan.github.io/waygo/) is a web and mobile application.
 
