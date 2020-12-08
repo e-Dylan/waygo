@@ -34,8 +34,9 @@ router.use('/', saved_locations_router);
 
 const app = express();
 
+const origin = process.env.NODE_ENV === "production" ? process.env.PRODUCTION_URL : process.env.DEVELOPMENT_URL
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: origin,
   credentials: true,
 };
 
