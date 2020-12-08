@@ -190,34 +190,34 @@ router.post('/logout', (req, res) => {
 });
   
 router.post('/isLoggedIn', (req, res) => {
-// session.userID is set to db id to the req when user logs in.
-console.log("checking if logged in - session: " + req.session);
-if (req.session.userID) {
-	let cols = [req.session.userID];
-	sql_db.query('SELECT * FROM user WHERE id = ? LIMIT 1', cols, (err, data, fields) => {
-	// if the session user's id matches one in the db, they're logged in.
-	if (data && data.length === 1) {
-		res.json({
-		success: true,
-		username: data[0].username
+	// session.userID is set to db id to the req when user logs in.
+	console.log("checking if logged in - session: " + req.session);
+	if (req.session.userID) {
+		let cols = [req.session.userID];
+		sql_db.query('SELECT * FROM user WHERE id = ? LIMIT 1', cols, (err, data, fields) => {
+			// if the session user's id matches one in the db, they're logged in.
+			if (data && data.length === 1) {
+				res.json({
+				success: true,
+				username: data[0].username
+				});
+				return true;
+			}
+			else // no data matches from the db, no user.
+			{
+				res.json({
+				success: false
+				});
+			}
+
 		});
-		return true;
 	}
-	else // no data matches from the db, no user.
+	else // User has no session id.
 	{
 		res.json({
-		success: false
+			success: false
 		});
 	}
-
-	});
-}
-else // User has no session id.
-{
-	res.json({
-	success: false
-	});
-}
 
 });
 
