@@ -1,8 +1,8 @@
 const express = require('express');
-//const morgan = require('morgan');
+//const morgan = require('morgan'); -> Switched to volleyball
 const helmet = require('helmet');
-const cors = require('cors'); //-> Switched to volleyball
-const volleyball = require('volleyball');
+const cors = require('cors'); //
+// const volleyball = require('volleyball');
 // const bcrypt = require('bcryptjs');
 // const Joi = require('joi');
 // const monk = require("monk");
@@ -17,7 +17,7 @@ const sql_db = require('./sql_db');
 
 require('dotenv').config();
 
-const middlewares = require('./middlewares');
+// const middlewares = require('./middlewares');
 
 // Require all api backend serivces (waymessages, users, index.js)
 // to be used with express app.
@@ -33,15 +33,13 @@ const corsOptions = {
 ///app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors(corsOptions));
-app.use(volleyball);
+// app.use(volleyball);
 app.use(express.json());
 
 var sessionStore = new MySQLStore({
   expiration: (1825 * 1000 * 1000),
   endConnectionOnClose: false,
 }, sql_db);
-
-// app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(session({
   secret: "keyboard cat",
@@ -57,14 +55,13 @@ app.use(session({
 
 app.get('/', (req, res) => {
     // serve front-end with this file
-	// res.sendFile(path.join(__dirname, 'build', 'index.html'));
 	res.send("Served '/' on main app /api. ");
 });
 
 app.use('/api', routes_api);
 
-app.use(middlewares.notFound);
-app.use(middlewares.errorHandler);
+// app.use(middlewares.notFound);
+// app.use(middlewares.errorHandler);
 
 // Listen to backend api port to receive any requests.
 // backend api -> port 1337
