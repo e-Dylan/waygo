@@ -36,7 +36,7 @@ const app = express();
 
 const origin = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PRODUCTION_URL : process.env.REACT_APP_DEVELOPMENT_URL
 const corsOptions = {
-  origin: true,
+  origin: 'http://waygo.vercel.app',
   credentials: true,
 };
 

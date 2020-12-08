@@ -4,7 +4,7 @@ class InputField extends React.Component {
 
     render() {
         return (
-            <div className="input-field">
+            <div className="login-register-input-field">
                 <input
                     id={this.props.id}
                     className={this.props.className || 'input'}

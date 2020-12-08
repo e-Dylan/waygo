@@ -120,7 +120,8 @@ img {
     align-items: flex-start;
     width: fit-content;
     transition: all 400ms ease-in-out;
-    opacity: 100%;
+	opacity: 100%;
+	color: black;
 }
 
 .form-group-moveup {
@@ -148,7 +149,8 @@ label {
     font-size: 16px;
     font-family: 'Ubuntu', sans-serif;
     width: 100%;
-    align-items: center;
+	align-items: center;
+	color: #222;
     background-color: #f3f3f3;
     border: 0;
     border-radius: 3px;
