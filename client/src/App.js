@@ -23,10 +23,10 @@ const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? `${process
 
 class App extends Component {
 
-  // every component has a state object, can be set with setState()
-  state = {
-	
-  };
+	// every component has a state object, can be set with setState()
+	state = {
+
+	};
 
 	componentDidMount() {
 		// Check if user is logged in on application load
