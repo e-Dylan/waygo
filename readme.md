@@ -15,16 +15,20 @@
 - Save destinations to your account so you can easily use them again.
 - And more.
 
-<a href="https://dylansmith.vercel.app/">
+<p href="https://dylansmith.vercel.app/">
     <img src="/demo/waygo-demo.gif" alt="Website Logo" title="Logo" align="right" height="700" width="1000" />
-</a>
+</p>
 
 <br/>
-<br/>
-
 
 ### In Development
-This application is still in development - it is not yet hosted in live deployment.
+This application is still in development - it is not yet hosted in live deployment.<br/>
+
+You can view a [live demo](https://waygo.vercel.app) in its current state. There is no database hosting yet, so you cannot sign up as a user although the functionality is built.<br/>
+
+Go to ["live map"](https://waygo.vercel.app/live-map) for the main application.<br/>
+
+Contact me with any found bugs - all appreciated.
 
 ### Build:
 <img align="left" alt="HTML5" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/html/html.png" />
