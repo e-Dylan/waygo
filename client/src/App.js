@@ -18,8 +18,8 @@ import HomePage from './components/HomePage';
 import Nav from './components/Nav';
 import LoginRegisterComponent from './components/LoginRegisterComponent';
 
-const LOGOUT_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/logout" : "production-url-here";
-const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/isLoggedIn" : "production-url-here";
+const LOGOUT_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/logout` : `${process.env.REACT_APP_PRODUCTION_API_URL}/logout`;
+const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/isLoggedIn` : `${process.env.REACT_APP_PRODUCTION_API_URL}/isLoggedIn`;
 
 class App extends Component {
 
