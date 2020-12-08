@@ -120,7 +120,7 @@ img {
     align-items: flex-start;
     width: fit-content;
     transition: all 400ms ease-in-out;
-	opacity: 100%;
+	opacity: 99%;
 	color: black;
 }
 
@@ -139,22 +139,6 @@ img {
 .login-form-label {
     font-size: 20px;
     font-family: "Ubuntu", sans-serif;
-}
-
-.login-input-field {
-    margin-top: 6px;
-    min-width: 16em;
-    height: 100%;
-    padding: 0px 10px;
-    font-size: 16px;
-    font-family: 'Ubuntu', sans-serif;
-    width: 100%;
-	align-items: center;
-	color: #222;
-    background-color: #f3f3f3;
-    border: 0;
-    border-radius: 3px;
-	transition: all 100ms ease-in-out;
 }
 
 .form-group input:focus {
@@ -234,4 +218,20 @@ img {
     opacity: 0%;
     transform: translate(155%, 0);
     transition: all 400ms ease-in-out;
+}
+
+.login-input-field {
+    margin-top: 6px;
+    min-width: 16em;
+    height: 100%;
+    padding: 0px 10px;
+    font-size: 16px;
+    font-family: 'Ubuntu', sans-serif;
+    width: 100%;
+	align-items: center;
+	color: #222;
+    background-color: #f3f3f3;
+    border: 0;
+    border-radius: 3px;
+	transition: all 100ms ease-in-out;
 }

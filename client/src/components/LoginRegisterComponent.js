@@ -147,7 +147,7 @@ class LoginRegisterComponent extends Component {
         const login_image = document.getElementById("login-image");
         const register_image = document.getElementById("register-image");
         const email_div = document.getElementById("email-div");
-        const email_inputfield = document.getElementById("email-inputfield");
+        const email_inputfield = document.getElementById("email-input-field");
         const password_div = document.getElementById("password-div");
         const login_form_button_div = document.getElementById("login-form-submit-button-div");
         
@@ -226,7 +226,7 @@ class LoginRegisterComponent extends Component {
                                 <div className="form-group form-group-moveup form-group-behind form-group-transparent" id="email-div">
                                     <label className="login-form-label" htmlFor="email">email</label>
                                     <InputField
-                                        id='email-inputfield'
+                                        id='email-input-field'
 										className="login-input-field"
                                         disabled={true}
                                         type='email'
