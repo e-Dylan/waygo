@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './components-styles/LoginRegisterComponent.css';
+
 class InputField extends React.Component {
 
     render() {
