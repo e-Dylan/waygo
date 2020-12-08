@@ -136,12 +136,12 @@ img {
     z-index: -1;
 }
 
-label {
+.login-form-label {
     font-size: 20px;
     font-family: "Ubuntu", sans-serif;
 }
 
-.form-group input {
+.login-input-field {
     margin-top: 6px;
     min-width: 16em;
     height: 100%;
@@ -154,7 +154,7 @@ label {
     background-color: #f3f3f3;
     border: 0;
     border-radius: 3px;
-    transition: all 100ms ease-in-out;
+	transition: all 100ms ease-in-out;
 }
 
 .form-group input:focus {

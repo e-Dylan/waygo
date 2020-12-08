@@ -1,15 +1,13 @@
 import React from 'react';
 
-import './components-styles/LoginRegisterComponent.css';
-
 class InputField extends React.Component {
 
     render() {
         return (
-            <div className="login-register-input-field">
+            <div className="input-field">
                 <input
                     id={this.props.id}
-                    className={this.props.className || 'input'}
+                    className={this.props.className || 'input-field'}
                     type={this.props.type}
                     placeholder={this.props.placeholder}
                     value={this.props.value}

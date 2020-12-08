@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import '../App.css';
-import './components-styles/LoginRegisterComponent.css';
+import './components-styles/LoginRegisterComponent.scss';
 
 import InputField from './InputField'
 import SubmitButton from './SubmitButton'
@@ -213,9 +213,10 @@ class LoginRegisterComponent extends Component {
                             
                             <div className="form">
                                 <div className="form-group">
-                                    <label htmlFor="username">username</label>
+                                    <label className="login-form-label" htmlFor="username">username</label>
                                     <InputField
                                         type='text'
+										className="login-input-field"
                                         placeholder='username'
                                         name='username'
                                         value={this.state.username ? this.state.username : ''}
@@ -223,9 +224,10 @@ class LoginRegisterComponent extends Component {
                                     />
                                 </div>
                                 <div className="form-group form-group-moveup form-group-behind form-group-transparent" id="email-div">
-                                    <label htmlFor="email">email</label>
+                                    <label className="login-form-label" htmlFor="email">email</label>
                                     <InputField
                                         id='email-inputfield'
+										className="login-input-field"
                                         disabled={true}
                                         type='email'
                                         placeholder='email'
@@ -234,9 +236,10 @@ class LoginRegisterComponent extends Component {
                                     />
                                 </div>
                                 <div className="form-group form-group-moveup" id="password-div">
-                                    <label htmlFor="password">password</label>
+                                    <label className="login-form-label" htmlFor="password">password</label>
                                     <InputField
                                         type='password'
+										className="login-input-field"
                                         placeholder='password'  
                                         value={this.state.password ? this.state.password : ''}
                                         onChange={ (val) => this.setStateFromInputValue('password', val) }
