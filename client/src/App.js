@@ -116,7 +116,7 @@ class App extends Component {
 				<Nav doLogout={this.doLogout} />
 				<Switch>
 					<Route exact path="/" component={HomePage} />
-					<Route path="/account/login" component={LoginRegisterComponent} />
+					<Route path="/login" component={LoginRegisterComponent} />
 				</Switch>
 			</div>
 		);
