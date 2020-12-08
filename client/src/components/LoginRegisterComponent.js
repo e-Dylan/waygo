@@ -9,7 +9,7 @@ import SubmitButton from './SubmitButton'
 const register_form_image = require('../resources/login-form/register-form-image.png');
 const login_form_image = require('../resources/login-form/login-form-image.png');
 
-const WEBSITE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : "production-url-here";
+const WEBSITE_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_URL}` : `${process.env.REACT_APP_PRODUCTION_URL}`;
 
 
 class LoginRegisterComponent extends Component {
@@ -49,7 +49,7 @@ class LoginRegisterComponent extends Component {
     }
 
     async doRegister() {
-        const REGISTER_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/register" : "production-url-here";
+        const REGISTER_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/register` : `${process.env.REACT_APP_DEVELOPMENT_API_URL}/register`;
 
         if (!this.state.username || !this.state.email || !this.state.password) {
             return;
@@ -96,7 +96,7 @@ class LoginRegisterComponent extends Component {
     }
 
     async doLogin() {
-        const LOGIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/login" : "production-url-here";
+        const LOGIN_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/login` : `${process.env.REACT_APP_DEVELOPMENT_API_URL}/login`;
 
         if (!this.state.username || !this.state.password) {
             return;
