@@ -7,7 +7,6 @@ import { setUserSavedLocationsState } from '../redux/actions/setUserSavedLocatio
 import { addUserSavedLocation } from '../redux/actions/addUserSavedLocation';
 
 // import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
-import { Card } from 'reactstrap';
 
 // Css
 import '../App.css';
@@ -17,7 +16,6 @@ import './components-styles/SaveLocationDialogue.scss';
 
 // Dependencies
 import mapboxgl from 'mapbox-gl';
-import ReactMapGL, { GeolocateControl, Marker, Layer, FlyToInterpolator, MapController } from 'react-map-gl';
 import Joi from "joi";
 
 // backend api functions
@@ -38,13 +36,6 @@ import SaveLocationDialogue from './SaveLocationDialogue';
 import activeMarkerIcon from '../resources/map/activeMarkerIcon.svg';
 import destIcon from "../resources/map/destIcon.svg";
 import originIcon from '../resources/map/originIcon.svg';
-import waymessageIcon from "../resources/map/waymessage_icon.svg";
-import directionsCarIcon from "../resources/maki-icons/car-15.svg";
-import directionsBuildingIcon from "../resources/maki-icons/building-alt1-15.svg";
-
-import torontoImage from '../resources/map/toronto-image.jpg';
-
-import citySearchIcon from "../resources/maki-icons/building-alt1-15.svg";
 
 const MapboxTraffic = require('@mapbox/mapbox-gl-traffic');
 
@@ -1179,9 +1170,6 @@ class MapComponent extends React.Component {
 	
 
     render() {
-		const { viewport } = this.state;
-
-		const mapController = new MapController();
 		
 		return (
             <div className="map" id="map-div">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card } from 'reactstrap';
+// import { Button, Card } from 'reactstrap';
 
 import mapboxgl from 'mapbox-gl';
 
@@ -12,7 +12,7 @@ import walkIcon from '../resources/maki-icons/pitch-15.svg'
 import busIcon from '../resources/maki-icons/bus-15.svg';
 import cycleIcon from '../resources/maki-icons/bicycle-share-15.svg';
 
-import trafficIcon from '../resources/maki-icons/icons8-traffic-light-26.png'
+// import trafficIcon from '../resources/maki-icons/icons8-traffic-light-26.png'
 
 class RoutesCard extends React.Component {
 	constructor(props) {
