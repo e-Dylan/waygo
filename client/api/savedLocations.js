@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 const router = express.Router();
 
-const sql_db = require('../sql_db');
+const sql_db = require('./sql_db');
 
 const locationSchema = Joi.object({
     username: Joi.string()

@@ -25,8 +25,8 @@ require('dotenv').config();
 const router = express.Router();
 
 // Import routers
-const users_router = require('./routes/users');
-const saved_locations_router = require('./routes/savedLocations');
+const users_router = require('./users');
+const saved_locations_router = require('./savedLocations');
 
 // Combine routers
 router.use('/', users_router);
