@@ -120,7 +120,7 @@ img {
     align-items: flex-start;
     width: fit-content;
     transition: all 400ms ease-in-out;
-	opacity: 99%;
+	opacity: 1.0;
 	color: black;
 }
 
@@ -129,7 +129,7 @@ img {
 }
 
 .form-group-transparent {
-    opacity: 0%;
+    opacity: 0;
 }
 
 .form-group-behind {
@@ -202,7 +202,7 @@ img {
 
 .login-image-left-hidden {
     z-index: 3;
-    opacity: 0%;
+    opacity: 0;
     position: absolute;
     right: 0;
     top: 0;
@@ -215,7 +215,7 @@ img {
     position: absolute;
     right: 0;
     top: 0;
-    opacity: 0%;
+    opacity: 0;
     transform: translate(155%, 0);
     transition: all 400ms ease-in-out;
 }
