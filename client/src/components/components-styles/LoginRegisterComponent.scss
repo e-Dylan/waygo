@@ -107,7 +107,7 @@ img {
     height: 100%;
 }
 
-.form {
+.input-form-container {
     margin-top: 2em;
     display: flex;
     flex-direction: column;
@@ -120,7 +120,7 @@ img {
     align-items: flex-start;
     width: fit-content;
     transition: all 400ms ease-in-out;
-	opacity: 1.0;
+	opacity: 1;
 	color: black;
 }
 
@@ -139,11 +139,6 @@ img {
 .login-form-label {
     font-size: 20px;
     font-family: "Ubuntu", sans-serif;
-}
-
-.form-group input:focus {
-    outline: none;
-    box-shadow: 0px 0px 6px 1px rgb(81, 139, 192);
 }
 
 .login-form-button {
@@ -234,4 +229,10 @@ img {
     border: 0;
     border-radius: 3px;
 	transition: all 100ms ease-in-out;
+	color: black;
+
+	&:focus {
+		outline: none;
+		box-shadow: 0px 0px 6px 1px rgb(81, 139, 192);
+	}
 }

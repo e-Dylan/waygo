@@ -211,7 +211,7 @@ class LoginRegisterComponent extends Component {
                                 <img src={register_form_image} className="register-image-right-hidden" id="register-image" />
                             </div>
                             
-                            <div className="form">
+                            <div className="input-form-container">
                                 <div className="form-group">
                                     <label className="login-form-label" htmlFor="username">username</label>
                                     <InputField
