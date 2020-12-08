@@ -25,6 +25,9 @@
 
 ### In Development
 This application is still in development - it is not yet hosted in live deployment.
+You can view a [live demo](waygo.vercel.app) in its current state. There is no database hosting yet, so you cannot sign up as a user although the functionality is built.
+Go to ["live map"](waygo.vercel.app/live-map) for the main application.
+Contact me with any found bugs - all appreciated.
 
 ### Build:
 <img align="left" alt="HTML5" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/html/html.png" />
