@@ -42,7 +42,7 @@ class RegisterForm extends React.Component {
     }
 
     async doRegister() {
-        const REGISTER_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/register" : "production-url-here";
+        const REGISTER_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/register` : `${process.env.REACT_APP_PRODUCTION_API_URL}/register`;
 
         if (!this.state.username || !this.state.email || !this.state.password) {
             return;

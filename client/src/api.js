@@ -1,7 +1,7 @@
-const WAYMESSAGE_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/waymessages" : "production-url-here";
-const SAVE_LOCATION_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/saveLocation" : "produced-url-here";
-const GET_SAVED_LOCATIONS_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/reqSavedLocations" : "produced-url-here";
-const DELETE_SAVED_LOCATION_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/deleteSavedLocation" : "production-url-here";
+const WAYMESSAGE_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/waymessages" : `${process.env.REACT_APP_PRODUCTION_API_URL}/waymessages`;
+const SAVE_LOCATION_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/saveLocation" : `${process.env.REACT_APP_PRODUCTION_API_URL}/saveLocation`;
+const GET_SAVED_LOCATIONS_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/reqSavedLocations" : `${process.env.REACT_APP_PRODUCTION_API_URL}/reqSavedLocations`;
+const DELETE_SAVED_LOCATION_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/deleteSavedLocation" : `${process.env.REACT_APP_PRODUCTION_API_URL}/deleteSavedLocation}`;
 
 export function saveLocationToApi(locationData) {
 	// CURRENT LOCATION OBJECT FORMAT:

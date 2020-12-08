@@ -58,7 +58,7 @@ const waymessage_schema = Joi.object({
         .required(),
 })
 
-const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/isLoggedIn" : `${PRODUCTION_API_URL}/isLoggedIn`;
+const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/isLoggedIn` : `${process.env.REACT_APP_PRODUCTION_API_URL}/isLoggedIn`;
 
 class MapComponent extends React.Component {
 
@@ -1072,12 +1072,12 @@ class MapComponent extends React.Component {
 		})
 
         // Fetch all waymessages from backend db
-        api.fetchWayMessages()
-          .then(waymessages => {
-            this.setState({
-              waymessages
-            })
-          });
+        // api.fetchWayMessages()
+        //   .then(waymessages => {
+        //     this.setState({
+        //       waymessages
+        //     })
+        //   });
     
         // Grab user's location with geolocator/ip api.
         api.getUserLocation()

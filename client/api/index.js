@@ -34,7 +34,7 @@ router.use('/', saved_locations_router);
 
 const app = express();
 
-const origin = process.env.NODE_ENV === "production" ? process.env.PRODUCTION_URL : process.env.DEVELOPMENT_URL
+const origin = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PRODUCTION_URL : process.env.REACT_APP_DEVELOPMENT_URL
 const corsOptions = {
   origin: true,
   credentials: true,
@@ -75,7 +75,7 @@ app.use('/api', router);
 
 // Listen to backend api port to receive any requests.
 // backend api -> port 1337
-const api_port = 5000; // || 1337;
+const api_port = 1337;
 app.listen(api_port, () => {
     console.log(`Listening: on ${api_port}, backend api port.`);
 });
