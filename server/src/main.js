@@ -68,7 +68,7 @@ app.use(middlewares.errorHandler);
 
 // Listen to backend api port to receive any requests.
 // backend api -> port 1337
-const api_port = 5000; // || 1337;
+const api_port = 1337; // || 1337;
 app.listen(api_port, () => {
     console.log(`Listening: on ${api_port}, backend api port.`);
 });

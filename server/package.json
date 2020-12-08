@@ -2,10 +2,10 @@
   "name": "waygo-app",
   "version": "1.2.0",
   "description": " A navigation app.",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node src/main.js",
+    "dev": "nodemon src/main.js",
     "lint": "eslint --fix src",
     "test": "mocha --exit"
   },
