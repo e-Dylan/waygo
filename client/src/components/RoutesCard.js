@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button, Card } from 'reactstrap';
 
+import mapboxgl from 'mapbox-gl';
+
 import './components-styles/RoutesCard.scss';
 
 // Icons
@@ -87,6 +89,18 @@ class RoutesCard extends React.Component {
 	setActiveRoute(route) {
 		this.props.mapComponent.setState({
 			activeRoute: route,
+		}, () => {
+			// Route has been set, zoom map to show it.
+			const coords = this.props.mapComponent.state.activeRoute.geometry.coordinates;
+			var bounds = coords.reduce((bounds, coord) => {
+				return bounds.extend(coord);
+			}, new mapboxgl.LngLatBounds(coords[0], coords[0]));
+
+			this.props.mapComponent.map.fitBounds(bounds, {
+				padding: 50,
+			}, () => {
+				console.log('done')
+			});
 		});
 
 		var travelColour = this.props.mapComponent.getTravelColour(this.props.mapComponent.state.activeProfile)

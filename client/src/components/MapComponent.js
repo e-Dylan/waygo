@@ -46,6 +46,8 @@ import torontoImage from '../resources/map/toronto-image.jpg';
 
 import citySearchIcon from "../resources/maki-icons/building-alt1-15.svg";
 
+const MapboxTraffic = require('@mapbox/mapbox-gl-traffic');
+
 const MAPBOX_TOKEN = "pk.eyJ1Ijoic2VsZmRyaXZpbmdkcml2ZXIiLCJhIjoiY2tlZGhwd28wMDE0aDJ5b3pic2d5Mm55YSJ9.zKnna2oVzmFrkXCjdEVsuA";
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -135,7 +137,7 @@ class MapComponent extends React.Component {
 		showMapSearchBar: true,
 		showLocationCard: false,
 		showDirectionsCard: false,
-		showRoutesCard: true,
+		showRoutesCard: false,
 
 		showLocationSearchResults: false,
 		showDirsFromSearchResults: false,
@@ -232,7 +234,7 @@ class MapComponent extends React.Component {
 	initializeMap() {
 		this.map = new mapboxgl.Map({
 			container: this.mapContainer,
-			style: 'mapbox://styles/mapbox/streets-v11',
+			style: 'mapbox://styles/mapbox/traffic-day-v2',
 			center: this.state.userPosition,
 			zoom: 12
 		});
@@ -269,6 +271,11 @@ class MapComponent extends React.Component {
 
 		this.map.on('load', () => {
 			geolocate.trigger();
+
+			this.map.addControl(new MapboxTraffic({
+				showTraffic: true,
+				showTrafficButton: true,
+			}));
 
 			// #region Set 3d map layer.
 
@@ -592,13 +599,17 @@ class MapComponent extends React.Component {
 	showDirections = () => {
 		this.setState({ 
 			showDirections: true,
-			showDirectionsCard: true
+			showDirectionsCard: true,
+			showRoutesCard: true,
 		});
 		// this.hideMapSearchBar();
 	}
 
 	hideDirections = () => {
-		this.setState({ showDirections: false });
+		this.setState({ 
+			showDirections: false,
+			showRoutesCard: false,
+		 });
 		this.hideDirsSearchResults({reset: false});
 	}
 
