@@ -53,10 +53,10 @@ app.use(session({
   }
 }));
 
-app.get('/', (req, res) => {
-    // serve front-end with this file
-	res.send("Served '/' on main app /api. ");
-});
+// app.get('/', (req, res) => {
+//     // serve front-end with this file
+// 	res.send("Served '/' on main app /api. ");
+// });
 
 app.use('/api', routes_api);
 

@@ -37,6 +37,8 @@ import activeMarkerIcon from '../resources/map/activeMarkerIcon.svg';
 import destIcon from "../resources/map/destIcon.svg";
 import originIcon from '../resources/map/originIcon.svg';
 
+const PRODUCTION_API_URL = "https://waygo.vercel.app/api";
+
 const MapboxTraffic = require('@mapbox/mapbox-gl-traffic');
 
 const MAPBOX_TOKEN = "pk.eyJ1Ijoic2VsZmRyaXZpbmdkcml2ZXIiLCJhIjoiY2tlZGhwd28wMDE0aDJ5b3pic2d5Mm55YSJ9.zKnna2oVzmFrkXCjdEVsuA";
@@ -56,7 +58,7 @@ const waymessage_schema = Joi.object({
         .required(),
 })
 
-const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/isLoggedIn" : "production-url-here";
+const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? "http://localhost:1337/api/isLoggedIn" : `${PRODUCTION_API_URL}/isLoggedIn`;
 
 class MapComponent extends React.Component {
 
