@@ -21,7 +21,16 @@ require('dotenv').config();
 
 // Require all api backend serivces (waymessages, users, index.js)
 // to be used with express app.
-const routes_api = require('./routes/api');
+
+const router = express.Router();
+
+// Import routers
+const users_router = require('./users');
+const saved_locations_router = require('./savedLocations');
+
+// Combine routers
+router.use('/', users_router);
+router.use('/', saved_locations_router);
 
 const app = express();
 
@@ -58,7 +67,7 @@ app.use(session({
 // 	res.send("Served '/' on main app /api. ");
 // });
 
-app.use('/api', routes_api);
+app.use('/api', router);
 
 // app.use(middlewares.notFound);
 // app.use(middlewares.errorHandler);
