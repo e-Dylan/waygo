@@ -44,8 +44,6 @@ class RoutesCard extends React.Component {
 		minutesDuration = Math.floor(secondsDuration / 60);
 		secondsDuration -= Math.floor(minutesDuration*60);
 
-		console.log(hoursDuration + ' ' + minutesDuration);
-
 		// take new minutes, calculate again and increase hours for any 60+ minutes.
 
 		var arrivalTime = (parseFloat(h)+parseFloat(hoursDuration)).toString()+':'+(parseFloat(m)+parseFloat(minutesDuration)).toString();
@@ -66,77 +64,110 @@ class RoutesCard extends React.Component {
 
 		this.props.mapComponent.setState({
 			activeProfile: clickedButton.id,
+		}, () => {
+			// MC's active profile state has been updated.
+
+			// Recalculate any showing routes using the new profile.
+			this.props.mapComponent.checkCalculateRoutes();
 		});
+
 		
+		
+	}
+
+	showHoveringRoute(route) {
+		var travelColour = this.props.mapComponent.getTravelColour(this.props.mapComponent.state.activeProfile)
+		this.props.mapComponent.drawHoveringRoute(route, travelColour);
+	}
+
+	hideHoveringRoute() {
+		this.props.mapComponent.removeHoveringRoute();
+	}
+
+	setActiveRoute(route) {
+		this.props.mapComponent.setState({
+			activeRoute: route,
+		});
+
+		var travelColour = this.props.mapComponent.getTravelColour(this.props.mapComponent.state.activeProfile)
+		this.props.mapComponent.drawActiveRoute(route, travelColour);
+		console.log(travelColour);
 	}
 
 	render() {
 		return (
-			<div>
-				<div className="routes-card-bg">
-					<div className="travel-profiles-bar">
-						<div className="travel-profile-button" id="recommended" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
-							<img src={recommendedIcon}></img>
-						</div>
-						<div className="travel-profile-button" id="driving-traffic" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
-							<img src={carIcon}></img>
-						</div>
-						<div className="travel-profile-button" id="walking" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
-							<img src={walkIcon}></img>
-						</div>
-						<div className="travel-profile-button" id="transit" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
-							<img src={busIcon}></img>
-						</div>
-						<div className="travel-profile-button" id="cycling" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
-							<img src={cycleIcon}></img>
-						</div>
+			<div className="routes-card-bg">
+				<div className="travel-profiles-bar">
+					<div className="travel-profile-button" id="recommended" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
+						<img src={recommendedIcon}></img>
 					</div>
-
-					<div className="routes-title" onClick={() => console.log(this.props.mapComponent.state.activeDisplayingRoutes)}>
-						optimal routes
+					<div className="travel-profile-button" id="driving" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
+						<img src={carIcon}></img>
 					</div>
-
-					{this.props.mapComponent.state.activeDisplayingRoutes != null && this.props.mapComponent.state.activeDisplayingRoutes.length > 0 &&
-						<div className="routes-container">
-							{ this.props.mapComponent.state.activeDisplayingRoutes.map(route =>
-									<div className="route-option" key={route.distance}>
-										<div className="route-icon">
-											{(() => {
-												{/* Return icon specific to route profile type */}
-												switch (route.weight_name) {
-													case "auto": return <img src={carIcon} />
-													case "routability": return <img src={carIcon} />
-													case "walkability": return <img src={walkIcon} />
-													case "cyclability": return <img src={cycleIcon} />
-												}
-											})()}
-										</div>
-										<div className="route-data">
-											<div className="route-top">
-												{route.duration &&
-													<div>{(route.duration/60).toFixed(1)} min</div>
-												}
-											</div>
-											<div className="route-bottom">
-												{route.distance &&
-													<div className="highlight">{(route.distance/1000).toFixed(1)} km</div>
-												}
-												{route.legs[0].summary &&
-													<div>via {route.legs[0].summary}</div>
-												}
-												{route.duration &&
-													<div>@ {
-														this.getArrivalTime(route.duration)
-													}</div>
-												}
-											</div>
-										</div>
-										
-									</div>
-							) }
-						</div>
-					}
+					<div className="travel-profile-button" id="walking" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
+						<img src={walkIcon}></img>
+					</div>
+					<div className="travel-profile-button" id="transit" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
+						<img src={busIcon}></img>
+					</div>
+					<div className="travel-profile-button" id="cycling" onClick={(e) => { this.setProfileButtonActive(e.target || e.srcElement) }}>
+						<img src={cycleIcon}></img>
+					</div>
 				</div>
+
+				<div className="routes-title" onClick={() => console.log(this.props.mapComponent.state.activeRouteOptions)}>
+					optimal routes
+				</div>
+
+				{this.props.mapComponent.state.activeRouteOptions != null && this.props.mapComponent.state.activeRouteOptions.length > 0 &&
+					<div className="routes-container">
+						{ this.props.mapComponent.state.activeRouteOptions.map((route, index) =>
+								<div className="route-option" key={route.distance} 
+									onMouseEnter={() => {
+										this.showHoveringRoute(route);
+									}}
+									onMouseLeave={() => {
+										this.hideHoveringRoute();
+									}}
+									onClick={() => {
+										this.setActiveRoute(route);
+									}}>
+									<div className="route-icon">
+										{(() => {
+											{/* Return icon specific to route profile type */}
+											switch (route.weight_name) {
+												case "auto": return <img src={carIcon} />
+												case "routability": return <img src={carIcon} />
+												case "pedestrian": return <img src={walkIcon} />
+												case "cyclability": return <img src={cycleIcon} />
+											}
+										})()}
+									</div>
+									<div className="route-data">
+										<div className="route-top">
+											{route.duration &&
+												<div>{(route.duration/60).toFixed(1)} min</div>
+											}
+										</div>
+										<div className="route-bottom">
+											{route.distance &&
+												<div className="highlight">{(route.distance/1000).toFixed(1)} km</div>
+											}
+											{route.legs[0].summary &&
+												<div>via {route.legs[0].summary}</div>
+											}
+											{route.duration &&
+												<div>@ {
+													this.getArrivalTime(route.duration)
+												}</div>
+											}
+										</div>
+									</div>
+									
+								</div>
+						) }
+					</div>
+				}
 			</div>
 		)
 	}

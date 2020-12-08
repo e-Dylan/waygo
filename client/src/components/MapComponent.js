@@ -163,9 +163,9 @@ class MapComponent extends React.Component {
 			country: ""
 		},
 
-		activeDisplayingRoutes: [
-			
+		activeRouteOptions: [
 		],
+		activeRoute: {},
 	}
 
 	compileActiveLocationData(data) {
@@ -242,7 +242,7 @@ class MapComponent extends React.Component {
 		this.map.on('click', (event) => {
 			this.clickMap(event);
 			// REMOVE, TESTING DRAWING ROUTES
-			console.log(this.state.activeDisplayingRoutes);
+			console.log(this.state.activeRouteOptions);
 		})
 
 		this.map.on('contextmenu', (event) => {
@@ -791,16 +791,7 @@ class MapComponent extends React.Component {
 		}
 	}
 
-	calculateRoutes = (origin, destination, profile) => {
-
-		if (origin === null || destination === null) 
-			return;
-
-		if (profile === null)
-			profile = this.state.activeProfile;
-
-		console.log(profile);
-			
+	getTravelColour = (profile) => {
 		var travelColour;
 		switch (profile) {
 			case "driving": travelColour = "#4b30c2"; break;
@@ -808,6 +799,18 @@ class MapComponent extends React.Component {
 			case "cycling": travelColour = "#30c25a"; break;
 			default: travelColour = "#333333"; break;
 		}
+		return travelColour;
+	}
+
+	calculateRoutes = (origin, destination, profile) => {
+
+		if (origin === null || destination === null) 
+			return;
+
+		if (profile === null)
+			profile = this.state.activeProfile;
+			
+		var travelColour = this.getTravelColour(profile);
 
 		// https://api.mapbox.com/directions/v5/mapbox/cycling/-84.518641,39.134270;-84.512023,39.102779?
 		
@@ -825,7 +828,7 @@ class MapComponent extends React.Component {
 			if (data.routes != null) {
 				this.setState({
 					showRoutesCard: true,
-					activeDisplayingRoutes: data.routes,
+					activeRouteOptions: data.routes,
 				});
 			}
 			// var route = data.routes[0].geometry.coordinates;
@@ -833,7 +836,12 @@ class MapComponent extends React.Component {
 		});
 	}
 
-	drawRoute = (route, travelColour) => {
+	/**
+	 * 
+	 * @param route: obj{, , ,} -> a mapbox route object containing route metadata.
+	 * @param travelColour: Colour of route path depending on profile.
+	 */
+	drawActiveRoute = (route, travelColour) => {
 		var geojson = {
 			type: 'Feature',
 			properties: {},
@@ -845,11 +853,58 @@ class MapComponent extends React.Component {
 
 		if (this.map.getSource('route')) {
 			// if the route already exists on the map, reset it using setData
-			this.map.getSource('route').setData(geojson);
+			// this.map.getSource('route').setData(geojson);
+			// remove the layer, re-add with new data. cannot change data to just update it.
+			this.removeActiveRoute();
+		}
+			
+		this.map.addLayer({
+			id: 'route',
+			type: 'line',
+			source: {
+				type: 'geojson',
+				data: {
+				type: 'Feature',
+				properties: {},
+				geometry: {
+					type: 'LineString',
+					coordinates: geojson
+				}
+				}
+			},
+			layout: {
+				'line-join': 'round',
+				'line-cap': 'round'
+			},
+			paint: {
+				'line-color': travelColour,
+				'line-width': 5,
+				'line-opacity': 0.8,
+			}
+		});	
+		
+		// Set layer data to geojson line once added.
+		this.map.getSource('route').setData(geojson);
+		// add turn instructions here at the end
+	}
+
+	drawHoveringRoute = (route, travelColour) => {
+		var geojson = {
+			type: 'Feature',
+			properties: {},
+			geometry: {
+				type: 'LineString',
+				coordinates: route.geometry.coordinates
+			}
+		};
+
+		if (this.map.getSource('hovering-route')) {
+			// if the route already exists on the map, reset it using setData
+			this.map.getSource('hovering-route').setData(geojson);
 		} else { // otherwise, make a new request
 			
 			this.map.addLayer({
-				id: 'route',
+				id: 'hovering-route',
 				type: 'line',
 				source: {
 					type: 'geojson',
@@ -869,14 +924,24 @@ class MapComponent extends React.Component {
 				paint: {
 					'line-color': travelColour,
 					'line-width': 5,
-					'line-opacity': 0.75
+					'line-opacity': 0.4
 				}
 			});	
 			
 			// Set layer data to geojson line once added.
-			this.map.getSource('route').setData(geojson);
+			this.map.getSource('hovering-route').setData(geojson);
 		}
 		// add turn instructions here at the end
+	}
+
+	removeHoveringRoute = () => {
+		this.map.removeLayer('hovering-route');
+		this.map.removeSource('hovering-route');
+	}
+
+	removeActiveRoute = () => {
+		this.map.removeLayer('route');
+		this.map.removeSource('route');
 	}
 
 
