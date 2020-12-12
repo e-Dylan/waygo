@@ -26,7 +26,7 @@ const routes_api = require('./routes/api');
 const app = express();
 
 const corsOptions = {
-  origin: true,
+  origin: 'http://localhost:3000',
   credentials: true,
 };
 
@@ -41,7 +41,7 @@ var sessionStore = new MySQLStore({
   endConnectionOnClose: false,
 }, sql_db);
 
-// app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(session({
   secret: "keyboard cat",
@@ -58,7 +58,6 @@ app.use(session({
 app.get('/', (req, res) => {
     // serve front-end with this file
 	res.sendFile(path.join(__dirname, 'build', 'index.html'));
-	// res.send("this is the main app");
 });
 
 app.use('/api', routes_api);
@@ -68,7 +67,7 @@ app.use(middlewares.errorHandler);
 
 // Listen to backend api port to receive any requests.
 // backend api -> port 1337
-const api_port = 1337; // || 1337;
+const api_port = process.env.API_PORT || 1337;
 app.listen(api_port, () => {
-    console.log(`Listening: on ${api_port}, backend api port.`);
+    console.log(`Listening: http://localhost:${api_port}, backend api port.`);
 });
