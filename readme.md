@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------
 
-[![Website](https://img.shields.io/website?label=Waygo-App&style=for-the-badge&url=https%3A%2F%2Fe-dylan.github.io/waygo/)](https://e-dylan.github.io/waygo/)
+[![Website](https://img.shields.io/website?label=Waygo-App&style=for-the-badge&url=https%3A%2F%2Fwaygo.vercel.app/)](https://waygo.vercel.app/)
 ---
 [Waygo](https://e-dylan.github.io/waygo/) is a web and mobile application that allows you to find the most time-optimal routes for navigation and travel. Access it on your phone while in the car to track your trip and use one of the many features it provides to make your trip easier.
 
