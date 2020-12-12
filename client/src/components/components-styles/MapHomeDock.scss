@@ -5,10 +5,18 @@
 	color: #ffffff;
 	transition: 0.15s all ease-in-out;
 	margin-top: 10px;
-}
-.home-dock-title:hover {
-	text-decoration: none;
-	color: var(--blue_main);
+	margin-left: 20px;
+	width: 200px;
+
+	.dock-logo {
+		width: 40px;
+		height: 40px;
+	}
+
+	&:hover {
+		text-decoration: none;
+		color: var(--blue_main);
+	}
 }
 
 .map-home-dock {

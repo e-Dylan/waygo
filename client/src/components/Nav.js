@@ -1,5 +1,8 @@
 import React from 'react';
 import '../App.css';
+import './components-styles/Nav.scss'
+
+import waygoLogo from '../resources/logo/waygo-logo.png'
 
 class Nav extends React.Component {
 
@@ -10,7 +13,10 @@ class Nav extends React.Component {
                 <nav>
                     <div className="nav-container">
                         <div className="nav-left">
-                            <a className="nav-link" href="/"><b>Waygo</b></a>
+                            <a className="nav-link" href="/">
+								<img src={waygoLogo} className="nav-logo"></img>
+								<b>Waygo</b>
+							</a>
                             <a className="nav-link" href="/live-map">live maps</a>
                         </div>
                         

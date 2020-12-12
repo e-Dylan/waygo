@@ -6,7 +6,11 @@ import * as api from '../api';
 
 import $ from 'jquery';
 
+// Component imports
 import SubmitButton from './SubmitButton';
+
+// Images/Icons
+import waygoLogo from '../resources/logo/waygo-logo.png';
 import leftArrow from '../resources/map-home-dock/left-arrow-close.png';
 import rightArrow from '../resources/map-home-dock/right-arrow-open.png';
 
@@ -88,7 +92,10 @@ class MapHomeDock extends React.Component {
 			<Card body className="map-home-dock" id={this.props.id}>
 
 				<div className="full-width-div text-center">
-					<a className="home-dock-title" href="/">WAYGO</a>
+					<a className="home-dock-title" href="/">
+						<img className="dock-logo" src={waygoLogo} />
+						<span>WAYGO</span>
+					</a>
 					<button
 						type="button"
 						id="map-home-dock-close-button"
