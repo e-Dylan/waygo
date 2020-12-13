@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -7,7 +7,10 @@ import { connect } from 'react-redux';
 import { Card } from 'reactstrap';
 
 import $ from 'jquery';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
+import '../App.css'
 import './components-styles/HomePage.scss'; // change to components css
 
 import AnimationSection from './HomePageComponents/AnimationSection';
@@ -17,22 +20,26 @@ import AnalyticsSection from './HomePageComponents/AnalyticsSection';
 // Images/icons
 import waygoLogo from '../resources/logo/waygo-logo.png';
 
-class HomePage extends React.Component {
+const HomePage = (props) => {
 
-	state = {	
-
-	}
-
-    render() {
-        return (
-			<div className="homepage">
-				<AnimationSection />
-				<AdvertisingSection />
-				<AnalyticsSection />
-			</div>
-        );
-    }
-
+	useEffect(() => {
+		AOS.init({
+			offset: 400,
+			duration: 700,
+			once: true,
+			disable: 'mobile',
+			easing: 'ease-in-out-sine'
+		});
+		AOS.refresh();
+	}, [])
+		
+	return (
+		<div className="homepage">
+			<AnimationSection />
+			<AdvertisingSection />
+			<AnalyticsSection />
+		</div>
+	);
 }
 
 function mapStateToProps(state) {

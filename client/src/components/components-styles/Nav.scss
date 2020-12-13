@@ -6,7 +6,6 @@ nav {
 	background-color: #212d3b;
 	// background-color: var(--blue_main);
     color: white;
-	z-index: 2;
     margin: 0;
     padding: 0;
     border: 0;
@@ -17,6 +16,10 @@ nav {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+
+	position: fixed;
+	top: 0px;
+	z-index: 31;
 } 
 
 .nav-container {

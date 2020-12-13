@@ -1,3 +1,16 @@
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+:root {
+	--title_text:rgb(44, 53, 110);
+}
+
 /* GLOBAL */
 .container-center {
 	// padding: 0 10% 0 10%;
@@ -11,61 +24,78 @@
 }
 
 /* Animated Div Section */
-.demo-map {
-	height: 45vh;
+.demo-map-section {
+	height: 60vh;
+	position: relative;
 
 	.demo-map-container {
-		height: 100%;
+		height: 60vh;
 		width: 100vw;
-		z-index: 10;
+		z-index: 13;
+		position: absolute;
 	}
 
-	.anim-div-copy {
+	.copy-content {
+		padding: 0 3rem 2rem 3rem;
+		position: absolute;
+		z-index: 14;
+		width: 100%;
+		min-width: 300px;
+		pointer-events: none;
+		margin: 0px;
+		bottom: 0px;
+		height: auto;
+		width: 50%;
 		display: flex;
 		flex-direction: column;
-		position: absolute;
-		z-index: 25;
-		margin-left: 6%;
-		top: 15vh;
-		width: 45%;
-		min-width: 300px;
-		min-width: 35%;
-		align-items: flex-start;
-		pointer-events: none;
 
-		a {
-			text-decoration: none;
-			color: var(--blue_main);
-			font-family: "Ubuntu", sans-serif;
-			margin-top: 1.2rem;
-		}
+			a {
+				text-decoration: none;
+				font-family: "Ubuntu", sans-serif;
+				margin-top: 1.2rem;
+			}
 
-		.content-title {
-			font-size: 55pt;
-			font-weight: bolder;
-		}
+			.content-title {
+				font-size: 46pt;
+				font-weight: bolder;
+				color: var(--blue_main);
+			}
 
-		.content-desc {
-			font-size: 15pt;
-			color: rgb(46, 49, 70);
-		}
+			.content-desc {
+				font-size: 13pt;
+				color: var(--title_text);
+			}
 
-		.create-account-button {
-			width: 40%;
-			max-width: 174px;
-			min-width: 120px;
-			border: 2px solid rgb(46, 49, 70);
-			transition: 120ms all ease-in-out;
-			text-align: center;
-			background: #fff;
-			pointer-events: auto;
+			.create-account-button {
+				width: 40%;
+				max-width: 174px;
+				min-width: 120px;
+				border: 2px solid var(--title_text);
+				transition: 120ms all ease-in-out;
+				text-align: center;
+				background: #fff;
+				pointer-events: auto;
 
-			&:hover {
-				background-color: var(--blue_main);
-				color: white;
+				&:hover {
+					background-color: var(--blue_main);
+					color: white;
+				}
+			}
+		
+	}
+
+	// Mobile
+	@media only screen and (max-width: 871px) {
+		.copy-content {
+			width: 100%;
+
+			.content-title {
+				font-size: 20pt;
+			}
+			.content-desc {
+				font-size: 12pt;
 			}
 		}
-
 	}
 }
 
@@ -96,11 +126,11 @@
 			.adv-title {
 				font-size: 22pt;
 				font-weight: bold;
-				color: rgb(46, 49, 70);
+				color: var(--title_text);
 			}
 			.adv-para {
 				font-size: 15pt;
-				color: rgb(46, 49, 70);
+				color: var(--title_text);
 			}
 			justify-content: center;
 		}
@@ -111,6 +141,40 @@
 			justify-content: center;
 			img {
 				width: 200px;
+			}
+		}
+	}
+	// Mobile
+	@media only screen and (max-width: 1000px) {
+		.adv-row {
+			.container-center {
+				width: 80%;
+			}
+		}
+	}
+
+	@media only screen and (max-width: 768px) {
+		.adv-row {
+			.container-center {
+				width: 90%;
+			}
+			.text-content {
+				display: flex;
+				flex-direction: column;
+				max-width: 50%;
+				.adv-title {
+					font-size: 16pt;
+				}
+				.adv-para {
+					font-size: 12pt;
+				}
+			}
+
+			.image-content {
+				img {
+					width: 125px;
+					height: 125px;
+				}
 			}
 		}
 	}
@@ -125,16 +189,59 @@
 	padding: 80px 0 80px 0;
 
 	.section-header {
-		font-size: 24pt;
-		color: rgb(46, 49, 70);
-		font-weight: bold;
-		text-align: center;
+		color: var(--title_text);
+		justify-content: center;
 		padding: 0 0 30px 0;
+		font-family: "Ubuntu";
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+
+		.section-title {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+
+			span {
+				font-size: 24pt;	
+				font-weight: bold;
+			}
+
+			.analytics-icon {
+				margin-right: 15px;
+				height: 36px;
+				width: 36px;
+			}
+		}
+
+		.title-desc {
+			font-weight: lighter;
+			font-size: 11pt;
+			color: rgb(95, 95, 119);
+			text-align: center;
+		}
 	}
 
 	.analytics-content {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-around;
+
+		.analytics-item {
+			display: flex;
+			flex-direction: column;
+		}
+	
+		.ana-item-icon {
+			width: 25px;
+			height: 25px;
+		}
+		.ana-title {
+
+		}
+		.ana-content {
+
+		}
+	
 	}
 }

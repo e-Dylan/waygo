@@ -5,55 +5,51 @@ import '../components-styles/HomePage.scss'; // change to components css
 // Images/icons
 import waygoLogo from '../../resources/logo/waygo-logo.png';
 
-class AdvertisingSection extends React.Component {
+const AdvertisingSection = (props) => {
 
-    render() {
-
-		return (
-			<section className="advertising-section">
-				<div className="adv-row">
-					<div className="container-center">
-						<div className="row-container">
-							<div className="text-content">
-								<span className="adv-title">optimize your travel</span>
-								<p className="adv-para">Calculate your route in seconds and plan your arrival time.</p>
-							</div>
-							<div className="image-content">
-								<img src={waygoLogo}></img>
-							</div>
+	return (
+		<section className="advertising-section">
+			<div className="adv-row">
+				<div className="container-center">
+					<div className="row-container">
+						<div className="text-content">
+							<span className="adv-title">optimize your travel</span>
+							<p className="adv-para">Calculate your route in seconds and plan your arrival time.</p>
+						</div>
+						<div className="image-content">
+							<img src={waygoLogo}></img>
 						</div>
 					</div>
 				</div>
-				<div className="adv-row">
-					<div className="container-center">
-						<div className="row-container">
-							<div className="image-content">
-								<img src={waygoLogo}></img>
-							</div>
-							<div className="text-content">
-								<span className="adv-title">own traffic</span>
-								<p className="adv-para">Automatically account for live-traffic data when finding your best route.</p>
-							</div>
+			</div>
+			<div className="adv-row">
+				<div className="container-center">
+					<div className="row-container">
+						<div className="image-content">
+							<img src={waygoLogo}></img>
+						</div>
+						<div className="text-content">
+							<span className="adv-title">own traffic</span>
+							<p className="adv-para">Automatically account for live-traffic data when finding your best route.</p>
 						</div>
 					</div>
 				</div>
-				<div className="adv-row">
-					<div className="container-center">
-						<div className="row-container">
-							<div className="text-content">
-								<span className="adv-title">travel with friends</span>
-								<p className="adv-para">See your friends on your map and sync your trips with them on the road.</p>
-							</div>
-							<div className="image-content">
-								<img src={waygoLogo}></img>
-							</div>
+			</div>
+			<div className="adv-row">
+				<div className="container-center">
+					<div className="row-container">
+						<div className="text-content">
+							<span className="adv-title">travel with friends</span>
+							<p className="adv-para">See your friends on your map and sync your trips with them on the road.</p>
+						</div>
+						<div className="image-content">
+							<img src={waygoLogo}></img>
 						</div>
 					</div>
 				</div>
-			</section>
-		)
-	}
+			</div>
+		</section>
+	)
 }
-
 
 export default AdvertisingSection;

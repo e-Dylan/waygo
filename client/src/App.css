@@ -27,27 +27,3 @@ body, html, #root, .app, .container {
 .hidden {
 	display: none;
 }
-
-.bold {
-	font-family: "IBM Plex Sans", sans-serif;
-}
-
-.input-search-bar {
-
-}
-.input-search-bar:focus {
-	outline: none;
-}
-
-/* @media screen and (max-width: 768px) {
-	body {
-		display: none;
-	}
-} */
-
-/* 
-* {
-    background: #000 !important;
-    color: #0f0 !important;
-    outline: solid #f00 1px !important;
-} */
