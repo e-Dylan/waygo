@@ -46,7 +46,7 @@ const placeActiveMarker = (event) => {
 	console.log(state);
 }
 
-const MapComponentOnly = (props) => {
+const ReactMapGL = (props) => {
 
   const MAPBOX_TOKEN = "pk.eyJ1Ijoic2VsZmRyaXZpbmdkcml2ZXIiLCJhIjoiY2tlZGhwd28wMDE0aDJ5b3pic2d5Mm55YSJ9.zKnna2oVzmFrkXCjdEVsuA";
 
@@ -137,4 +137,4 @@ const MapComponentOnly = (props) => {
   );
 }
 
-export default MapComponentOnly
+export default ReactMapGL

@@ -2,22 +2,28 @@
 nav {
     // align-items: center;
     min-height: 8vh;
-    height: 14vh;
-    background: #424242;
+    height: 9vh;
+	background-color: #212d3b;
+	// background-color: var(--blue_main);
     color: white;
 	z-index: 2;
     margin: 0;
     padding: 0;
     border: 0;
     font-size: 100%;
-    display: block;
+	display: block;
+	border-bottom: 2px solid rgb(46, 46, 46);
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 } 
 
 .nav-container {
     overflow: hidden;
 	width: 100vw;
 	padding: 0 5% 0 5%;
-	height: 100%;
+	// height: 100%;
 	margin: 0;
 	display: flex;
 	flex-direction: row;
@@ -25,40 +31,33 @@ nav {
 }
 
 .nav-logo {
-    width: 65px;
-    height: 65px;
-    padding: 5px;
-    border: none;
+    width: 55px;
+    height: 55px;
+    padding: 0px;
 }
 
 .nav-container a {
     font-size: 16px;
-    display: flex;
-    /* justify-content: space-around; */
-    flex-direction: row;
-    align-items: center;
     list-style: none;
     text-decoration: none;
 	transition: 0.15s ease;
 	margin: 0 20px 0px 20px;
-    /* line-height: 12vh;        makes button height too large */
-
 }
 
 .nav-container a:hover {
-    color: black;
+    color: var(--blue_main);
 }
 
 .nav-left {
     display: flex;
-    flex-direction: row;
-    align-content: center;
+	flex-direction: row;
+	align-items: center;
 }
 
 .nav-right {
 	display: flex;
 	flex-direction: row;
-	align-content: center;
+	align-items: center;
 }
 
 .nav-link {

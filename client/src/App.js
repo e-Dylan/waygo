@@ -18,9 +18,6 @@ import HomePage from './components/HomePage';
 import Nav from './components/Nav';
 import LoginRegisterComponent from './components/LoginRegisterComponent';
 
-const LOGOUT_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/logout` : `${process.env.REACT_APP_PRODUCTION_API_URL}/logout`;
-const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/isLoggedIn` : `${process.env.REACT_APP_PRODUCTION_API_URL}/isLoggedIn`;
-
 class App extends Component {
 
 	// every component has a state object, can be set with setState()
@@ -29,83 +26,9 @@ class App extends Component {
 	};
 
 	componentDidMount() {
-		// Check if user is logged in on application load
-		var userState = {}; 
-		let res = fetch(ISLOGGEDIN_API_URL, {
-			method: 'POST',
-			credentials: 'include',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			}
-		})
-		.then(res => res.json())
-		.then(result => {
-			try {
-				if (result && result.success) {
-					// user is logged in
-					userState = {
-						username: result.username,
-						email: result.email,
-						isLoggedIn: true,
-						loading: false,
-					}
-				} else { 
-					// user isn't logged in on the page
-					userState = {
-						username: '',
-						email: '',
-						isLoggedIn: false,
-						loading: false,
-					}
-				}
-				// call action of setting user state.
-				// reducer listens and updates the store with this data.
-				this.props.setUserState(userState);
-			} catch(e) {
-				
-			}
-		});
-	}
-
-  doLogout() {
-	  console.log("logging out");
-
-	  var userState = {}; 
-	  let res = fetch(LOGOUT_API_URL, {
-		  method: 'POST',
-		  credentials: 'include',
-		  headers: {
-			  'Accept': 'application/json',
-			  'Content-Type': 'application/json',
-		  }
-	  })
-	  .then(res => res.json())
-	  .then(result => {
-		  try {
-			  if (result && result.success) {
-				  // user is logged in
-				  userState = {
-					  username: "",
-					  email: "",
-					  isLoggedIn: false,
-					  loading: false,
-				  }
-			  } else { 
-				  // user isn't logged in on the page
-				  userState = {
-					  loading: false,
-				  }
-			  }
-			  // call action of setting user state.
-			  // reducer listens and updates the store with this data.
-			  this.props.setUserState(userState);
-			  alert(result.msg);
-		  } catch(e) {
-			  this.props.setUserState({ loading: false });
-			  console.log(e);
-		  }
-	  });
+		// implement checking if user is logged in and caching their
+		// data on application load,
+		// rn each page must load their own user data with an api call.
 	}
 
   render() {
@@ -113,7 +36,7 @@ class App extends Component {
 	const RoutesWithNav = () => {
 		return (
 			<div>
-				<Nav doLogout={this.doLogout} />
+				{/* <Nav doLogout={this.doLogout} /> */}
 				<Switch>
 					<Route exact path="/" component={HomePage} />
 					<Route path="/login" component={LoginRegisterComponent} />
@@ -125,6 +48,7 @@ class App extends Component {
     return(
 		<Router history={history}>
 			<div className="app">
+				<Route component={Nav} />
 				<Switch>
 					<Route path="/live-map" component={MapComponent} />
 					<Route component={RoutesWithNav} />

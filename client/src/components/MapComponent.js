@@ -232,8 +232,6 @@ class MapComponent extends React.Component {
 			zoom: 12
 		});
 
-		const canvas = this.map.getCanvasContainer();
-
 		this.map.on('click', (event) => {
 			this.clickMap(event);
 			// REMOVE, TESTING DRAWING ROUTES

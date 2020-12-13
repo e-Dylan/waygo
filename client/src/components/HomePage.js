@@ -10,6 +10,13 @@ import $ from 'jquery';
 
 import './components-styles/HomePage.scss'; // change to components css
 
+import AnimationSection from './HomePageComponents/AnimationSection';
+import AdvertisingSection from './HomePageComponents/AdvertisingSection';
+import AnalyticsSection from './HomePageComponents/AnalyticsSection';
+
+// Images/icons
+import waygoLogo from '../resources/logo/waygo-logo.png';
+
 class HomePage extends React.Component {
 
 	state = {	
@@ -17,10 +24,11 @@ class HomePage extends React.Component {
 	}
 
     render() {
-
         return (
-			<div>
-				
+			<div className="homepage">
+				<AnimationSection />
+				<AdvertisingSection />
+				<AnalyticsSection />
 			</div>
         );
     }

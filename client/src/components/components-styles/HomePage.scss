@@ -1,0 +1,140 @@
+/* GLOBAL */
+.container-center {
+	// padding: 0 10% 0 10%;
+	width: 65%;
+	margin-left: auto;
+	margin-right: auto;
+	// display: flex;
+	// flex-direction: row;
+	// justify-content: center;
+	// justify-content: space-between;
+}
+
+/* Animated Div Section */
+.demo-map {
+	height: 45vh;
+
+	.demo-map-container {
+		height: 100%;
+		width: 100vw;
+		z-index: 10;
+	}
+
+	.anim-div-copy {
+		display: flex;
+		flex-direction: column;
+		position: absolute;
+		z-index: 25;
+		margin-left: 6%;
+		top: 15vh;
+		width: 45%;
+		min-width: 300px;
+		min-width: 35%;
+		align-items: flex-start;
+		pointer-events: none;
+
+		a {
+			text-decoration: none;
+			color: var(--blue_main);
+			font-family: "Ubuntu", sans-serif;
+			margin-top: 1.2rem;
+		}
+
+		.content-title {
+			font-size: 55pt;
+			font-weight: bolder;
+		}
+
+		.content-desc {
+			font-size: 15pt;
+			color: rgb(46, 49, 70);
+		}
+
+		.create-account-button {
+			width: 40%;
+			max-width: 174px;
+			min-width: 120px;
+			border: 2px solid rgb(46, 49, 70);
+			transition: 120ms all ease-in-out;
+			text-align: center;
+			background: #fff;
+			pointer-events: auto;
+
+			&:hover {
+				background-color: var(--blue_main);
+				color: white;
+			}
+		}
+
+	}
+}
+
+/* Advertise Section */
+.advertising-section {
+	background-color: rgb(241, 241, 241);
+
+	.white {
+		background-color: white !important;
+	}
+
+	.row-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.adv-row {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		padding: 25px 0 25px 0;
+
+		.text-content {
+			display: flex;
+			flex-direction: column;
+			max-width: 50%;
+			.adv-title {
+				font-size: 22pt;
+				font-weight: bold;
+				color: rgb(46, 49, 70);
+			}
+			.adv-para {
+				font-size: 15pt;
+				color: rgb(46, 49, 70);
+			}
+			justify-content: center;
+		}
+
+		.image-content {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			img {
+				width: 200px;
+			}
+		}
+	}
+}
+
+/* Analytics Section */
+.analytics-section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-family: "Ubuntu", sans-serif;
+	padding: 80px 0 80px 0;
+
+	.section-header {
+		font-size: 24pt;
+		color: rgb(46, 49, 70);
+		font-weight: bold;
+		text-align: center;
+		padding: 0 0 30px 0;
+	}
+
+	.analytics-content {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+	}
+}
