@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-const Joi = require('joi');
 
 const sql_db = require('./sql_db');
 

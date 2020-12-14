@@ -49,7 +49,7 @@ class LoginRegisterComponent extends Component {
     }
 
     async doRegister() {
-        const REGISTER_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/register` : `${process.env.REACT_APP_DEVELOPMENT_API_URL}/register`;
+        const REGISTER_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/register` : `${process.env.REACT_APP_PRODUCTION_API_URL}/register`;
 
         if (!this.state.username || !this.state.email || !this.state.password) {
             return;
@@ -96,7 +96,7 @@ class LoginRegisterComponent extends Component {
     }
 
     async doLogin() {
-        const LOGIN_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/login` : `${process.env.REACT_APP_DEVELOPMENT_API_URL}/login`;
+        const LOGIN_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/login` : `${process.env.REACT_APP_PRODUCTION_API_URL}/login`;
 
         if (!this.state.username || !this.state.password) {
             return;
