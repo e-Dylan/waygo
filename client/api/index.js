@@ -50,7 +50,7 @@ app.use(session({
   }
 }));
 
-app.get('/', (req, res) => {
+app.get('/api/', (req, res) => {
 	res.send("this is the serverless");
 });
 
