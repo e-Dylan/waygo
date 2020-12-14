@@ -1,7 +1,7 @@
 const express = require('express');
 // const morgan = require('morgan'); -> Switched to volleyball
 // const helmet = require('helmet');
-const cors = require('cors');
+// const cors = require('cors');
 // const volleyball = require('volleyball');
 // const bcrypt = require('bcryptjs');
 // const Joi = require('joi');
@@ -30,7 +30,7 @@ const corsOptions = {
 
 ///app.use(morgan('dev'));
 // app.use(helmet());
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 // app.use(volleyball);
 app.use(express.json());
 
