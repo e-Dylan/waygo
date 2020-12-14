@@ -68,7 +68,7 @@ app.use(session({
 // 	res.send("Served '/' on main app /api. ");
 // });
 
-app.use('/api', router);
+app.use('/', router);
 
 // app.use(middlewares.notFound);
 // app.use(middlewares.errorHandler);
