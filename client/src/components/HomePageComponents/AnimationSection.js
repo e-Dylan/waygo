@@ -15,9 +15,9 @@ const AnimationSection = (props) => {
 				<DemoMapComponent />
 			</div>
 			<div className="copy-content">
-				<a className="content-title">Waygo</a>
+				<a className="content-title">WAYGO</a>
 				<a className="content-desc">Visualize the world and navigate it with ease.</a>
-				<a className="content-desc"> Whether you're on a road trip or taking the bus to work - see it all in seconds. All in the palm of your hand.</a>
+				<a className="content-desc" style={{fontSize: 11+'pt'}}> Whether you're on a road trip or taking the bus to work - see it all in seconds. All in the palm of your hand.</a>
 				<a className="create-account-button" href="/register">Create Account</a>
 			</div>
 		</section>

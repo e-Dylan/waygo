@@ -4,6 +4,9 @@ import '../components-styles/HomePage.scss'; // change to components css
 
 // Images/icons
 import waygoLogo from '../../resources/logo/waygo-logo.png';
+import optimizeTravelImage from '../../resources/front-page/adv-section/optimize-your-travel.svg';
+import ownTrafficIcon from '../../resources/front-page/adv-section/own-traffic.svg';
+import travelWithFriendsImage from '../../resources/front-page/adv-section/travel-with-friends.svg';
 
 const AdvertisingSection = (props) => {
 
@@ -17,7 +20,7 @@ const AdvertisingSection = (props) => {
 							<p className="adv-para">Calculate your route in seconds and plan your arrival time.</p>
 						</div>
 						<div className="image-content">
-							<img src={waygoLogo}></img>
+							<img src={optimizeTravelImage}></img>
 						</div>
 					</div>
 				</div>
@@ -26,7 +29,7 @@ const AdvertisingSection = (props) => {
 				<div className="container-center">
 					<div className="row-container">
 						<div className="image-content">
-							<img src={waygoLogo}></img>
+							<img src={ownTrafficIcon}></img>
 						</div>
 						<div className="text-content">
 							<span className="adv-title">own traffic</span>
@@ -43,7 +46,7 @@ const AdvertisingSection = (props) => {
 							<p className="adv-para">See your friends on your map and sync your trips with them on the road.</p>
 						</div>
 						<div className="image-content">
-							<img src={waygoLogo}></img>
+							<img src={travelWithFriendsImage}></img>
 						</div>
 					</div>
 				</div>
