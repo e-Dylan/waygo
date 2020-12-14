@@ -189,7 +189,7 @@ router.post('/logout', (req, res) => {
 	});
 });
   
-router.post('/isLoggedIn', (req, res) => {
+router.post('/api/isLoggedIn', (req, res) => {
 	// session.userID is set to db id to the req when user logs in.
 	console.log("checking if logged in - session: " + req.session);
 	if (req.session.userID) {
