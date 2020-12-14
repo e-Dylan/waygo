@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 
@@ -20,7 +21,7 @@ const register_schema = Joi.object({
         .required()
 });
 
-router.post('/register', (req, res) => {
+app.post('/register', (req, res) => {
     console.log('[attempting to register user into database...]\n\n session id: ' + req.session.id);
 
     const result = register_schema.validate(req.body);
@@ -76,7 +77,7 @@ router.post('/register', (req, res) => {
     }
 });
 
-router.post('/login', (req, res) => {
+app.post('/login', (req, res) => {
 
     console.log("session id: " + req.session.id);
   
@@ -156,7 +157,7 @@ router.post('/login', (req, res) => {
     });
   })
   
-router.post('/logout', (req, res) => {
+app.post('/logout', (req, res) => {
 	var cols = [req.session.userID];
 	sql_db.query('SELECT * FROM user WHERE id = ? LIMIT 1', cols, (err, data, fields) => {		
 		// If user is signed in, destroy session

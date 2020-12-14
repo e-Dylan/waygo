@@ -42,7 +42,7 @@ const corsOptions = {
 
 ///app.use(morgan('dev'));
 // app.use(helmet());
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 // app.use(volleyball);
 app.use(express.json());
 
@@ -68,7 +68,7 @@ app.use(session({
 // 	res.send("Served '/' on main app /api. ");
 // });
 
-app.use('/', router);
+app.use('/api', router);
 
 // app.use(middlewares.notFound);
 // app.use(middlewares.errorHandler);
