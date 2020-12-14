@@ -107,7 +107,10 @@ const Nav = (props) => {
 
 					<div className="nav-right">
 						{ props.globalState.userState.isLoggedIn ?
-							<a className="nav-link" href="/" onClick={doLogout}>logout</a>
+							<div className="nav-right">
+								<a className="nav-link">{props.globalState.userState.username}</a>
+								<a className="nav-link" href="/" onClick={doLogout}>logout</a>
+							</div>
 						:
 							<div className="nav-right">
 								<a className="nav-link" href="/login">login</a>

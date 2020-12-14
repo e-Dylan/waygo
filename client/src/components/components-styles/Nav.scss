@@ -41,7 +41,10 @@ nav {
     list-style: none;
     text-decoration: none;
 	transition: 0.15s ease;
-	margin: 0 20px 0px 20px;
+
+	// ADD MEDIA QUERY TO SHRINK NAV LINKS INTO BURGER DROPDOWN.
+	// margin: 0 20px 0px 20px;
+	margin: 0 10px 0px 10px;
 }
 
 .nav-container a:hover {
