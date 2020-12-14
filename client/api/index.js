@@ -40,7 +40,7 @@ var sessionStore = new MySQLStore({
 }, sql_db);
 
 app.use(session({
-	secret: process.env.REACT_APP_SESSION_SECRET,
+	secret: "keyboard cat",
 	store: sessionStore,
 	resave: false,
 	saveUninitialized: false,
