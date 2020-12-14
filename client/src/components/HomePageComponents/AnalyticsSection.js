@@ -33,17 +33,17 @@ const AnalyticsSection = (props) => {
 					<div className="analytics-item">
 						<img src={pageViewsIcon} className="ana-item-icon"></img>
 						<span className="ana-title">Page Views</span>
-						<p className="ana-content">{pageViews} views</p>
+						{/* <p className="ana-content">{pageViews} views</p> */}
 					</div>
 					<div className="analytics-item">
 						<img src={registeredUsersIcon} className="ana-item-icon"></img>
 						<span className="ana-title">Registered Users</span>
-						<p className="ana-content">{registedUsers} users</p>
+						{/* <p className="ana-content">{registedUsers} users</p> */}
 					</div>
 					<div className="analytics-item">
 						<img src={calculatedRoutesIcon} className="ana-item-icon"></img>
 						<span className="ana-title">Calculated Routes</span>
-						<p className="ana-content">{calculatedRoutes} routes calculated.</p>
+						{/* <p className="ana-content">{calculatedRoutes} routes calculated.</p> */}
 					</div>
 				</div>
 			</div>

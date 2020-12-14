@@ -7,6 +7,10 @@ import mapboxgl from 'mapbox-gl';
 const MAPBOX_TOKEN = "pk.eyJ1Ijoic2VsZmRyaXZpbmdkcml2ZXIiLCJhIjoiY2tlZGhwd28wMDE0aDJ5b3pic2d5Mm55YSJ9.zKnna2oVzmFrkXCjdEVsuA";
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
+const MapboxTraffic = require('@mapbox/mapbox-gl-traffic');
+
+const torontoLngLat = [-79.4233303590558, 43.63438972957748];
+
 class DemoMapComponent extends React.Component {
 
 	constructor(props) {
@@ -22,7 +26,7 @@ class DemoMapComponent extends React.Component {
 		this.map = new mapboxgl.Map({
 			container: this.mapContainer,
 			style: 'mapbox://styles/mapbox/light-v10',
-			center: [-79.384252, 43.653119],
+			center: torontoLngLat,
 			zoom: 16,
 			pitch: 60,
 			bearing: -30,
@@ -31,10 +35,10 @@ class DemoMapComponent extends React.Component {
 		this.map.on('load', () => {
 			// geolocate.trigger();
 
-			// this.map.addControl(new MapboxTraffic({
-			// 	showTraffic: true,
-			// 	showTrafficButton: true,
-			// }));
+			this.map.addControl(new MapboxTraffic({
+				showTraffic: false,
+				showTrafficButton: true,
+			}));
 
 			// #region Set 3d map layer.
 
@@ -94,8 +98,22 @@ class DemoMapComponent extends React.Component {
 		});
 	}
 
+	startFlying() {
+		this.map.flyTo({
+			center: [-79.30692381360724, 43.671170378968746],
+			zoom: 16,
+			curve: 0.01,
+			speed: 0.0006,
+			easing: (t) => {
+				return t;
+			},
+			essential: true,
+		})
+	}
+
 	componentDidMount() {
 		this.initializeMap();
+		this.startFlying();
 	}
 
     render() {
