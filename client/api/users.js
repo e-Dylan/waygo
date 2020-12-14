@@ -221,3 +221,5 @@ router.post('/isLoggedIn', (req, res) => {
 	}
 
 });
+
+export default router;
