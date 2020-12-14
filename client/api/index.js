@@ -34,7 +34,7 @@ const corsOptions = {
 app.use(express.json());
 
 var sessionStore = new MySQLStore({
-  expiration: (1825 * 1000 * 1000),
+  expiration: (10000 * 650),
   endConnectionOnClose: false,
 }, sql_db);
 
@@ -44,7 +44,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: (10000 * 6504 * 1000),
+    maxAge: (10000 * 650),
     httpOnly: false,
     secure: false,
   }
@@ -59,7 +59,178 @@ app.get('/api/', (req, res) => {
 // 	res.send("Served '/' on main app /api. ");
 // });
 
-// app.post('/api/isLoggedIn', (req, res) => {
+app.post('/api/isLoggedIn', (req, res) => {
+	// session.userID is set to db id to the req when user logs in.
+	console.log("checking if logged in - session: " + req.session);
+	if (req.session.userID) {
+		let cols = [req.session.userID];
+		sql_db.query('SELECT * FROM user WHERE id = ? LIMIT 1', cols, (err, data, fields) => {
+			// if the session user's id matches one in the db, they're logged in.
+			if (data && data.length === 1) {
+				res.json({
+				success: true,
+				username: data[0].username
+				});
+				return true;
+			}
+			else // no data matches from the db, no user.
+			{
+				res.json({
+					success: false
+				});
+			}
+
+		});
+	}
+	else // User has no session id.
+	{
+		res.json({
+			success: false
+		});
+	}
+
+});
+
+// app.use(middlewares.notFound);
+// app.use(middlewares.errorHandler);
+
+// Listen to backend api port to receive any requests.
+// backend api -> port 1337
+// const api_port = 1337;
+// app.listen(api_port, () => {
+//     console.log(`Listening: on ${api_port}, backend api port.`);
+// });
+
+
+
+// export default (req, res) => {
+
+// 	console.log("session id: " + req.session.id);
+
+// 	let username = req.body.username.toLowerCase();
+// 	let password = req.body.password;
+
+// 	// User login info validation
+// 	if (username.length > 16 || password.length > 16) {
+// 		res.json({
+// 			success: false,
+// 			msg: 'Username and password must be shorter than 16 characters.'
+// 		});
+// 		return;
+// 	}
+
+// 	// Check if username exists in db
+// 	let cols = [username];
+// 	sql_db.query("SELECT * FROM user WHERE username = ? LIMIT 1", cols, (err, data, fields) => {
+// 		if (err) {
+// 			// No username in the database matching login username
+// 			res.json({
+// 				success: false,
+// 				msg: 'User does not exist.'
+// 			});
+// 			return;
+// 		}
+
+// 		// Found a user with this username
+// 		// data = data array returned from db query
+// 		if (data && data.length === 1) {
+// 		// compare username's hashed password with db password
+// 		bcrypt.compare(password, data[0].password, (bcryptErr, verified) => {
+// 			// password is the same
+// 			if (verified) {
+
+// 				// Log the user in. Start a session for user.
+// 				req.session.userID = data[0].id;
+// 				req.session.save((err) => {
+// 					if (err) {
+// 					console.log(err);
+// 					}
+// 				});
+// 				const userData = {
+// 					username: data[0].username,
+// 					password: password,
+// 					email: data[0].email,
+// 					session: req.session,
+// 				}
+// 				console.log(`User successfully logging in: ${JSON.stringify(userData, null, 4)}`);
+
+// 				res.json({
+// 					success: true,
+// 					username: data[0].username,
+// 				});
+
+// 				return;
+// 				}
+
+// 				else {
+// 				// Not verified, wrong password.
+// 				res.json({
+// 					success: false,
+// 					msg: 'Incorrect password.'
+// 				});
+// 				}
+
+// 			});
+// 		}
+// 		else // User does not exist in database.
+// 		{
+// 			res.json({
+// 				success: false,
+// 				msg: 'User not found. Please try again.'
+// 			});
+// 		}
+// 	});
+// }
+
+
+
+// export default (req, res) => {
+// 	const mysql = require('mysql');
+
+// 	const deploy = 'production';
+
+// 	var sql_db_port;
+// 	var host;
+// 	var user;
+// 	var password;
+// 	var database;
+
+// 	if (deploy === 'production') {
+// 		// REMOTE HOST
+// 		sql_db_port = 3306;
+// 		host = 'sql9.freemysqlhosting.net';
+// 		user = 'sql9380874';
+// 		password = 'UenAiZQTdp';
+// 		database = 'sql9380874';
+// 	} else if (deploy === 'localhost') {
+// 		// LOCALHOST:
+// 		sql_db_port = 3308;
+// 		host = 'localhost';
+// 		user = 'root'
+// 		password = 'root'
+// 		database = 'waygo_db';
+// 	}
+
+// 	// Database connection
+// 	const sql_db = mysql.createConnection({
+// 		host: host,
+// 		user: user,
+// 		password: password,
+// 		port: sql_db_port,
+// 		database: database,
+// 	}); 
+
+// 	// Connect to mySQL user database
+// 	sql_db.connect((err) => { 
+// 		if (err) {
+// 			console.log('ERROR: database connection error.');
+// 			throw(err);
+// 			return false;
+// 		} else {
+// 			console.log(`Connected to mysql database for users`);
+// 		}
+// 	});
+
 // 	// session.userID is set to db id to the req when user logs in.
 // 	console.log("checking if logged in - session: " + req.session);
 // 	if (req.session.userID) {
@@ -88,17 +259,6 @@ app.get('/api/', (req, res) => {
 // 			success: false
 // 		});
 // 	}
-
-// });
-
-// app.use(middlewares.notFound);
-// app.use(middlewares.errorHandler);
-
-// Listen to backend api port to receive any requests.
-// backend api -> port 1337
-// const api_port = 1337;
-// app.listen(api_port, () => {
-//     console.log(`Listening: on ${api_port}, backend api port.`);
-// });
+// };
 
 module.exports = app;
