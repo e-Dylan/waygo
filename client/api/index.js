@@ -50,12 +50,16 @@ app.use(session({
   }
 }));
 
+app.get('/', (req, res) => {
+	res.send("this is the serverless");
+});
+
 // app.get('/', (req, res) => {
 //     // serve front-end with this file
 // 	res.send("Served '/' on main app /api. ");
 // });
 
-app.post('/api/isLoggedIn', (req, res) => {
+app.post('/isLoggedIn', (req, res) => {
 	// session.userID is set to db id to the req when user logs in.
 	console.log("checking if logged in - session: " + req.session);
 	if (req.session.userID) {
@@ -97,8 +101,8 @@ app.post('/api/login', (req, res) => {
 	// User login info validation
 	if (username.length > 16 || password.length > 16) {
 		res.json({
-		success: false,
-		msg: 'Username and password must be shorter than 16 characters.'
+			success: false,
+			msg: 'Username and password must be shorter than 16 characters.'
 		});
 		return;
 	}
@@ -107,12 +111,12 @@ app.post('/api/login', (req, res) => {
 	let cols = [username];
 	sql_db.query("SELECT * FROM user WHERE username = ? LIMIT 1", cols, (err, data, fields) => {
 		if (err) {
-		// No username in the database matching login username
-		res.json({
-			success: false,
-			msg: 'User does not exist.'
-		});
-		return;
+			// No username in the database matching login username
+			res.json({
+				success: false,
+				msg: 'User does not exist.'
+			});
+			return;
 		}
 
 		// Found a user with this username
@@ -123,47 +127,46 @@ app.post('/api/login', (req, res) => {
 			// password is the same
 			if (verified) {
 
-			// Log the user in. Start a session for user.
-			req.session.userID = data[0].id;
-			req.session.save((err) => {
-				if (err) {
-				console.log(err);
+				// Log the user in. Start a session for user.
+				req.session.userID = data[0].id;
+				req.session.save((err) => {
+					if (err) {
+					console.log(err);
+					}
+				});
+				const userData = {
+					username: data[0].username,
+					password: password,
+					email: data[0].email,
+					session: req.session,
 				}
+				console.log(`User successfully logging in: ${JSON.stringify(userData, null, 4)}`);
+
+				res.json({
+					success: true,
+					username: data[0].username,
+				});
+
+				return;
+				}
+
+				else {
+				// Not verified, wrong password.
+				res.json({
+					success: false,
+					msg: 'Incorrect password.'
+				});
+				}
+
 			});
-			const userData = {
-				username: data[0].username,
-				password: password,
-				email: data[0].email,
-				session: req.session,
-			}
-			console.log(`User successfully logging in: ${JSON.stringify(userData, null, 4)}`);
-
-			res.json({
-				success: true,
-				username: data[0].username,
-			});
-
-			return;
-			}
-
-			else {
-			// Not verified, wrong password.
-			res.json({
-				success: false,
-				msg: 'Incorrect password.'
-			});
-			}
-
-		});
 		}
 		else // User does not exist in database.
 		{
-		res.json({
-			success: false,
-			msg: 'User not found. Please try again.'
-		});
+			res.json({
+				success: false,
+				msg: 'User not found. Please try again.'
+			});
 		}
-		
 	});
 })
 
