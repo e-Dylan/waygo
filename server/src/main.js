@@ -37,7 +37,7 @@ app.use(volleyball);
 app.use(express.json());
 
 var sessionStore = new MySQLStore({
-  expiration: (1825 * 1000 * 1000),
+  expiration: (1825 * 1000),
   endConnectionOnClose: false,
 }, sql_db);
 
