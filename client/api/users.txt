@@ -87,8 +87,8 @@ app.post('/login', (req, res) => {
 	// User login info validation
 	if (username.length > 16 || password.length > 16) {
 		res.json({
-		success: false,
-		msg: 'Username and password must be shorter than 16 characters.'
+			success: false,
+			msg: 'Username and password must be shorter than 16 characters.'
 		});
 		return;
 	}

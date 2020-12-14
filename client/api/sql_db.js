@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const serverlessMySQL = require('serverless-mysql');
 
 const deploy = 'production';
 
@@ -24,24 +24,14 @@ if (deploy === 'production') {
 	database = 'waygo_db';
 }
 
-// Database connection
-const sql_db = mysql.createConnection({
-  host: host,
-  user: user,
-  password: password,
-  port: sql_db_port,
-  database: database,
-}); 
-
-// Connect to mySQL user database
-sql_db.connect((err) => { 
-	if (err) {
-		console.log('ERROR: database connection error.');
-		throw(err);
-		return false;
-	} else {
-		console.log(`Connected to mysql database for users`);
+const sql_db = serverlessMySQL({
+	config: {
+		host: host,
+		user: user,
+		password: password,
+		port: sql_db_port,
+		database: database,
 	}
-});
+})
 
 module.exports = sql_db;

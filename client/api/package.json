@@ -29,7 +29,9 @@
     "monk": "^7.3.1",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
+    "next-iron-session": "^4.1.10",
     "now": "^21.0.1",
+    "serverless-mysql": "^1.5.4",
     "vercel": "^21.0.1",
     "volleyball": "^1.5.1"
   },
