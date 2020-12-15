@@ -35,7 +35,7 @@ const corsOptions = {
 app.use(express.json());
 
 var sessionStore = new MySQLStore({
-	expiration: (1000*60*60*24), // 24 hours MILLISECONDS
+	expiration: (1000*60*10), // 10 minutes MILLISECONDS
 	endConnectionOnClose: false,
 }, sql_db);
 
