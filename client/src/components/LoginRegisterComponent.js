@@ -128,11 +128,11 @@ class LoginRegisterComponent extends Component {
                 // UserStore.isLoggedIn = true;
                 // UserStore.username = result.username;
 				window.location.replace(WEBSITE_URL);
-				alert(result.msg);
+				// alert(result.msg);
             } else if (result && result.success === false) {
                 // User tried to log in, no account match found, login failed.
                 this.resetForm();
-                alert(result.msg); // change alert
+                // alert(result.msg); // change alert
             }
         }
         catch(e) {
