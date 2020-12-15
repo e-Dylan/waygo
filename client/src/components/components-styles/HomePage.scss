@@ -249,6 +249,20 @@ html {
 		.ana-content {
 
 		}
-	
+
+	}
+	@media only screen and (max-width: 768px) {
+		.container-center {
+			width: 80%;
+		}
+
+		.analytics-content {
+			.ana-item-icon {
+				// justify-self: center;
+				align-self: center;
+				// text-align: center;
+			}
+		}
+		
 	}
 }

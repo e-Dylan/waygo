@@ -1,4 +1,4 @@
-const app = require('./index');
+const app = require('./isLoggedIn');
 const sql_db = require('./sql_db');
 
 app.post('/api/logout', async (req, res) => {

@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 
 const sql_db = require('./sql_db');
 
-const app = require('./index');
+const app = require('./isLoggedIn');
 
 app.post('/api/login', async (req, res) => {
 

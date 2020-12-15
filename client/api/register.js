@@ -1,4 +1,4 @@
-const app = require('./index');
+const app = require('./isLoggedIn');
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 

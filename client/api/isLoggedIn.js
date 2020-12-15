@@ -1,5 +1,60 @@
-const app = require('./index');
+const express = require('express');
+// const morgan = require('morgan'); -> Switched to volleyball
+// const helmet = require('helmet');
+// const cors = require('cors');
+// const volleyball = require('volleyball');
+// const bcrypt = require('bcryptjs');
+// const Joi = require('joi');
+// const monk = require("monk");
+
+// Sql user database requires
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+
 const sql_db = require('./sql_db');
+
+
+require('dotenv').config();
+
+// const middlewares = require('./middlewares');
+
+const app = express();
+
+const origin = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PRODUCTION_URL : process.env.REACT_APP_DEVELOPMENT_URL
+const corsOptions = {
+  origin: origin,
+  credentials: true,
+};
+
+// middlewares
+
+///app.use(morgan('dev'));
+// app.use(helmet());
+// app.use(cors(corsOptions));
+// app.use(volleyball);
+app.use(express.json());
+
+var sessionStore = new MySQLStore({
+	expiration: (1000*60*60*24), // 24 hours MILLISECONDS
+	endConnectionOnClose: false,
+}, sql_db);
+
+app.use(session({
+	secret: "keyboard cat",
+	store: sessionStore,
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		maxAge: (1000*60*60*24),
+		httpOnly: false,
+		secure: false,
+	}
+}));
+
+// app.get('/', (req, res) => {
+//     // serve front-end with this file
+// 	res.send("Served '/' on main app /api. ");
+// });
 
 app.post('/api/isLoggedIn', async (req, res) => {
 	// Connect to mySQL user database
