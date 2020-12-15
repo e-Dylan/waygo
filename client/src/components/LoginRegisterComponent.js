@@ -1,3 +1,4 @@
+import { string } from 'joi';
 import React, { Component } from 'react';
 
 import '../App.css';
@@ -192,15 +193,21 @@ class LoginRegisterComponent extends Component {
         this.setState( (prevState) => ({
             loginActive: !prevState.loginActive,
         }));
-    }
+	}
+	
+	componentDidMount() {
+		if (window.location.href.includes('register')) {
+			this.changeState();
+		}
+	}
 
     render() {
-
+		
         const { loginActive } = this.state;
         const current = loginActive ? "login" : "register";
         const opposite = loginActive ? "register" : "login";
-        var currentTitle = current.charAt(0).toUpperCase() + current.slice(1)
-
+		var currentTitle = current.charAt(0).toUpperCase() + current.slice(1)
+	
         return(
             <div className="login-form">
                 <div className="login-form-container">
