@@ -3,8 +3,9 @@
 /* login main container */
 
 .login-form {
-    width: 27em;
-    height: 40em;
+    width: 70%;
+	height: 50%;
+	max-width: 350px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -95,6 +96,7 @@
 .content {
     display: flex;
     flex-direction: column;
+	width: 100%;
 }
 
 .image {
@@ -108,7 +110,7 @@ img {
 }
 
 .input-form-container {
-    margin-top: 2em;
+    margin-top: 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -122,6 +124,7 @@ img {
     transition: all 400ms ease-in-out;
 	opacity: 1;
 	color: black;
+	width: auto;
 }
 
 .form-group-moveup {
@@ -138,7 +141,8 @@ img {
 
 .login-form-label {
     font-size: 20px;
-    font-family: "Ubuntu", sans-serif;
+	font-family: "Ubuntu", sans-serif;
+	width: auto;
 }
 
 .login-form-button {
@@ -152,7 +156,7 @@ img {
     border-radius: 3px;
     transition: all 400ms ease-in-out;
     cursor: pointer;
-    margin-top: 2em;
+    margin-top: 2rem;
 }
 
 .login-form-button:focus {
@@ -184,8 +188,8 @@ img {
 .login-form-image {
     max-height: 250px;
     max-width: 1000px;
-    height: 50%;
-    width: 40%;
+    height: 8rem;
+    width: 8rem;
     margin-top: 30px;
     align-self: center;
     transition: all 400ms ease-in-out;
@@ -217,7 +221,7 @@ img {
 
 .login-input-field {
     margin-top: 6px;
-    min-width: 16em;
+    min-width: 6rem;
     height: 100%;
     padding: 0px 10px;
     font-size: 16px;
@@ -234,5 +238,17 @@ img {
 	&:focus {
 		outline: none;
 		box-shadow: 0px 0px 6px 1px rgb(81, 139, 192);
+	}
+}
+
+// MOBILE
+@media only screen and (max-width: 768px) {
+	.login-form-label {
+		font-size: 18px;
+	}
+
+	.input-form-container {
+		width: 85%;
+		align-self: center;
 	}
 }
