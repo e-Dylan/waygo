@@ -1,6 +1,6 @@
 const serverlessMySQL = require('serverless-mysql');
 
-const deploy = 'production';
+const deploy = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
 var sql_db_port;
 var host;
@@ -15,7 +15,7 @@ if (deploy === 'production') {
 	user = 'sql9380874';
 	password = 'UenAiZQTdp';
 	database = 'sql9380874';
-} else if (deploy === 'localhost') {
+} else if (deploy === 'development') {
 	// LOCALHOST:
 	sql_db_port = 3308;
 	host = 'localhost';

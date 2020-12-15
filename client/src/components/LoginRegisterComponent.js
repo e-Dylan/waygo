@@ -127,7 +127,8 @@ class LoginRegisterComponent extends Component {
 				// FIX WITH REDUX INCLUDES
                 // UserStore.isLoggedIn = true;
                 // UserStore.username = result.username;
-                window.location.replace(WEBSITE_URL);
+				window.location.replace(WEBSITE_URL);
+				alert(result.msg);
             } else if (result && result.success === false) {
                 // User tried to log in, no account match found, login failed.
                 this.resetForm();

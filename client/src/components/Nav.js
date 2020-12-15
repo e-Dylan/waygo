@@ -84,7 +84,6 @@ const Nav = (props) => {
 				// call action of setting user state.
 				// reducer listens and updates the store with this data.
 				props.setUserState(userState);
-				alert(result.msg);
 			} catch(e) {
 				props.setUserState({ loading: false });
 				console.log(e);

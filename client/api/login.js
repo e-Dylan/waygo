@@ -58,19 +58,20 @@ app.post('/api/login', async (req, res) => {
 
 				res.json({
 					success: true,
+					msg: `user ${data[0].username} successfully logged in.`,
 					username: data[0].username,
 				});
 
 				return;
-				}
+			}
 
-				else {
+			else {
 				// Not verified, wrong password.
 				res.json({
 					success: false,
 					msg: 'Incorrect password.'
 				});
-				}
+			}
 
 			});
 		}
