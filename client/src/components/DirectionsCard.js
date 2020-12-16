@@ -2,9 +2,12 @@ import React from "react";
 
 import { Card } from 'reactstrap';
 
+// Icons and images
 import directionsCarIcon from "../resources/maki-icons/car-15.svg";
 import citySearchIcon from "../resources/maki-icons/building-alt1-15.svg";
 import directionsBuildingIcon from "../resources/maki-icons/building-alt1-15.svg";
+
+import useActiveLocationIcon from "../resources/map/active-location-icon.png";
 
 import '../App.css'
 import './components-styles/MapComponent.scss';
@@ -21,7 +24,7 @@ class DirectionsCard extends React.Component {
 	render() {
 		return(
 			<Card body className="map-hud-card directions-card">
-				<div className="dirs-title">
+				<div className="dirs-buttons">
 					<div className="dirs-burger"
 						onClick={this.props.mapComponent.moveHomeDock}>
 						<div className="search-bar-button__burger"></div>
@@ -119,9 +122,39 @@ class DirectionsCard extends React.Component {
 					</div>
 				</div>
 
+															
+				{ this.props.mapComponent.state.showUseCurrentLocationButton &&
+					<div className="use-active-location search-result-div" onClick={() => {
+						const mc = this.props.mapComponent;
+						// get location data for user's location (at lngLat)
+						const userPos = mc.state.userPosition;
+
+						var loc;
+						if (mc.state.hasOrigin && !mc.state.hasDest) {
+							// User has origin, is missing a destination.
+							loc = "dest"
+							mc.placeDestMarker(userPos.lng, userPos.lat);
+						} else {
+							// Otherwise always set to origin.
+							loc = "origin"
+							mc.placeOriginMarker(userPos.lng, userPos.lat);
+						}
+
+							// Fill in the origin with user's position.
+							this.props.mapComponent.reverseGeocodeLoc(userPos.lng, userPos.lat, loc);
+							// Hide use my location option after clicked.
+							this.props.mapComponent.showUseCurrentLocationButton(false);
+						
+					}}>
+						<img className="search-result-icon" src={useActiveLocationIcon}></img>
+						<span className="use-active-location-text">Use my location</span>
+					</div>
+				}
+
 				{ this.props.mapComponent.state.showDirsFromSearchResults && this.props.mapComponent.state.searchResultItems.length > 0 &&
 								
 					<Card className="search-results-bg-card dirs-from-search-results">
+						
 						{ this.props.mapComponent.state.searchResultItems.map(searchResult =>
 
 							<div 

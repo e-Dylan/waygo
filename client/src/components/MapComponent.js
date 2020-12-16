@@ -88,7 +88,7 @@ class MapComponent extends React.Component {
 			lat: 0,
 			lng: 0,
 		},
-		hasUserPosition: false,
+		hasUserLocation: false,
 
 		hasActiveMarker: false,
 		activeMarkerPosition: {
@@ -131,6 +131,7 @@ class MapComponent extends React.Component {
 		showLocationCard: false,
 		showDirectionsCard: false,
 		showRoutesCard: false,
+		showUseCurrentLocationButton: false,
 
 		showLocationSearchResults: false,
 		showDirsFromSearchResults: false,
@@ -234,8 +235,6 @@ class MapComponent extends React.Component {
 
 		this.map.on('click', (event) => {
 			this.clickMap(event);
-			// REMOVE, TESTING DRAWING ROUTES
-			console.log(this.state.activeRouteOptions);
 		})
 
 		this.map.on('contextmenu', (event) => {
@@ -391,13 +390,26 @@ class MapComponent extends React.Component {
 	}
 
 	setActiveDest(locationData) {
-		this.setState({activeDest: locationData}, () => {
+		if (this.map.getSource('route')) {
+			// remove any active routes when setting new destination or origin.
+			this.removeActiveRoute();
+		}
+
+		this.setState({
+			activeDest: locationData,
+			hasDest: true,
+		}, () => {
 			// console.log(this.state.activeDest);
 			this.checkCalculateRoutes();
 		});
 
 		// set active to-value in dirs card to active destination whenever set.
 		this.setToValue(locationData.full_place);
+	
+		// display button to use your own location when a destination is set.
+		if (this.state.hasUserLocation) {
+			this.showUseCurrentLocationButton(true);
+		}
 	}
 
 	placeDestMarker(lng, lat) {
@@ -441,12 +453,24 @@ class MapComponent extends React.Component {
 	}
 
 	setActiveOrigin(locationData) {
-		this.setState({activeOrigin: locationData}, () => {
+		if (this.map.getSource('route')) {
+			// remove any active routes when setting new destination or origin.
+			this.removeActiveRoute();
+		}
+		
+		this.setState({
+			activeOrigin: locationData,
+			hasOrigin: true
+		}, () => {
 			this.checkCalculateRoutes();
 		});
 		
 		// Set current directions card to the active origin.
 		this.setFromValue(locationData.full_place);
+
+		this.showUseCurrentLocationButton(true);
+	
+		// remove any active routes when setting new destination or origin.
 	}
 
 	placeOriginMarker(lng, lat) {
@@ -716,6 +740,12 @@ class MapComponent extends React.Component {
 		this.setState({ showMapSearchBar: false });
 	}
 
+	showUseCurrentLocationButton(bool) {
+		this.setState({
+			showUseCurrentLocationButton: bool
+		})
+	}
+
 	//#endregion
 
 	// Fetches location data for lng,lat, compiles into scraped data to be stored in state.
@@ -728,7 +758,7 @@ class MapComponent extends React.Component {
 				var locData = mapApi.compileLocationData(location)[0];
 				
 				if (loc === "origin") {
-					this.setActiveOrigin(locData)
+					this.setActiveOrigin(locData);
 					this.setFromValue(locData.full_place);
 					this.showDirections();
 					this.hideLocation();
@@ -825,7 +855,7 @@ class MapComponent extends React.Component {
 		)
 		.then(res => res.json())
 		.then(data => {
-			console.log(data.routes);
+			// console.log(data.routes);
 
 			if (data.routes != null) {
 				this.setState({
@@ -880,7 +910,7 @@ class MapComponent extends React.Component {
 			},
 			paint: {
 				'line-color': travelColour,
-				'line-width': 5,
+				'line-width': 7,
 				'line-opacity': 0.8,
 			}
 		});	
@@ -944,6 +974,9 @@ class MapComponent extends React.Component {
 	removeActiveRoute = () => {
 		this.map.removeLayer('route');
 		this.map.removeSource('route');
+		
+		// Clear state active route?
+		// Keeping cached for now, maybe used to re-instate for user quality of life feature.
 	}
 
 
@@ -1083,7 +1116,7 @@ class MapComponent extends React.Component {
 			setTimeout(() => {
 				this.setState({
 					userPosition,
-					hasUserPosition: true,
+					hasUserLocation: true,
 					zoom: 13,
 				});
 				this.initializeMap();

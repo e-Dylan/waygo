@@ -105,7 +105,7 @@ class RoutesCard extends React.Component {
 
 		var travelColour = this.props.mapComponent.getTravelColour(this.props.mapComponent.state.activeProfile)
 		this.props.mapComponent.drawActiveRoute(route, travelColour);
-		console.log(travelColour);
+		// console.log(travelColour);
 	}
 
 	render() {

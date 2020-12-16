@@ -291,7 +291,7 @@
 	background-color: rgba(255, 255, 255, 1);
 	border-radius: 6px;
 	padding: 0px;
-	padding-bottom: 5px;
+	// padding-bottom: 5px;
 	margin-top: 5px;
 
 	&::before {
@@ -330,6 +330,8 @@
 .dirs-burger:hover > .search-bar-button__burger::before {
 	background: rgb(47, 160, 212);
 }
+
+
 
 .directions-card {
 	align-items: center;
@@ -397,16 +399,35 @@
 .dirs-from-search-results {
 	display: flex;
 	flex-direction: column;
-	top: 10px;
+	// top: 10px;
 }
 .dirs-to-search-results {
 	display: flex;
 	flex-direction: column;
-	top: 10px;
+	// top: 10px;
 }
 
-/* .dirs-title {
-} */
+// Directions Card Top-Section
+
+.dirs-title {
+	display: flex;
+	flex-direction: row;
+}
+
+.use-active-location {
+
+	background-color: rgb(245, 245, 245);
+	font-size: 12pt;
+
+	img {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	.use-active-location-text {
+		margin-left: 10px;
+	}
+}
 
 .hud-card-button {
 	margin: 5px;
