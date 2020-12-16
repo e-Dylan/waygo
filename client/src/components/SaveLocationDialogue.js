@@ -4,7 +4,7 @@ import { Card } from 'reactstrap';
 
 import * as mapApi from '../mapApi';
 
-import waygoLogo from '../resources/logo/waygo-logo.png';
+import waygoLogo from '../resources/logo/new/waygo-logo.png';
 import locationIcon from '../resources/save-location-dialogue/map-marked-alt-solid.svg';
 import addressIcon from '../resources/save-location-dialogue/at-solid.svg';
 import citySearchIcon from "../resources/maki-icons/building-alt1-15.svg";

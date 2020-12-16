@@ -3,7 +3,7 @@ import React from 'react';
 import '../components-styles/HomePage.scss'; // change to components css
 
 // Images/icons
-import waygoLogo from '../../resources/logo/waygo-logo.png';
+import waygoLogo from '../../resources/logo/new/waygo-logo.png';
 import optimizeTravelImage from '../../resources/front-page/adv-section/optimize-your-travel.svg';
 import ownTrafficIcon from '../../resources/front-page/adv-section/own-traffic.svg';
 import travelWithFriendsImage from '../../resources/front-page/adv-section/travel-with-friends.svg';

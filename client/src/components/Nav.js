@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { setUserState } from '../redux/actions/setUserState';
 
-import waygoLogo from '../resources/logo/waygo-logo.png'
+import waygoLogo from '../resources/logo/new/waygo-logo.png'
 
 const ISLOGGEDIN_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/isLoggedIn` : `${process.env.REACT_APP_PRODUCTION_API_URL}/isLoggedIn`;
 const LOGOUT_API_URL = window.location.hostname === "localhost" ? `${process.env.REACT_APP_DEVELOPMENT_API_URL}/logout` : `${process.env.REACT_APP_PRODUCTION_API_URL}/logout`;

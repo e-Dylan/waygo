@@ -18,7 +18,7 @@ import AdvertisingSection from './HomePageComponents/AdvertisingSection';
 import AnalyticsSection from './HomePageComponents/AnalyticsSection';
 
 // Images/icons
-import waygoLogo from '../resources/logo/waygo-logo.png';
+import waygoLogo from '../resources/logo/new/waygo-logo.png';
 
 const HomePage = (props) => {
 

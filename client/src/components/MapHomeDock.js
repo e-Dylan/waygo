@@ -10,7 +10,7 @@ import $ from 'jquery';
 import SubmitButton from './SubmitButton';
 
 // Images/Icons
-import waygoLogo from '../resources/logo/waygo-logo.png';
+import waygoLogo from '../resources/logo/new/waygo-logo.png';
 import leftArrow from '../resources/map-home-dock/left-arrow-close.png';
 import rightArrow from '../resources/map-home-dock/right-arrow-open.png';
 
