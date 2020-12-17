@@ -390,11 +390,8 @@ class MapComponent extends React.Component {
 	}
 
 	setActiveDest(locationData) {
-
-		if (this.map.getSource('route')) {
-			// remove any active routes when setting new destination or origin.
-			this.removeActiveRoute();
-		}
+		// remove any active routes when setting new destination or origin.
+		this.removeActiveRoute();
 
 		this.setState({
 			activeDest: locationData,
@@ -454,11 +451,8 @@ class MapComponent extends React.Component {
 	}
 
 	setActiveOrigin(locationData) {
-
-		if (this.map.getSource('route')) {
-			// remove any active routes when setting new destination or origin.
-			this.removeActiveRoute();
-		}
+		// remove any active routes when setting new destination or origin.
+		this.removeActiveRoute();
 		
 		this.setState({
 			activeOrigin: locationData,
@@ -883,12 +877,10 @@ class MapComponent extends React.Component {
 			}
 		};
 
-		if (this.map.getSource('route')) {
-			// if the route already exists on the map, reset it using setData
-			// this.map.getSource('route').setData(geojson);
-			// remove the layer, re-add with new data. cannot change data to just update it.
-			this.removeActiveRoute();
-		}
+		// if the route already exists on the map, reset it using setData
+		// this.map.getSource('route').setData(geojson);
+		// remove the layer, re-add with new data. cannot change data to just update it.
+		this.removeActiveRoute();
 			
 		this.map.addLayer({
 			id: 'route',
@@ -967,14 +959,18 @@ class MapComponent extends React.Component {
 	}
 
 	removeHoveringRoute = () => {
-		this.map.removeLayer('hovering-route');
-		this.map.removeSource('hovering-route');
+		if (this.map.getSource('hovering-route')) {
+			this.map.removeLayer('hovering-route');
+			this.map.removeSource('hovering-route');
+		}
+		
 	}
 
 	removeActiveRoute = () => {
-		this.map.removeLayer('route');
-		this.map.removeSource('route');
-		
+		if (this.map.getSource('route')) { 
+			this.map.removeLayer('route');
+			this.map.removeSource('route');
+		}
 		// Clear state active route?
 		// Keeping cached for now, maybe used to re-instate for user quality of life feature.
 	}
