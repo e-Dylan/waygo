@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { createBrowserHistory } from 'history'
 
 // import { Card, Button, CardTitle, CardText, Row, Col, Form, FormGroup, Label, Input, ButtonDropdown } from "reactstrap";
 import { Card } from 'reactstrap';
@@ -24,13 +25,14 @@ import waygoLogo from '../resources/logo/new/waygo-logo.png';
 import ReactGA from 'react-ga';
 
 const trackingId = "G-M7Z6KW7GT6"
+console.log(trackingId);
 ReactGA.initialize(trackingId);
 ReactGA.set({
 	// set any user data relaveng to application,
 	// fill out future.
 });
 
-history.listen(location => {
+createBrowserHistory().listen(location => {
 	ReactGA.set({page: location.pathname});
 	ReactGA.pageview(location.pathname);
 });
