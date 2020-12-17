@@ -390,6 +390,7 @@ class MapComponent extends React.Component {
 	}
 
 	setActiveDest(locationData) {
+
 		if (this.map.getSource('route')) {
 			// remove any active routes when setting new destination or origin.
 			this.removeActiveRoute();
@@ -453,6 +454,7 @@ class MapComponent extends React.Component {
 	}
 
 	setActiveOrigin(locationData) {
+
 		if (this.map.getSource('route')) {
 			// remove any active routes when setting new destination or origin.
 			this.removeActiveRoute();
@@ -468,9 +470,10 @@ class MapComponent extends React.Component {
 		// Set current directions card to the active origin.
 		this.setFromValue(locationData.full_place);
 
-		this.showUseCurrentLocationButton(true);
-	
-		// remove any active routes when setting new destination or origin.
+		// display button to use your own location when a destination is set.
+		if (this.state.hasUserLocation) {
+			this.showUseCurrentLocationButton(true);
+		}
 	}
 
 	placeOriginMarker(lng, lat) {
@@ -743,7 +746,7 @@ class MapComponent extends React.Component {
 	showUseCurrentLocationButton(bool) {
 		this.setState({
 			showUseCurrentLocationButton: bool
-		})
+		}, console.log(this.state.showUseCurrentLocationButton));
 	}
 
 	//#endregion
@@ -760,16 +763,13 @@ class MapComponent extends React.Component {
 				if (loc === "origin") {
 					this.setActiveOrigin(locData);
 					this.setFromValue(locData.full_place);
-					this.showDirections();
-					this.hideLocation();
-					this.showDirectionsCard();
 				} else if (loc === "dest") {
 					this.setActiveDest(locData);
 					this.setToValue(locData.full_place);
-					this.showDirections();
-					this.hideLocation();
-					this.showDirectionsCard();
 				}
+				if (!this.state.showDirections) this.showDirections();
+				this.hideLocation();
+				this.showDirectionsCard();
 			});
 	}
 
@@ -1045,35 +1045,17 @@ class MapComponent extends React.Component {
 	}
 
     componentDidMount() {
+		try {
+			// Check if the user is logged in on map load, if so, fetch their map data.
+			api.checkIsLoggedIn()
+			.then(userState => {
+				this.props.setUserState(userState);
 
-        // isLoggedIn check on Map load	
-          // fetch isLoggedIn api
-
-		var userState = {}; 
-		var res = fetch(ISLOGGEDIN_API_URL, {
-			method: 'POST',
-			credentials: 'include',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			}
-		})
-		.then(res => res.json())
-		.then(result => {
-			try {
-				if (result && result.success) {
-					// user is logged in
-					userState = {
-						username: result.username,
-						email: result.email,
-						isLoggedIn: true,
-						loading: false,
-					}
-
-					// If user is logged in, fetch their saved locations and store
-					// in redux state.
+				if (userState.isLoggedIn) {
 					api.getSavedLocationsFromApi()
 					.then(result => {
+						// If user is logged in, fetch their saved locations and store
+						// in redux state.
 						var savedLocationsState = result;
 						if (savedLocationsState != null) {
 							// saved locations state in DB will initialize as null, 
@@ -1084,23 +1066,12 @@ class MapComponent extends React.Component {
 							})
 							this.props.setUserSavedLocationsState(savedLocationsState)
 						}
-					})
-				} else { 
-					// user isn't logged in on the page
-					userState = {
-						username: '',
-						email: '',
-						isLoggedIn: false,
-						loading: false,
-					}
+					});
 				}
-				// call action of setting user state.
-				// reducer listens and updates the store with this data.
-				this.props.setUserState(userState);
-			} catch(e) {
-				
-			}
-		})
+			});
+		} catch (e) {
+
+		}
 
         // Fetch all waymessages from backend db
         // api.fetchWayMessages()

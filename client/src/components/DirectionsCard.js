@@ -124,7 +124,7 @@ class DirectionsCard extends React.Component {
 
 															
 				{ this.props.mapComponent.state.showUseCurrentLocationButton &&
-					<div className="use-active-location search-result-div" onClick={() => {
+					<div className="use-active-location search-result-div" onClick={async() => {
 						const mc = this.props.mapComponent;
 						// get location data for user's location (at lngLat)
 						const userPos = mc.state.userPosition;
@@ -140,10 +140,15 @@ class DirectionsCard extends React.Component {
 							mc.placeOriginMarker(userPos.lng, userPos.lat);
 						}
 
-							// Fill in the origin with user's position.
-							this.props.mapComponent.reverseGeocodeLoc(userPos.lng, userPos.lat, loc);
-							// Hide use my location option after clicked.
-							this.props.mapComponent.showUseCurrentLocationButton(false);
+						// Fill in the origin with user's position.
+						this.props.mapComponent.reverseGeocodeLoc(userPos.lng, userPos.lat, loc)
+							// reverseGeocodeLoc shows showuserlocation button by setting a position, 
+							// wait until it's done, then hide the button.
+							.then(() => {
+								// Hide use my location option after clicked.
+								this.props.mapComponent.showUseCurrentLocationButton(false);
+							});
+
 						
 					}}>
 						<img className="search-result-icon" src={useActiveLocationIcon}></img>

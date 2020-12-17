@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -24,18 +24,9 @@ import waygoLogo from '../resources/logo/new/waygo-logo.png';
 // Google Analytics
 import ReactGA from 'react-ga';
 
-const trackingId = "G-M7Z6KW7GT6"
-// console.log(trackingId);
-ReactGA.initialize(trackingId);
-// ReactGA.set({
-// 	// set any user data relaveng to application,
-// 	// fill out future.
-// });
+import { renderButton, checkSignedIn } from "../analyticsUtils";
 
-createBrowserHistory().listen(location => {
-	ReactGA.set({page: location.pathname});
-	ReactGA.pageview(location.pathname);
-});
+// const trackingId = "G-M7Z6KW7GT6"
 
 const HomePage = (props) => {
 
@@ -56,14 +47,17 @@ const HomePage = (props) => {
 			// 	action: "User loaded the front page."
 			// });
 		
-			ReactGA.pageview(window.location.pathname);
+			// ReactGA.pageview(window.location.pathname);
+
 	}, [])
 		
 	return (
-		<div className="homepage">
-			<AnimationSection />
-			<AdvertisingSection />
-			<AnalyticsSection />
+		<div>
+			<div className="homepage">
+				<AnimationSection />
+				<AdvertisingSection />
+				<AnalyticsSection />
+			</div>
 		</div>
 	);
 }
