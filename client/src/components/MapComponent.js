@@ -73,17 +73,6 @@ class MapComponent extends React.Component {
 	}
 
 	state = {
-		viewport: {
-			width: '100vw',
-			height: '100vh',
-			latitude: 0,
-			longitude: 0,
-			zoom: 12,
-			pitch: 0,
-		},
-
-		homeDockOpen: false,
-
 		userPosition: {
 			lat: 0,
 			lng: 0,
@@ -137,7 +126,6 @@ class MapComponent extends React.Component {
 		showDirsFromSearchResults: false,
 		showDirsToSearchResults: false,
 
-		showHomeDock: true,
 		showContextMenu: false,
 		showWaymessageMenu: false,
 		showSaveLocationDialogue: true,
@@ -162,6 +150,8 @@ class MapComponent extends React.Component {
 		activeRouteOptions: [
 		],
 		activeRoute: {},
+		hasSelectedRoute: false,
+		hasActiveRoute: false,
 	}
 
 	compileActiveLocationData(data) {
@@ -740,7 +730,19 @@ class MapComponent extends React.Component {
 	showUseCurrentLocationButton(bool) {
 		this.setState({
 			showUseCurrentLocationButton: bool
-		}, console.log(this.state.showUseCurrentLocationButton));
+		});
+	}
+
+	startRoute() {
+		// this.hideDirections();
+		this.setState({
+			showRoutesCard: false,
+			showUseCurrentLocationButton: false,
+			hasSelectedRoute: false,
+			hasActiveRoute: true,
+		});
+
+		// Build functionality to zoom in on user and track them during their route.
 	}
 
 	//#endregion
@@ -1139,10 +1141,6 @@ class MapComponent extends React.Component {
 		}
 	}
 
-	_onViewportChange = viewport => this.setState({
-		viewport: { ...this.state.viewport, ...viewport }
-	});
-
 	_flyTo = ({lat, lng, zoom, displayActiveMarker}) => {
 		this._onViewportChange({
 			latitude: lat,
@@ -1221,18 +1219,16 @@ class MapComponent extends React.Component {
 					
 				</div>
 
-                { this.state.showHomeDock &&
-                    <MapHomeDock
-						id="map-home-dock"
-						moveHomeDock={this.moveHomeDock}
-						homeDockOpen={this.state.homeDockOpen}
-						toggleWaymessageMenu={this.toggleWaymessageMenu} 
-						waymessageFormSubmit={this.waymessageFormSubmit} 
-						waymessageValueChanged={this.waymessageValueChanged} 
-						waymessageFormIsValid={this.waymessageFormIsValid}
-						mapComponent={this}
-					/>
-                }
+				<MapHomeDock
+					id="map-home-dock"
+					moveHomeDock={this.moveHomeDock}
+					homeDockOpen={this.state.homeDockOpen}
+					toggleWaymessageMenu={this.toggleWaymessageMenu} 
+					waymessageFormSubmit={this.waymessageFormSubmit} 
+					waymessageValueChanged={this.waymessageValueChanged} 
+					waymessageFormIsValid={this.waymessageFormIsValid}
+					mapComponent={this}
+				/>
                 
 				<div className="waymessage-menu-div waymessage-menu-hidden" id="waymessage-menu-div">
 					<WaymessageMenuComponent 

@@ -88,6 +88,39 @@
 	}
 }
 
+.go-button-container {
+	background-color: white;
+	height: auto;
+	// position: relative; 
+	background-color: rgb(207, 107, 140);
+
+	.go-button {
+		transition: 150ms background-color ease-in-out;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		padding: 8px;
+		cursor: pointer;
+
+		&:hover {
+			background-color: rgb(235, 135, 168);
+		}
+
+		.go-image {
+			align-self: center;
+			width: 1.3rem;
+			height: 1.1rem;
+		}
+		.go-text {
+			align-self: center;
+			font-size: 14pt;
+			margin: 0 10px;
+			color: white;
+			text-transform: uppercase;
+		}	
+	}
+}
+
 .routes-title {
 	font-family: "Ubuntu", sans-serif;
 	font-size: 10pt;

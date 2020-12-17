@@ -77,7 +77,8 @@ class LoginRegisterComponent extends Component {
             });
             
             // backend will respond success if the user matches any, not if no user.
-            let result = await res.json();
+			let result = await res.json();
+			// console.log(result);
             if (result && result.success) {
                 // alert(result.msg + "\nUsername: " + result.username);
                 // Automatically log user in if successfully registered.

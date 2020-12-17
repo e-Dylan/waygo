@@ -11,7 +11,7 @@ import carIcon from '../resources/maki-icons/car-15.svg';
 import walkIcon from '../resources/maki-icons/pitch-15.svg'
 import busIcon from '../resources/maki-icons/bus-15.svg';
 import cycleIcon from '../resources/maki-icons/bicycle-share-15.svg';
-
+import goButtonIcon from '../resources/map/go-button.png';
 // import trafficIcon from '../resources/maki-icons/icons8-traffic-light-26.png'
 
 class RoutesCard extends React.Component {
@@ -21,7 +21,7 @@ class RoutesCard extends React.Component {
 	}
 
 	state = {
-
+		showGoButton: true,
 	}
 
 	getCurrentTimeAsString() {
@@ -89,6 +89,8 @@ class RoutesCard extends React.Component {
 	setActiveRoute(route) {
 		this.props.mapComponent.setState({
 			activeRoute: route,
+			// set the selected route, not active yet. Shows on map as active. Clicking "Go" sets active.
+			hasSelectedRoute: true,
 		}, () => {
 			// Route has been set, zoom map to show it.
 			const coords = this.props.mapComponent.state.activeRoute.geometry.coordinates;
@@ -98,8 +100,6 @@ class RoutesCard extends React.Component {
 
 			this.props.mapComponent.map.fitBounds(bounds, {
 				padding: 50,
-			}, () => {
-				console.log('done')
 			});
 		});
 
@@ -180,6 +180,22 @@ class RoutesCard extends React.Component {
 									
 								</div>
 						) }
+
+						{/* Go Route Button */}
+
+						{ this.props.mapComponent.state.hasSelectedRoute &&
+							<div className="go-button-container">
+								<div className="go-button" onClick={() => {
+									const mc = this.props.mapComponent;
+									if (mc.state.hasSelectedRoute) {
+										this.props.mapComponent.startRoute();
+									}
+								}}>
+									<img className="go-image" src={goButtonIcon} />
+									<span className="go-text">Go</span>
+								</div>
+							</div>
+						}
 					</div>
 				}
 			</div>
