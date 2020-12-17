@@ -6,15 +6,15 @@ const sql_db = require('./sql_db');
 
 const register_schema = Joi.object({
     username: Joi.string()
-        .regex(/^[a-zA-ZÀ-ÿ0-9-_]{3,18}$/)
+        .regex(/^[a-zA-Z0-9-_]{3,18}$/)
         .required(),
 
     email: Joi.string()
-        .email({minDomainSegments: 2, tlds: {allow: ['com', 'net']}})
+        .email({minDomainSegments: 2, tlds: {allow: ['com', 'net', 'ca', 'co', 'io', 'app', 'shop', 'xyz']}})
         .required(),
 
     password: Joi.string()
-        .regex(/^[a-zA-ZÀ-ÿ0-9-_]{3,26}$/)
+        .regex(/^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+${3, 18}/g)
         .required()
 });
 
