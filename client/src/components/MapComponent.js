@@ -152,6 +152,7 @@ class MapComponent extends React.Component {
 		activeRoute: {},
 		hasSelectedRoute: false,
 		hasActiveRoute: false,
+		originIsCurrentPosition: false,
 	}
 
 	compileActiveLocationData(data) {
@@ -733,6 +734,10 @@ class MapComponent extends React.Component {
 		});
 	}
 
+	/**
+	 * Called from RoutesCard using "GO" button when a route is selected.
+	 * Can only be clicked if user's origin is their position, meaning assumes starting point is user position.
+	 */
 	startRoute() {
 		// this.hideDirections();
 		this.setState({
@@ -742,7 +747,12 @@ class MapComponent extends React.Component {
 			hasActiveRoute: true,
 		});
 
-		// Build functionality to zoom in on user and track them during their route.
+		try {
+			// Build functionality to zoom in on user and track them during their route.
+			
+		} catch (e) {
+			// avoid any null errors
+		}
 	}
 
 	//#endregion
