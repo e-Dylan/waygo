@@ -1,4 +1,4 @@
-<a href="https://waygo.vercel.app/" align="center">
+<a href="https://waygo.vercel.app/" align="center" style="display: flex; flex-direction: row; justify-content: center;">
     <img src="https://github.com/e-Dylan/waygo/blob/master/client/src/resources/logo/new/waygo-logo.png" height="170" width="170" />
 </a>
 
