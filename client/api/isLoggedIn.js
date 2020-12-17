@@ -21,10 +21,11 @@ require('dotenv').config();
 const app = express();
 
 const origin = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PRODUCTION_URL : process.env.REACT_APP_DEVELOPMENT_URL
-const corsOptions = {
-  origin: origin,
-  credentials: true,
-};
+
+// const corsOptions = {
+//   origin: origin,
+//   credentials: true,
+// };
 
 // middlewares
 
