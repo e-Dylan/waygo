@@ -148,8 +148,6 @@ class DirectionsCard extends React.Component {
 								// Hide use my location option after clicked.
 								this.props.mapComponent.showUseCurrentLocationButton(false);
 							});
-
-						
 					}}>
 						<img className="search-result-icon" src={useActiveLocationIcon}></img>
 						<span className="use-active-location-text">Use my location</span>

@@ -18,25 +18,24 @@ import HomePage from './components/HomePage';
 import Nav from './components/Nav';
 import LoginRegisterComponent from './components/LoginRegisterComponent';
 
-const App = () => {
+const RoutesWithNav = () => {
+	return (
+		<div>
+			<Nav />
+			<Switch>
+				<Route exact path="/" component={HomePage} />
+				<Route path="/login" component={LoginRegisterComponent} />
+				<Route path="/register" component={LoginRegisterComponent} />
+			</Switch>
+		</div>
+	);
+}
 
-	const RoutesWithNav = () => {
-		return (
-			<div>
-				{/* <Nav doLogout={this.doLogout} /> */}
-				<Switch>
-					<Route exact path="/" component={HomePage} />
-					<Route path="/login" component={LoginRegisterComponent} />
-					<Route path="/register" component={LoginRegisterComponent} />
-				</Switch>
-			</div>
-		);
-	}
+const App = () => {
 
 	return (
 		<Router history={history}>
 			<div className="app">
-				<Route component={Nav} />
 				<Switch>
 					<Route path="/live-map" component={MapComponent} />
 					<Route component={RoutesWithNav} />
