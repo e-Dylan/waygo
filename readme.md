@@ -1,5 +1,5 @@
 <p href="https://dylansmith.vercel.app/" align="center">
-    <img src="https://github.com/e-Dylan/waygo/blob/master/client/src/resources/logo/waygo.png" height="170" width="170" />
+    <img src="https://github.com/e-Dylan/waygo/blob/master/client/src/resources/logo/new/waygo-logo.png" height="170" width="170" />
 </p>
 
 --------------------------------------------------------------------
@@ -15,7 +15,7 @@
 - Save destinations to your account so you can easily use them again.
 - And more.
 
-<p href="https://dylansmith.vercel.app/">
+<p href="https://waygo.vercel.app/">
     <img src="/demo/waygo-demo.gif" alt="Website Logo" title="Logo" align="right" height="700" width="1000" />
 </p>
 
