@@ -25,12 +25,12 @@ import waygoLogo from '../resources/logo/new/waygo-logo.png';
 import ReactGA from 'react-ga';
 
 const trackingId = "G-M7Z6KW7GT6"
-console.log(trackingId);
+// console.log(trackingId);
 ReactGA.initialize(trackingId);
-ReactGA.set({
-	// set any user data relaveng to application,
-	// fill out future.
-});
+// ReactGA.set({
+// 	// set any user data relaveng to application,
+// 	// fill out future.
+// });
 
 createBrowserHistory().listen(location => {
 	ReactGA.set({page: location.pathname});
