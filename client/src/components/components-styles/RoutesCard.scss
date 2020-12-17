@@ -50,6 +50,11 @@
 	display: flex;
 	flex-direction: row;
 	padding: 10px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: rgba(153, 201, 255, 0.1)
+	}
 
 	.route-icon {
 		margin: 0 10px;

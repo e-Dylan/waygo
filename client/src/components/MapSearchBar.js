@@ -30,7 +30,7 @@ class MapSearchBar extends React.Component {
 						className="map-search-bar-search input-search-bar"
 						placeholder="where to?"	
 						onFocus={(e) => {
-							this.props.mapComponent.showLocationSearchResults();
+							// this.props.mapComponent.showLocationSearchResults();
 						}}
 						onChange={(e) => {
 							// make api call to get best 5 results using search text,

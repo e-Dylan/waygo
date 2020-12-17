@@ -142,8 +142,14 @@
 
 .search-results-bg-card-saveloc-dialogue {
 	position: absolute;
-	transform: translateY(100%);
-	width: 100%;
+	// transform: translateY(100%);
+	transform: translateX(0);
+	width: calc(100% - 40px);
+	min-width: 0px;
+}
+
+.save-location-search-result-div {
+
 }
 
 .outline-error {
