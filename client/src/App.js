@@ -18,34 +18,7 @@ import HomePage from './components/HomePage';
 import Nav from './components/Nav';
 import LoginRegisterComponent from './components/LoginRegisterComponent';
 
-// Google Analytics
-import ReactGA from 'react-ga';
-
-const trackingId = "G-M7Z6KW7GT6"
-ReactGA.initialize(trackingId);
-ReactGA.set({
-	// set any user data relaveng to application,
-	// fill out future.
-});
-
-history.listen(location => {
-
-})
-
 const App = () => {
-
-	useEffect(() => {
-		// implement checking if user is logged in and caching their
-		// data on application load,
-		// rn each page must load their own user data with an api call.
-		// ReactGA.event({
-		// 	category: "Page Views",
-		// 	action: "User loaded the front page."
-		// });
-
-		ReactGA.pageview(window.location.pathname);
-
-	}, []);
 
 	const RoutesWithNav = () => {
 		return (
