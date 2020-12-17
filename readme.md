@@ -1,4 +1,4 @@
-<p href="https://dylansmith.vercel.app/" align="center">
+<p href="https://waygo.vercel.app/" align="center">
     <img src="https://github.com/e-Dylan/waygo/blob/master/client/src/resources/logo/new/waygo-logo.png" height="170" width="170" />
 </p>
 
@@ -6,7 +6,7 @@
 
 [![Website](https://img.shields.io/website?label=Waygo-App&style=for-the-badge&url=https%3A%2F%2Fwaygo.vercel.app/)](https://waygo.vercel.app/)
 ---
-[Waygo](https://e-dylan.github.io/waygo/) is a web and mobile application that allows you to find the most time-optimal routes for navigation and travel. Access it on your phone while in the car to track your trip and use one of the many features it provides to make your trip easier.
+[Waygo](https://waygo.vercel.app) is a web and mobile application that allows you to find the most time-optimal routes for navigation and travel. Access it on your phone while in the car to track your trip and use one of the many features it provides to make your trip easier.
 
 ### Features
 - Automatically update your route using live traffic in your area.
