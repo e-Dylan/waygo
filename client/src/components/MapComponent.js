@@ -449,6 +449,10 @@ class MapComponent extends React.Component {
 			this.destMarker.setLngLat([lng, lat]);
 		}
 
+		this.setState({
+			hasSelectedRoute: false,
+		});
+
 		// Set state's active destination position data.
 		this.reverseGeocodeLoc(lng, lat, "dest")
 	}
@@ -459,7 +463,8 @@ class MapComponent extends React.Component {
 		
 		this.setState({
 			activeOrigin: locationData,
-			hasOrigin: true
+			hasOrigin: true,
+			// originIsCurrentPosition: false,
 		}, () => {
 			this.checkCalculateRoutes();
 		});
@@ -513,6 +518,11 @@ class MapComponent extends React.Component {
 
 			this.originMarker.setLngLat([lng, lat]);
 		}
+
+		this.setState({
+			originIsCurrentPosition: false,
+			hasSelectedRoute: false,
+		});
 		
 		// Set state's active origin position data.
 		this.reverseGeocodeLoc(lng, lat, "origin");

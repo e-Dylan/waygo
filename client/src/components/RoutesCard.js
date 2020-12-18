@@ -89,31 +89,25 @@ class RoutesCard extends React.Component {
 	setActiveRoute(route) {
 		try {
 			const mc = this.props.mapComponent;
-			var originIsCurrentPosition;
-			if (mc.state.activeOrigin.lng === mc.state.userPosition.lng && mc.state.activeOrigin.lat === mc.state.userPosition.lat)
-				originIsCurrentPosition = true;
-			else
-				originIsCurrentPosition = false;
 
-			this.props.mapComponent.setState({
+			mc.setState({
 				activeRoute: route,
 				// set the selected route, not active yet. Shows on map as active. Clicking "Go" sets active.
 				hasSelectedRoute: true,
-				originIsCurrentPosition: originIsCurrentPosition,
 			}, () => {
 				// Route has been set, zoom map to show it.
-				const coords = this.props.mapComponent.state.activeRoute.geometry.coordinates;
+				const coords = mc.state.activeRoute.geometry.coordinates;
 				var bounds = coords.reduce((bounds, coord) => {
 					return bounds.extend(coord);
 				}, new mapboxgl.LngLatBounds(coords[0], coords[0]));
 
-				this.props.mapComponent.map.fitBounds(bounds, {
+				mc.map.fitBounds(bounds, {
 					padding: 50,
 				});
 			});
 
-			var travelColour = this.props.mapComponent.getTravelColour(this.props.mapComponent.state.activeProfile)
-			this.props.mapComponent.drawActiveRoute(route, travelColour);
+			var travelColour = mc.getTravelColour(mc.state.activeProfile)
+			mc.drawActiveRoute(route, travelColour);
 		} catch (e) {
 			
 		}

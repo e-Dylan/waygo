@@ -134,10 +134,16 @@ class DirectionsCard extends React.Component {
 							// User has origin, is missing a destination.
 							loc = "dest"
 							mc.placeDestMarker(userPos.lng, userPos.lat);
+							mc.setState({
+								originIsCurrentPosition: false,
+							});
 						} else {
 							// Otherwise always set to origin.
 							loc = "origin"
 							mc.placeOriginMarker(userPos.lng, userPos.lat);
+							mc.setState({
+								originIsCurrentPosition: true,
+							});
 						}
 
 						// Fill in the origin with user's position.
