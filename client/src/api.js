@@ -182,7 +182,6 @@ export function fetchWayMessages() {
 export function getUserLocation() {
     return new Promise((resolve) => {
         navigator.geolocation.getCurrentPosition((userPosition) => {
-        // setState refreshes the react app when called
         resolve({
             lat: userPosition.coords.latitude,
             lng: userPosition.coords.longitude,

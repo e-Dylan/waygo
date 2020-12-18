@@ -248,6 +248,18 @@ class MapComponent extends React.Component {
 			auto: true,
 		});
 
+		geolocate.on('geolocate', (e) => {
+			this.setState({
+				// userPosition: {
+				// 	lng: e.coords.longitude,
+				// 	lat: e.coords.latitude,
+				// },
+			}, () => {
+				// console.log('saving user coords ' + e.coords.longitude);
+			});
+			
+		})
+
 		this.map.addControl(geolocate);
 
 		this.map.on('load', () => {
@@ -739,7 +751,6 @@ class MapComponent extends React.Component {
 	 * Can only be clicked if user's origin is their position, meaning assumes starting point is user position.
 	 */
 	startRoute() {
-		// this.hideDirections();
 		this.setState({
 			showRoutesCard: false,
 			showUseCurrentLocationButton: false,
@@ -749,6 +760,43 @@ class MapComponent extends React.Component {
 
 		try {
 			// Build functionality to zoom in on user and track them during their route.
+			this.map.flyTo({
+				center: [this.state.userPosition.lng, this.state.userPosition.lat],
+				essential: true,
+				speed: 1,
+				maxDuration: 1,
+			});
+	
+			this.map.zoomTo(18, {
+				duration: 1500
+			});
+
+			// // Update hook while the user is travelling.
+			// while (true) {
+			// 	// Keep the map centered as user moves.
+			// 	setTimeout(() => {
+			// 		this.map.setCenter([this.state.userPosition.lng, this.state.userPosition.lat]);
+			// 	}, 1000);
+				
+			// 	// Check if the user has passed any coordinates in their route, if so, remove them from the linestring
+				
+			// 	// Rotate the map to the direction the user is currently facing.
+				
+			// 	navigator.geolocation.getCurrentPosition((userPosition) => {
+			// 		var coords = this.map.getSource('route')._data.geometry.coordinates;
+			// 		console.log(coords);
+			// 		console.log("positioning map. " + userPosition.coords.latitude + ", " + userPosition.coords.longitude);
+			// 	});
+
+			// 	for (var i = 0; i < coords.length; i++) {
+					
+			// 		var coordLng = coords[i][0];
+			// 		var coordLat = coords[i][1];
+			// 		var userLng = this.state.userPosition.lng;
+			// 		var userLat = this.state.userPosition.lat;
+			// 	}
+			// 	break;
+			// }
 			
 		} catch (e) {
 			// avoid any null errors
@@ -900,12 +948,12 @@ class MapComponent extends React.Component {
 			source: {
 				type: 'geojson',
 				data: {
-				type: 'Feature',
-				properties: {},
-				geometry: {
-					type: 'LineString',
-					coordinates: geojson
-				}
+					type: 'Feature',
+					properties: {},
+					geometry: {
+						type: 'LineString',
+						coordinates: geojson
+					}
 				}
 			},
 			layout: {
@@ -1152,13 +1200,6 @@ class MapComponent extends React.Component {
 	}
 
 	_flyTo = ({lat, lng, zoom, displayActiveMarker}) => {
-		this._onViewportChange({
-			latitude: lat,
-			longitude: lng,
-			zoom: zoom,
-			pitch: 0,
-		});
-
 		this.map.flyTo({
 			center: [lng, lat],
 			essential: true,
