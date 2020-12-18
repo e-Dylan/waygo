@@ -186,9 +186,9 @@ export function getUserLocation() {
             lat: userPosition.coords.latitude,
             lng: userPosition.coords.longitude,
         });
-        console.log("User location received... positioning map. " + userPosition.coords.latitude + ", " + userPosition.coords.longitude);
+        // console.log("User location received... positioning map. " + userPosition.coords.latitude + ", " + userPosition.coords.longitude);
       }, () => {
-        console.log("User location request denied... locating general location from ip adress.")
+        // console.log("User location request denied... locating general location from ip adress.")
         fetch("https://ipapi.co/json")
           .then(res => res.json())
           .then(userPosition => {

@@ -153,6 +153,7 @@ class MapComponent extends React.Component {
 		hasSelectedRoute: false,
 		hasActiveRoute: false,
 		originIsCurrentPosition: false,
+		stayCentered: false,
 	}
 
 	compileActiveLocationData(data) {
@@ -781,12 +782,12 @@ class MapComponent extends React.Component {
 				duration: 1500
 			});
 
-			// // Update hook while the user is travelling.
-			// while (true) {
-			// 	// Keep the map centered as user moves.
-			// 	setTimeout(() => {
-			// 		this.map.setCenter([this.state.userPosition.lng, this.state.userPosition.lat]);
-			// 	}, 1000);
+			// Keep the map centered as user moves.
+			this.setState({
+				stayCentered: true
+			}, () => {
+				this.followUser();
+			});
 				
 			// 	// Check if the user has passed any coordinates in their route, if so, remove them from the linestring
 				
@@ -831,11 +832,27 @@ class MapComponent extends React.Component {
 					this.setActiveDest(locData);
 					this.setToValue(locData.full_place);
 				}
+				// console.log(locData);
 				if (!this.state.showDirections) this.showDirections();
 				this.hideLocation();
 				this.showDirectionsCard();
 			});
 	}
+
+	// SET ORIGIN LOCATION USING JUST USER POSITION COORDINATES, NOT THEIR GEOLOCATED COORDS.
+
+	// async setLocAtCurrentLocation(lng, lat, loc) {
+	// 	if (loc === "origin") {
+	// 		this.setActiveOrigin(locData);
+	// 		this.setFromValue(locData.full_place);
+	// 	} else if (loc === "dest") {
+	// 		this.setActiveDest(locData);
+	// 		this.setToValue(locData.full_place);
+	// 	}
+	// 	if (!this.state.showDirections) this.showDirections();
+	// 	this.hideLocation();
+	// 	this.showDirectionsCard();
+	// }
 
 	reverseGeocode(event) {
 		// get the location/city data using lng/lat to display in a card or popup
@@ -1041,6 +1058,12 @@ class MapComponent extends React.Component {
 			this.map.removeLayer('route');
 			this.map.removeSource('route');
 		}
+
+		// Stop centering loop on the user.
+		this.setState({
+			stayCentered: false,
+		});
+
 		// Clear state active route?
 		// Keeping cached for now, maybe used to re-instate for user quality of life feature.
 	}
@@ -1160,10 +1183,40 @@ class MapComponent extends React.Component {
 			}, 0)
 		  });
 
+		// Begin updating user's position every x seconds.
+		this.followUser();
 	}
 
 	componentWillUnmount() {
 		// destructor
+		// clearTimeout(this.updateUserLocationInterval);
+	}
+
+	followUser() { 
+		setTimeout(() => {
+			navigator.geolocation.getCurrentPosition(pos => {
+				this.setState({
+					userPosition: {
+						lng: pos.coords.longitude,
+						lat: pos.coords.latitude,
+					},
+				}, () => {
+					this.centerMapOnUser();
+				});
+
+				// Only call again if still centered.
+				if (this.state.stayCentered)
+					this.followUser();
+			})
+		}, 500);
+	}
+
+	centerMapOnUser() {
+		try {
+			var pos = [this.state.userPosition.lng, this.state.userPosition.lat];
+			this.map.flyTo({center: pos});
+		}
+		catch (e) {}
 	}
       
     // Callback whenever user waymessage form values change.

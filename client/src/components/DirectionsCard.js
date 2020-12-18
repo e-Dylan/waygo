@@ -124,7 +124,7 @@ class DirectionsCard extends React.Component {
 
 															
 				{ this.props.mapComponent.state.showUseCurrentLocationButton &&
-					<div className="use-active-location search-result-div" onClick={async() => {
+					<div className="use-active-location search-result-div" onClick={ async() => {
 						const mc = this.props.mapComponent;
 						// get location data for user's location (at lngLat)
 						const userPos = mc.state.userPosition;
