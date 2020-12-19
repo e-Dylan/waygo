@@ -6,7 +6,7 @@ const sql_db = require('./sql_db');
 
 const register_schema = Joi.object({
     username: Joi.string()
-        .regex(/^[a-zA-Z0-9-_]{3,18}$/)
+        .regex(/^[a-zA-Z0-9-_]{3,30}$/)
         .required(),
 
     email: Joi.string()
@@ -14,7 +14,7 @@ const register_schema = Joi.object({
         .required(),
 
     password: Joi.string()
-        .regex(/^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+${3, 18}/g)
+        .regex(/^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+${3, 30}/g)
         .required()
 });
 
