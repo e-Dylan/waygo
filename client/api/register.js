@@ -6,16 +6,18 @@ const sql_db = require('./sql_db');
 
 const register_schema = Joi.object({
     username: Joi.string()
-        .regex(/^[a-zA-Z0-9-_]{3,30}$/)
+        .alphanum()
+        .min(3)
+        .max(30)
         .required(),
 
     email: Joi.string()
         .email({minDomainSegments: 2, tlds: {allow: ['com', 'net', 'ca', 'co', 'io', 'app', 'shop', 'xyz']}})
         .required(),
-
-    password: Joi.string()
-        .regex(/^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+${3, 30}/g)
-        .required()
+		
+	password: Joi.string()
+		.pattern(new RegExp('^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{3,30}$'))
+		.required(),
 });
 
 app.post('/api/register', async (req, res) => {
@@ -68,7 +70,7 @@ app.post('/api/register', async (req, res) => {
         // User entered invalid registration information -> Failed joi schema
         res.json({
             success: false,
-            msg: "Please enter valid user information. What do you think this is?",
+            msg: "Please enter valid user information.\nEmail and Password must be between 3 - 30 characters.",
         });
         return;
 	}
