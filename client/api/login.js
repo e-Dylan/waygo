@@ -13,7 +13,7 @@ app.post('/api/login', async (req, res) => {
 	username = username.toLowerCase();
 
 	// User login info validation
-	if (username.length > 16 || password.length > 16) {
+	if (username.length > 35 || password.length > 35) {
 		res.json({
 			success: false,
 			msg: 'Username and password must be shorter than 16 characters.'
