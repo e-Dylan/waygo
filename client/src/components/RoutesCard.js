@@ -134,14 +134,14 @@ class RoutesCard extends React.Component {
 					</div>
 				</div>
 
-				<div className="routes-title" onClick={() => console.log(this.props.mapComponent.state.activeRouteOptions)}>
+				<div className="routes-title">
 					optimal routes
 				</div>
 
 				{this.props.mapComponent.state.activeRouteOptions != null && this.props.mapComponent.state.activeRouteOptions.length > 0 &&
 					<div className="routes-container">
 						{ this.props.mapComponent.state.activeRouteOptions.map((route, index) =>
-								<div className="route-option" key={route.distance} 
+								<div className="route-option" key={route.weight} 
 									onMouseEnter={() => {
 										this.showHoveringRoute(route);
 									}}

@@ -36,6 +36,7 @@ import SaveLocationDialogue from './SaveLocationDialogue';
 import activeMarkerIcon from '../resources/map/activeMarkerIcon.svg';
 import destIcon from "../resources/map/destIcon.svg";
 import originIcon from '../resources/map/originIcon.svg';
+import { ajaxTransport } from 'jquery';
 
 const PRODUCTION_API_URL = "https://waygo.vercel.app/api";
 
@@ -74,6 +75,10 @@ class MapComponent extends React.Component {
 
 	state = {
 		userPosition: {
+			lat: 0,
+			lng: 0,
+		},
+		prevUserPosition: {
 			lat: 0,
 			lng: 0,
 		},
@@ -151,9 +156,9 @@ class MapComponent extends React.Component {
 		],
 		activeRoute: {},
 		hasSelectedRoute: false,
-		hasActiveRoute: false,
+
 		originIsCurrentPosition: false,
-		stayCentered: false,
+		hasActiveUserRoute: false,
 	}
 
 	compileActiveLocationData(data) {
@@ -200,18 +205,12 @@ class MapComponent extends React.Component {
 
 		if (this.state.homeDockOpen) {
 			// close home dock
-
 			homeDock.classList.remove("map-home-dock-open");
-
 			// move close button
 			dockCloseButton.classList.remove("map-home-dock-close-button-open");
-		}
-		else
-		{
+		} else {
 			// open home dock
-
 			homeDock.classList.add("map-home-dock-open");
-
 			// move close button
 			dockCloseButton.classList.add("map-home-dock-close-button-open");
 		}
@@ -402,7 +401,7 @@ class MapComponent extends React.Component {
 			hasDest: true,
 		}, () => {
 			// console.log(this.state.activeDest);
-			this.checkCalculateRoutes();
+			this.checkCalculateRoutes(false);
 		});
 
 		// set active to-value in dirs card to active destination whenever set.
@@ -467,7 +466,7 @@ class MapComponent extends React.Component {
 			hasOrigin: true,
 			// originIsCurrentPosition: false,
 		}, () => {
-			this.checkCalculateRoutes();
+			this.checkCalculateRoutes(false);
 		});
 		
 		// Set current directions card to the active origin.
@@ -766,7 +765,7 @@ class MapComponent extends React.Component {
 			showRoutesCard: false,
 			showUseCurrentLocationButton: false,
 			hasSelectedRoute: false,
-			hasActiveRoute: true,
+			hasActiveUserRoute: true,
 		});
 
 		try {
@@ -786,7 +785,10 @@ class MapComponent extends React.Component {
 			this.setState({
 				stayCentered: true
 			}, () => {
-				this.followUser();
+				// Both of these loops work with recursive timers to repeat during an active route.
+				// They terminate when this.state.stayCentered == false.
+				this.centerUserLoop();
+				this.recalculateRouteLoop();
 			});
 				
 			// 	// Check if the user has passed any coordinates in their route, if so, remove them from the linestring
@@ -839,20 +841,23 @@ class MapComponent extends React.Component {
 			});
 	}
 
-	// SET ORIGIN LOCATION USING JUST USER POSITION COORDINATES, NOT THEIR GEOLOCATED COORDS.
+	// Recalculate a current route from user's current position, instantly
+	// set it as their new active route.
+	recalculateCurrentRoute(lng, lat) {
+		if (!this.state.hasDest)
+			return;
 
-	// async setLocAtCurrentLocation(lng, lat, loc) {
-	// 	if (loc === "origin") {
-	// 		this.setActiveOrigin(locData);
-	// 		this.setFromValue(locData.full_place);
-	// 	} else if (loc === "dest") {
-	// 		this.setActiveDest(locData);
-	// 		this.setToValue(locData.full_place);
-	// 	}
-	// 	if (!this.state.showDirections) this.showDirections();
-	// 	this.hideLocation();
-	// 	this.showDirectionsCard();
-	// }
+		let res = fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?
+		access_token=${MAPBOX_TOKEN}`)
+			.then(res => res.json())
+			.then(data => {
+				var location = [data.features[0]]
+				var locData = mapApi.compileLocationData(location)[0];
+
+				this.setFromValue(locData.full_place);
+				this.checkCalculateRoutes(true);
+			});
+	}
 
 	reverseGeocode(event) {
 		// get the location/city data using lng/lat to display in a card or popup
@@ -891,7 +896,7 @@ class MapComponent extends React.Component {
 		});
 	}
 
-	checkCalculateRoutes = () => {
+	checkCalculateRoutes = (recalculation) => {
 		if (this.state.activeOrigin.lat != null && this.state.activeDest.lat != null) {
 			this.calculateRoutes(
 				{
@@ -900,7 +905,9 @@ class MapComponent extends React.Component {
 				{
 					lat: this.state.activeDest.lat, lng: this.state.activeDest.lng
 				},
-				this.state.activeProfile || "driving");
+				this.state.activeProfile || "driving",
+				recalculation
+			);
 		}
 	}
 
@@ -915,7 +922,7 @@ class MapComponent extends React.Component {
 		return travelColour;
 	}
 
-	calculateRoutes = (origin, destination, profile) => {
+	calculateRoutes = (origin, destination, profile, recalculation) => {
 
 		if (origin === null || destination === null) 
 			return;
@@ -938,13 +945,20 @@ class MapComponent extends React.Component {
 		.then(data => {
 			// console.log(data.routes);
 
-			if (data.routes != null) {
-				this.setState({
-					showRoutesCard: true,
-					activeRouteOptions: data.routes,
-				});
+			// Recalculating a route mid-route needs to be automatically set and displayed.
+			// Doesn't need to go through route selection gui.
+			if (recalculation) {
+				var route = data.routes[0];
+				this.drawActiveRoute(route, this.getTravelColour(this.state.activeProfile));
+			} else {
+				if (data.routes != null) {
+					this.setState({
+						showRoutesCard: true,
+						activeRouteOptions: data.routes,
+					});
+				}
+				// var route = data.routes[0].geometry.coordinates;
 			}
-			// var route = data.routes[0].geometry.coordinates;
 
 		});
 	}
@@ -1061,7 +1075,7 @@ class MapComponent extends React.Component {
 
 		// Stop centering loop on the user.
 		this.setState({
-			stayCentered: false,
+			hasActiveUserRoute: false,
 		});
 
 		// Clear state active route?
@@ -1184,40 +1198,70 @@ class MapComponent extends React.Component {
 		  });
 
 		// Begin updating user's position every x seconds.
-		this.followUser();
+		this.updateUserLocationLoop();
 	}
 
 	componentWillUnmount() {
 		// destructor
-		// clearTimeout(this.updateUserLocationInterval);
+		clearTimeout(this.updateUserLocationTimer);
+		clearTimeout(this.centerUserLoopTimer);
+		clearTimeout(this.recalculateRouteLoopTimer);
 	}
 
-	followUser() { 
-		setTimeout(() => {
+	updateUserLocationLoop() {
+		this.updateUserLocationTimer = setTimeout(() => {
 			navigator.geolocation.getCurrentPosition(pos => {
 				this.setState({
+					prevUserPosition: this.state.userPosition,
 					userPosition: {
 						lng: pos.coords.longitude,
 						lat: pos.coords.latitude,
 					},
-				}, () => {
-					this.centerMapOnUser();
 				});
-
-				// Only call again if still centered.
-				if (this.state.stayCentered)
-					this.followUser();
 			})
 		}, 500);
 	}
 
-	centerMapOnUser() {
-		try {
-			var pos = [this.state.userPosition.lng, this.state.userPosition.lat];
-			this.map.flyTo({center: pos});
-		}
-		catch (e) {}
+
+	/**
+	 * #region Active personal user route loops to keep map:
+	 * - centered
+	 * - recalculating routes
+	 */
+	centerUserLoop() { 
+		this.centerUserLoopTimer = setTimeout(() => {
+			this.centerMapOnUser();
+			// Only call again if still centered.
+			if (this.state.hasActiveUserRoute)
+				this.centerUserLoop();
+		}, 500);
 	}
+
+	recalculateRouteLoop() {
+		// implement flag to NOT call if this.state.userPosition is equal to this.state.previousUserPosition
+		// update a previous position each call in the loop.
+
+		this.recalculateRouteLoopTimer = setTimeout(() => {
+			// only recalculate route if position has changed.
+			if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
+				this.recalculateCurrentRoute(this.state.userPosition.lng, this.state.userPosition.lat);
+				console.log("recalculating");
+				// console.log(this.state.prevUserPosition);
+				// console.log(this.state.userPosition);
+			}
+
+			// always keep the loop running until it breaks.
+			if (this.state.hasActiveUserRoute)
+					this.recalculateRouteLoop();
+		}, 5000)
+	}
+
+	centerMapOnUser() {
+		var pos = [this.state.userPosition.lng, this.state.userPosition.lat];
+		this.map.flyTo({center: pos});
+	}
+
+	// #endregion
       
     // Callback whenever user waymessage form values change.
     waymessageValueChanged = (event) => {
