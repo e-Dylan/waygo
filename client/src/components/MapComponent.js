@@ -17,6 +17,7 @@ import './components-styles/SaveLocationDialogue.scss';
 // Dependencies
 import mapboxgl from 'mapbox-gl';
 import Joi from "joi";
+import { distance } from '@turf/turf';
 
 // backend api functions
 import * as api from '../api';
@@ -1266,12 +1267,23 @@ class MapComponent extends React.Component {
 	}
 
 	recalculateRouteLoop() {
-		// implement flag to NOT call if this.state.userPosition is equal to this.state.previousUserPosition
-		// update a previous position each call in the loop.
+		const reachedDestDistance = 50; // (metres)
+
+		// Check if user has reached their destination - if within x metres. 
+		var routeCoords = this.state.activeRoute.geometry.coordinates;
+		var destCoords = routeCoords[routeCoords.length - 1];
+		var userPos = [this.state.userPosition.lng, this.state.userPosition.lat]
+		var distFromDest = (distance(userPos, destCoords, {units: "kilometres"})*1000); // metres.
+
+		// console.log((distFromDest).toFixed(0) + " m");
+		if (distFromDest.toFixed(0) < reachedDestDistance) {
+			this.endRoute();
+			return;
+		}
 
 		this.recalculateRouteLoopTimer = setInterval(() => {
 			// Stop recalculating loop, route has ended.
-			if (!this.state.hasActiveUserRoute) {
+			if (!this.state.hasActiveUserRoute || this.state.userPosition) {
 				// console.log('Stopping recalculating route.');
 				clearInterval(this.recalculateRouteLoopTimer);
 				return;
