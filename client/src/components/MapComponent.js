@@ -1239,10 +1239,14 @@ class MapComponent extends React.Component {
 			navigator.geolocation.getCurrentPosition(pos => {
 				this.setState({
 					prevUserPosition: this.state.userPosition,
-					userPosition: {
-						lng: pos.coords.longitude,
-						lat: pos.coords.latitude,
-					},
+					
+				}, () => {
+					this.setState({
+						userPosition: {
+							lng: pos.coords.longitude,
+							lat: pos.coords.latitude,
+						},	
+					})
 				});
 			})
 		}, 500);
@@ -1290,9 +1294,9 @@ class MapComponent extends React.Component {
 			}
 			
 			// only recalculate route if position has changed.
-			if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
+			// if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
 				this.recalculateCurrentRoute(this.state.userPosition.lng, this.state.userPosition.lat);
-			}
+			// }
 		}, 5000)
 	}
 

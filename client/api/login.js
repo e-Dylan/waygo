@@ -8,7 +8,6 @@ app.post('/api/login', async (req, res) => {
 
 	console.log("session id: " + req.session.id);
 
-
 	var { username, password } = req.body;
 	username = username.toLowerCase();
 
@@ -16,7 +15,7 @@ app.post('/api/login', async (req, res) => {
 	if (username.length > 35 || password.length > 35) {
 		res.json({
 			success: false,
-			msg: 'Username and password must be shorter than 16 characters.'
+			msg: 'Username and password must be shorter than 35 characters, and must be alphanumeric (no special characters).'
 		});
 		return;
 	}
@@ -58,7 +57,7 @@ app.post('/api/login', async (req, res) => {
 
 				res.json({
 					success: true,
-					msg: `user ${data[0].username} successfully logged in.`,
+					msg: `Welcome ${data[0].username}.`,
 					username: data[0].username,
 				});
 
@@ -69,7 +68,7 @@ app.post('/api/login', async (req, res) => {
 				// Not verified, wrong password.
 				res.json({
 					success: false,
-					msg: 'Incorrect password.'
+					msg: "Password doesn't match the username we have."
 				});
 			}
 
@@ -79,7 +78,7 @@ app.post('/api/login', async (req, res) => {
 		{
 			res.json({
 				success: false,
-				msg: 'User not found. Please try again.'
+				msg: 'User not found. You may have misspelled your username. If you do not have an account, register for free!'
 			});
 		}
 	});
