@@ -765,7 +765,6 @@ class MapComponent extends React.Component {
 			showRoutesCard: false,
 			showUseCurrentLocationButton: false,
 			hasSelectedRoute: false,
-			hasActiveUserRoute: true,
 		});
 
 		try {
@@ -783,7 +782,7 @@ class MapComponent extends React.Component {
 
 			// Keep the map centered as user moves.
 			this.setState({
-				stayCentered: true
+				hasActiveUserRoute: true
 			}, () => {
 				// Both of these loops work with recursive timers to repeat during an active route.
 				// They terminate when this.state.stayCentered == false.
