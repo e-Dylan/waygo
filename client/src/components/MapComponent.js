@@ -453,15 +453,16 @@ class MapComponent extends React.Component {
 			hasSelectedRoute: false,
 		});
 
-		// Set state's active destination position data.
-		this.reverseGeocodeLoc(lng, lat, "dest");
+		if (isUserPos)
+			this.reverseGeocodeUserPos(lng, lat, "dest");
+		else
+			// Set state's active destination position data.
+			this.reverseGeocodeLoc(lng, lat, "dest");
 	}
 
 	setActiveOrigin(locationData) {
 		// remove any active routes when setting new destination or origin.
 		this.endRoute();
-
-		console.log(locationData);
 		
 		this.setState({
 			activeOrigin: locationData,
@@ -480,7 +481,7 @@ class MapComponent extends React.Component {
 		}
 	}
 
-	placeOriginMarker(lng, lat) {
+	placeOriginMarker(lng, lat, isUserPos) {
 
 		// TAKE IN ORIGIN LOCATION DATA TO SET STATE ACTIVEORIGIN POSITION INSTEAD OF JUST LNGLAT
 		// set active origin position in directions card ALSO DO FOR DESTINATION<
@@ -526,8 +527,11 @@ class MapComponent extends React.Component {
 			hasSelectedRoute: false,
 		});
 		
-		// Set state's active origin position data.
-		this.reverseGeocodeLoc(lng, lat, "origin");
+		if (isUserPos)
+			this.reverseGeocodeUserPos(lng, lat, "origin");
+		else
+			// Set state's active origin position data.
+			this.reverseGeocodeLoc(lng, lat, "origin");
 	}
 
 	toggleWaymessageMenu = () => {
@@ -770,6 +774,7 @@ class MapComponent extends React.Component {
 		});
 
 		try {
+			var zoomDuration = 1500; // milliseconds
 			// Build functionality to zoom in on user and track them during their route.
 			this.map.flyTo({
 				center: [this.state.userPosition.lng, this.state.userPosition.lat],
@@ -779,17 +784,20 @@ class MapComponent extends React.Component {
 			});
 	
 			this.map.zoomTo(18, {
-				duration: 1500
+				duration: zoomDuration,
 			});
 
 			// Keep the map centered as user moves.
 			this.setState({
 				hasActiveUserRoute: true
 			}, () => {
-				// Both of these loops work with recursive timers to repeat during an active route.
-				// They terminate when this.state.stayCentered == false.
-				this.centerUserLoop();
-				this.recalculateRouteLoop();
+				setTimeout(() => {
+					// Both of these loops work with recursive timers to repeat during an active route.
+					// They terminate when this.state.stayCentered == false.
+					this.centerUserLoop();
+					this.recalculateRouteLoop();
+				}, zoomDuration)
+				
 			});
 				
 			// 	// Check if the user has passed any coordinates in their route, if so, remove them from the linestring
@@ -1222,7 +1230,7 @@ class MapComponent extends React.Component {
 		// destructor
 		clearTimeout(this.updateUserLocationTimer);
 		clearInterval(this.centerUserLoopTimer);
-		clearTimeout(this.recalculateRouteLoopTimer);
+		clearInterval(this.recalculateRouteLoopTimer);
 	}
 
 	updateUserLocationLoop() {
@@ -1239,7 +1247,6 @@ class MapComponent extends React.Component {
 		}, 500);
 	}
 
-
 	/**
 	 * #region Active personal user route loops to keep map:
 	 * - centered
@@ -1247,13 +1254,14 @@ class MapComponent extends React.Component {
 	 */
 	centerUserLoop() { 
 		this.centerUserLoopTimer = setInterval(() => {
-			this.centerMapOnUser();
-			console.log('centering');
-			// Only call again if still centered.
+			// Stop centering loop, route has ended.
 			if (!this.state.hasActiveUserRoute) {
-				// console.log('stop center');
+				// console.log('Stopping centering.');
 				clearInterval(this.centerUserLoopTimer);
+				return;
 			}
+
+			this.centerMapOnUser();
 		}, 500);
 	}
 
@@ -1262,18 +1270,16 @@ class MapComponent extends React.Component {
 		// update a previous position each call in the loop.
 
 		this.recalculateRouteLoopTimer = setInterval(() => {
-			// only recalculate route if position has changed.
-			// if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
-				this.recalculateCurrentRoute(this.state.userPosition.lng, this.state.userPosition.lat);
-				console.log("recalculating");
-				// console.log(this.state.prevUserPosition);
-				// console.log(this.state.userPosition);
-			// }
-
-			// always keep the loop running until it breaks.
+			// Stop recalculating loop, route has ended.
 			if (!this.state.hasActiveUserRoute) {
-				// console.log('stop recalc');
+				// console.log('Stopping recalculating route.');
 				clearInterval(this.recalculateRouteLoopTimer);
+				return;
+			}
+			
+			// only recalculate route if position has changed.
+			if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
+				this.recalculateCurrentRoute(this.state.userPosition.lng, this.state.userPosition.lat);
 			}
 		}, 5000)
 	}
