@@ -854,7 +854,7 @@ class MapComponent extends React.Component {
 		var locData = {
 			lng: lng,
 			lat: lat,
-			full_place: "User Location",
+			full_place: "My Position",
 		};
 
 		if (loc === "origin") {
