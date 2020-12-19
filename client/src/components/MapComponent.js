@@ -251,12 +251,12 @@ class MapComponent extends React.Component {
 
 		geolocate.on('geolocate', (e) => {
 			this.setState({
-				// userPosition: {
-				// 	lng: e.coords.longitude,
-				// 	lat: e.coords.latitude,
-				// },
+				userPosition: {
+					lng: e.coords.longitude,
+					lat: e.coords.latitude,
+				},
 			}, () => {
-				// console.log('saving user coords ' + e.coords.longitude);
+				console.log('saving user coords ' + e.coords.longitude);
 			});
 			
 		})
@@ -1229,13 +1229,13 @@ class MapComponent extends React.Component {
 
 	componentWillUnmount() {
 		// destructor
-		clearTimeout(this.updateUserLocationTimer);
+		clearInterval(this.updateUserLocationTimer);
 		clearInterval(this.centerUserLoopTimer);
 		clearInterval(this.recalculateRouteLoopTimer);
 	}
 
 	updateUserLocationLoop() {
-		this.updateUserLocationTimer = setTimeout(() => {
+		this.updateUserLocationTimer = setInterval(() => {
 			navigator.geolocation.getCurrentPosition(pos => {
 				this.setState({
 					prevUserPosition: this.state.userPosition,
