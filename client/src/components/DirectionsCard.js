@@ -146,14 +146,8 @@ class DirectionsCard extends React.Component {
 							});
 						}
 
-						// Fill in the origin with user's position.
-						this.props.mapComponent.reverseGeocodeLoc(userPos.lng, userPos.lat, loc)
-							// reverseGeocodeLoc shows showuserlocation button by setting a position, 
-							// wait until it's done, then hide the button.
-							.then(() => {
-								// Hide use my location option after clicked.
-								this.props.mapComponent.showUseCurrentLocationButton(false);
-							});
+						// Placing origin/dest marker's auto call reversegeolocateloc at that lngLat.
+						this.props.mapComponent.showUseCurrentLocationButton(false);
 					}}>
 						<img className="search-result-icon" src={useActiveLocationIcon}></img>
 						<span className="use-active-location-text">Use my location</span>

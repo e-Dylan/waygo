@@ -394,7 +394,7 @@ class MapComponent extends React.Component {
 
 	setActiveDest(locationData) {
 		// remove any active routes when setting new destination or origin.
-		this.removeActiveRoute();
+		this.endRoute();
 
 		this.setState({
 			activeDest: locationData,
@@ -413,7 +413,7 @@ class MapComponent extends React.Component {
 		}
 	}
 
-	placeDestMarker(lng, lat) {
+	placeDestMarker(lng, lat, isUserPos) {
 
 		if (lng === 0 && lat === 0) {
 			lng = this.state.lastClickedMap.lng;
@@ -454,12 +454,14 @@ class MapComponent extends React.Component {
 		});
 
 		// Set state's active destination position data.
-		this.reverseGeocodeLoc(lng, lat, "dest")
+		this.reverseGeocodeLoc(lng, lat, "dest");
 	}
 
 	setActiveOrigin(locationData) {
 		// remove any active routes when setting new destination or origin.
-		this.removeActiveRoute();
+		this.endRoute();
+
+		console.log(locationData);
 		
 		this.setState({
 			activeOrigin: locationData,
@@ -818,26 +820,40 @@ class MapComponent extends React.Component {
 	//#endregion
 
 	// Fetches location data for lng,lat, compiles into scraped data to be stored in state.
-	async reverseGeocodeLoc(lng, lat, loc) {
-		let res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?
+	reverseGeocodeLoc(lng, lat, loc) {
+		let res = fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?
 		access_token=${MAPBOX_TOKEN}`)
 			.then(res => res.json())
 			.then(data => {
 				var location = [data.features[0]]
 				var locData = mapApi.compileLocationData(location)[0];
-				
+
 				if (loc === "origin") {
 					this.setActiveOrigin(locData);
-					this.setFromValue(locData.full_place);
 				} else if (loc === "dest") {
 					this.setActiveDest(locData);
-					this.setToValue(locData.full_place);
 				}
 				// console.log(locData);
 				if (!this.state.showDirections) this.showDirections();
 				this.hideLocation();
 				this.showDirectionsCard();
 			});
+	}
+
+	// Fetches user position and sets their location at this position to calculate their route,
+	// Rather than finding the nearest address (inaccurate).
+	reverseGeocodeUserPos(lng, lat, loc) {
+		var locData = {
+			lng: lng,
+			lat: lat,
+			full_place: "User Location",
+		};
+
+		if (loc === "origin") {
+			this.setActiveOrigin(locData);
+		} else if (loc === "dest") {
+			this.setActiveDest(locData);
+		}
 	}
 
 	// Recalculate a current route from user's current position, instantly
@@ -956,9 +972,7 @@ class MapComponent extends React.Component {
 						activeRouteOptions: data.routes,
 					});
 				}
-				// var route = data.routes[0].geometry.coordinates;
 			}
-
 		});
 	}
 
@@ -980,7 +994,7 @@ class MapComponent extends React.Component {
 		// if the route already exists on the map, reset it using setData
 		// this.map.getSource('route').setData(geojson);
 		// remove the layer, re-add with new data. cannot change data to just update it.
-		this.removeActiveRoute();
+		this.removeDrawingRoute();
 			
 		this.map.addLayer({
 			id: 'route',
@@ -1066,11 +1080,15 @@ class MapComponent extends React.Component {
 		
 	}
 
-	removeActiveRoute = () => {
+	removeDrawingRoute = () => {
 		if (this.map.getSource('route')) { 
 			this.map.removeLayer('route');
 			this.map.removeSource('route');
 		}
+	}
+
+	endRoute = () => {
+		this.removeDrawingRoute();
 
 		// Stop centering loop on the user.
 		this.setState({
@@ -1203,7 +1221,7 @@ class MapComponent extends React.Component {
 	componentWillUnmount() {
 		// destructor
 		clearTimeout(this.updateUserLocationTimer);
-		clearTimeout(this.centerUserLoopTimer);
+		clearInterval(this.centerUserLoopTimer);
 		clearTimeout(this.recalculateRouteLoopTimer);
 	}
 
@@ -1228,11 +1246,14 @@ class MapComponent extends React.Component {
 	 * - recalculating routes
 	 */
 	centerUserLoop() { 
-		this.centerUserLoopTimer = setTimeout(() => {
+		this.centerUserLoopTimer = setInterval(() => {
 			this.centerMapOnUser();
+			console.log('centering');
 			// Only call again if still centered.
-			if (this.state.hasActiveUserRoute)
-				this.centerUserLoop();
+			if (!this.state.hasActiveUserRoute) {
+				// console.log('stop center');
+				clearInterval(this.centerUserLoopTimer);
+			}
 		}, 500);
 	}
 
@@ -1240,18 +1261,20 @@ class MapComponent extends React.Component {
 		// implement flag to NOT call if this.state.userPosition is equal to this.state.previousUserPosition
 		// update a previous position each call in the loop.
 
-		this.recalculateRouteLoopTimer = setTimeout(() => {
+		this.recalculateRouteLoopTimer = setInterval(() => {
 			// only recalculate route if position has changed.
-			if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
+			// if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
 				this.recalculateCurrentRoute(this.state.userPosition.lng, this.state.userPosition.lat);
 				console.log("recalculating");
 				// console.log(this.state.prevUserPosition);
 				// console.log(this.state.userPosition);
-			}
+			// }
 
 			// always keep the loop running until it breaks.
-			if (this.state.hasActiveUserRoute)
-					this.recalculateRouteLoop();
+			if (!this.state.hasActiveUserRoute) {
+				// console.log('stop recalc');
+				clearInterval(this.recalculateRouteLoopTimer);
+			}
 		}, 5000)
 	}
 
