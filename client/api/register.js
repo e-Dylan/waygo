@@ -58,14 +58,14 @@ app.post('/api/register', async (req, res) => {
                     email: values[1],
                     password_hash: values[2],
                 };
-				console.log(`[/register] Successfully registered user:\n\n session id: ${req.session.id}\n\n user: ${userJson.username}\nemail: ${userJson.email}`);
+				console.log(`[/register] Successfully registered user:\n\n session id: ${req.session.id}\n\n user: ${userJson.username}\nemail: ${userJson.email}\n`);
             }
         });
     }
     else
     {
 		// User entered invalid registration information -> Failed joi schema
-		console.log(`[/register] Error registering user - failed Joi schema:\n\n session id: ${req.session.id}\n\n user: ${username}\nemail: ${email}`);
+		console.log(`[/register] Error registering user - failed Joi schema:\n\n session id: ${req.session.id}\n\n user: ${username}\nemail: ${email}\n`);
         res.json({
             success: false,
             msg: "Please enter valid user information.\nEmail and Password must be between 3 - 30 characters.",

@@ -9,7 +9,7 @@ app.post('/api/login', async (req, res) => {
 	console.log("session id: " + req.session.id);
 
 	var { username, password } = req.body;
-	console.log(`[/login] Attempting to login user:\n\nusername: ${username}`);
+	console.log(`[/login] Attempting to login user:\n\nusername: ${username}\n`);
 	username = username.toLowerCase();
 
 	// User login info validation
@@ -54,8 +54,8 @@ app.post('/api/login', async (req, res) => {
 					email: data[0].email,
 					session: req.session,
 				}
-				console.log(`[/login] User successfully logging in: ${JSON.stringify(userData, null, 4)}`);
 
+				console.log(`[/login] User successfully logging in: ${JSON.stringify(userData, null, 4)}\n`);
 				res.json({
 					success: true,
 					msg: `Welcome ${data[0].username}.`,

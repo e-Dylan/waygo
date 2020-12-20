@@ -69,9 +69,6 @@ app.post('/api/isLoggedIn', async (req, res) => {
 
 	if (req.session) {
 		// session.userID is set to db id to the req when user logs in.
-		
-		console.log(`checking if user is logged in, session: ${JSON.stringify(req.session)}`);
-		
 		if (req.session.userID) {
 			let cols = [req.session.userID];
 			sql_db.query('SELECT * FROM user WHERE id = ? LIMIT 1', cols, (err, data, fields) => {
@@ -79,7 +76,7 @@ app.post('/api/isLoggedIn', async (req, res) => {
 				if (data && data.length === 1) {
 					const username = data[0].username;
 					const email = data[0].email;
-					console.log(`[/IsLoggedIn] Authenticated user:\n\nuser: ${username}\nemail: ${email}`)
+					console.log(`[/IsLoggedIn] Authenticated user:\n\nuser: ${username}\nemail: ${email}\n`)
 					res.json({
 						success: true,
 						username: username,
@@ -97,7 +94,7 @@ app.post('/api/isLoggedIn', async (req, res) => {
 		}
 		else // User has no session id.
 		{
-			console.log(`[/IsLoggedIn] Anon user connected.`)
+			console.log(`[/IsLoggedIn] Anon user connected.\n`)
 			res.json({
 				msg: "user has no session id - has not signed in.",
 				success: false
