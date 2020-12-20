@@ -69,16 +69,20 @@ app.post('/api/isLoggedIn', async (req, res) => {
 
 	if (req.session) {
 		// session.userID is set to db id to the req when user logs in.
-		console.log("checking if user is logged in, session: " + req.session);
-		console.log(JSON.stringify(req.session));
+		
+		console.log(`checking if user is logged in, session: ${JSON.stringify(req.session)}`);
+		
 		if (req.session.userID) {
 			let cols = [req.session.userID];
 			sql_db.query('SELECT * FROM user WHERE id = ? LIMIT 1', cols, (err, data, fields) => {
 				// if the session user's id matches one in the db, they're logged in.
 				if (data && data.length === 1) {
+					const username = data[0].username;
+					const email = data[0].email;
+					console.log(`[/IsLoggedIn] Authenticated user:\n\nuser: ${username}\nemail: ${email}`)
 					res.json({
 						success: true,
-						username: data[0].username
+						username: username,
 					});
 					return true;
 				}
@@ -93,6 +97,7 @@ app.post('/api/isLoggedIn', async (req, res) => {
 		}
 		else // User has no session id.
 		{
+			console.log(`[/IsLoggedIn] Anon user connected.`)
 			res.json({
 				msg: "user has no session id - has not signed in.",
 				success: false
@@ -101,9 +106,8 @@ app.post('/api/isLoggedIn', async (req, res) => {
 
 		await sql_db.end();
 	} else {
-		console.log('no session, erroring');
 		res.json({
-			msg: "no session, erroring",
+			msg: "no session, erroring: user should never have no session.",
 		});
 	}
 });

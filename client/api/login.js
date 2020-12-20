@@ -9,13 +9,14 @@ app.post('/api/login', async (req, res) => {
 	console.log("session id: " + req.session.id);
 
 	var { username, password } = req.body;
+	console.log(`[/login] Attempting to login user:\n\nusername: ${username}`);
 	username = username.toLowerCase();
 
 	// User login info validation
 	if (username.length > 35 || password.length > 35) {
 		res.json({
 			success: false,
-			msg: 'Username and password must be shorter than 35 characters, and must be alphanumeric (no special characters).'
+			msg: 'Fields must be shorter than 35 characters and must be alphanumeric (no special characters).'
 		});
 		return;
 	}
@@ -53,22 +54,20 @@ app.post('/api/login', async (req, res) => {
 					email: data[0].email,
 					session: req.session,
 				}
-				console.log(`User successfully logging in: ${JSON.stringify(userData, null, 4)}`);
+				console.log(`[/login] User successfully logging in: ${JSON.stringify(userData, null, 4)}`);
 
 				res.json({
 					success: true,
 					msg: `Welcome ${data[0].username}.`,
 					username: data[0].username,
 				});
-
 				return;
-			}
-
-			else {
+			} else {
 				// Not verified, wrong password.
+				console.log(`[/login] User entered wrong password:\n\nusername: ${username}\n`);
 				res.json({
 					success: false,
-					msg: "Password doesn't match the username we have."
+					msg: "Password doesn't match your username."
 				});
 			}
 
@@ -78,7 +77,7 @@ app.post('/api/login', async (req, res) => {
 		{
 			res.json({
 				success: false,
-				msg: 'User not found. You may have misspelled your username. If you do not have an account, register for free!'
+				msg: 'User not found. You may have misspelled your username. If you do not have an account, register for free for some useful features!'
 			});
 		}
 	});

@@ -21,13 +21,12 @@ const register_schema = Joi.object({
 });
 
 app.post('/api/register', async (req, res) => {
-    console.log('[attempting to register user into database...]\n\n session id: ' + req.session.id);
+	const { username, email, password } = req.body;
+    // console.log(`[/register] Attemtping to register user:\n\n session id: ${req.session.id}\n\n user: ${username}\nemail: ${email}`);
 
     const result = register_schema.validate(req.body);
     if (result.error === undefined) {
         // user entered valid registration credentials, insert into db
-
-        const { username, email, password } = req.body;
 
         // encrypt password with bcrypt
         const salt = bcrypt.genSaltSync(10);
@@ -39,12 +38,10 @@ app.post('/api/register', async (req, res) => {
             if (err) {
                 res.json({
                     success: false,
-                    msg: "Error registering data into database.",
+                    msg: "Error registering user. Usernames must be alphanumeric, each field must be shorter than 35 characters.",
                 });
                 return;
             }
-
-            console.log(values);
 
             // User has been registered and inserted into database
             // data == [id, user, email, password] data from user inserted
@@ -52,7 +49,7 @@ app.post('/api/register', async (req, res) => {
                 res.json({
                     success: true,
                     username: values[0],
-                    msg: "Successfully inserted user into database.",
+                    msg: `Successfully registered, welcome ${values[0]}.`,
                     data: values,
                 });
 
@@ -61,13 +58,14 @@ app.post('/api/register', async (req, res) => {
                     email: values[1],
                     password_hash: values[2],
                 };
-                console.log("[Successfuly registered user into user database.]\n" + JSON.stringify(userJson));
+				console.log(`[/register] Successfully registered user:\n\n session id: ${req.session.id}\n\n user: ${userJson.username}\nemail: ${userJson.email}`);
             }
         });
     }
     else
     {
-        // User entered invalid registration information -> Failed joi schema
+		// User entered invalid registration information -> Failed joi schema
+		console.log(`[/register] Error registering user - failed Joi schema:\n\n session id: ${req.session.id}\n\n user: ${username}\nemail: ${email}`);
         res.json({
             success: false,
             msg: "Please enter valid user information.\nEmail and Password must be between 3 - 30 characters.",
