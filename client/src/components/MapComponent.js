@@ -250,17 +250,16 @@ class MapComponent extends React.Component {
 			auto: true,
 		});
 
-		geolocate.on('geolocate', (e) => {
-			this.setState({
-				userPosition: {
-					lng: e.coords.longitude,
-					lat: e.coords.latitude,
-				},
-			}, () => {
-				console.log('saving user coords ' + e.coords.longitude);
-			});
-			
-		})
+		// geolocate.on('geolocate', (e) => {
+		// 	this.setState({
+		// 		userPosition: {
+		// 			lng: e.coords.longitude,
+		// 			lat: e.coords.latitude,
+		// 		},
+		// 	}, () => {
+		// 		console.log('saving user coords ' + e.coords.longitude);
+		// 	});
+		// })
 
 		this.map.addControl(geolocate);
 
@@ -1318,7 +1317,7 @@ class MapComponent extends React.Component {
 		// Don't recenter if it's already moving to recenter.
 		// Smooth centering is slower, avoid jitters.
 		if (!this.state.centeringInProgess) {
-			console.log(this.state.centeringInProgess);
+			// console.log(this.state.centeringInProgess);
 			var pos = [this.state.userPosition.lng, this.state.userPosition.lat];
 			this.map.flyTo({center: pos, speed: 0.20});
 		}
