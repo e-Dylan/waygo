@@ -20,6 +20,10 @@ const register_schema = Joi.object({
 		.required(),
 });
 
+/**
+ * PREVENT USERS FROM REGISTERING ACCOUNTS IF USERNAMES ARE TAKEN.
+ */
+
 app.post('/api/register', async (req, res) => {
 	const { username, email, password } = req.body;
     // console.log(`[/register] Attemtping to register user:\n\n session id: ${req.session.id}\n\n user: ${username}\nemail: ${email}`);

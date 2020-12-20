@@ -1249,8 +1249,10 @@ class MapComponent extends React.Component {
 		this.updateUserLocationTimer = setInterval(() => {
 			navigator.geolocation.getCurrentPosition(pos => {
 				this.setState({
-					prevUserPosition: this.state.userPosition,
-					
+					prevUserPosition: {
+						lng: this.state.userPosition.lng,
+						lat: this.state.userPosition.lat,
+					},
 				}, () => {
 					this.setState({
 						userPosition: {
@@ -1307,9 +1309,10 @@ class MapComponent extends React.Component {
 			}
 		
 			// only recalculate route if position has changed.
-			if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
+			// if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
 				this.recalculateCurrentRoute(this.state.userPosition.lng, this.state.userPosition.lat);
-			}
+				
+			// }
 		}, 5000)
 	}
 
