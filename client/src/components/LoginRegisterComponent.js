@@ -58,7 +58,13 @@ class LoginRegisterComponent extends Component {
 
         this.setState({
             buttonDisabled: true,
-        });
+        }, () => {
+			setTimeout(() => {
+				this.setState({
+					buttonDisabled: false,
+				}, 800);
+			})
+		});
 
         try {   
             // make a request to the backend /login to try to login.
@@ -104,9 +110,15 @@ class LoginRegisterComponent extends Component {
             return;
         }
 
-        this.setState({
+		this.setState({
             buttonDisabled: true,
-        });
+        }, () => {
+			setTimeout(() => {
+				this.setState({
+					buttonDisabled: false,
+				}, 800);
+			})
+		});
 
         try {   
             // make a request to the backend /login to try to login.
@@ -127,7 +139,7 @@ class LoginRegisterComponent extends Component {
             let result = await res.json();
             if (result && result.success) {
 				window.location.replace(WEBSITE_URL);
-				alert(result.msg);
+				// alert(result.msg); // Don't alert a second time if coming from /register auto-login.
             } else if (result && result.success === false) {
                 // User tried to log in, no account match found, login failed.
                 this.resetForm();
