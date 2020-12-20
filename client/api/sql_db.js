@@ -8,11 +8,11 @@ var database;
 
 if (process.env.NODE_ENV === 'production') {
 	// REMOTE HOST
-	sql_db_port = 3306;
-	host = 'sql9.freemysqlhosting.net';
-	user = 'sql9380874';
-	password = 'UenAiZQTdp';
-	database = 'sql9380874';
+	sql_db_port = process.env.REACT_APP_DB_PORT
+	host = process.env.REACT_APP_DB_HOST
+	user = process.env.REACT_APP_DB_USER
+	password = process.env.REACT_APP_DB_PASSWORD
+	database = process.env.REACT_APP_DB_DATABASE
 } else if (process.env.NODE_ENV === 'development') {
 	// LOCALHOST:
 	sql_db_port = 3308;
