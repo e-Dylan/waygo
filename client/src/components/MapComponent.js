@@ -160,6 +160,7 @@ class MapComponent extends React.Component {
 
 		originIsCurrentPosition: false,
 		hasActiveUserRoute: false,
+		centeringInProgess: false,
 	}
 
 	compileActiveLocationData(data) {
@@ -262,6 +263,12 @@ class MapComponent extends React.Component {
 		})
 
 		this.map.addControl(geolocate);
+
+		this.map.on("moveend", () => {
+			this.setState({
+				centeringInProgess: false
+			});
+		});
 
 		this.map.on('load', () => {
 			geolocate.trigger();
@@ -871,16 +878,21 @@ class MapComponent extends React.Component {
 		if (!this.state.hasDest)
 			return;
 
-		let res = fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?
-		access_token=${MAPBOX_TOKEN}`)
-			.then(res => res.json())
-			.then(data => {
-				var location = [data.features[0]]
-				var locData = mapApi.compileLocationData(location)[0];
+		// this.setFromValue(locData.full_place);
+		// this.checkCalculateRoutes(true);
 
-				this.setFromValue(locData.full_place);
-				this.checkCalculateRoutes(true);
-			});
+		console.log('recalculating');
+		// Don't change any of active origin - still wants to be coming from the start point.
+		// Recalculate on the fly, don't change any data.
+		const locData = {
+			lng: lng,
+			lat: lat,
+		}
+		this.setState({
+			activeOrigin: locData,
+		}, () => {
+			this.checkCalculateRoutes(true);
+		});
 	}
 
 	reverseGeocode(event) {
@@ -1258,6 +1270,7 @@ class MapComponent extends React.Component {
 	 * - recalculating routes
 	 */
 	centerUserLoop() { 
+
 		this.centerUserLoopTimer = setInterval(() => {
 			// Stop centering loop, route has ended.
 			if (!this.state.hasActiveUserRoute) {
@@ -1282,27 +1295,36 @@ class MapComponent extends React.Component {
 		// console.log((distFromDest).toFixed(0) + " m");
 		if (distFromDest.toFixed(0) < reachedDestDistance) {
 			this.endRoute();
+			console.log("Reached destination.")
 			return;
 		}
 
 		this.recalculateRouteLoopTimer = setInterval(() => {
 			// Stop recalculating loop, route has ended.
-			if (!this.state.hasActiveUserRoute || this.state.userPosition) {
+			if (!this.state.hasActiveUserRoute) {
 				// console.log('Stopping recalculating route.');
 				clearInterval(this.recalculateRouteLoopTimer);
 				return;
 			}
-			
+		
 			// only recalculate route if position has changed.
-			// if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
+			if (this.state.prevUserPosition.lat != this.state.userPosition.lat || this.state.prevUserPosition.lng != this.state.userPosition.lng) {
 				this.recalculateCurrentRoute(this.state.userPosition.lng, this.state.userPosition.lat);
-			// }
+			}
 		}, 5000)
 	}
 
 	centerMapOnUser() {
-		var pos = [this.state.userPosition.lng, this.state.userPosition.lat];
-		this.map.flyTo({center: pos});
+		// Don't recenter if it's already moving to recenter.
+		// Smooth centering is slower, avoid jitters.
+		if (!this.state.centeringInProgess) {
+			console.log(this.state.centeringInProgess);
+			var pos = [this.state.userPosition.lng, this.state.userPosition.lat];
+			this.map.flyTo({center: pos, speed: 0.20});
+		}
+		this.setState({
+			centeringInProgess: true,
+		});
 	}
 
 	// #endregion
