@@ -62,8 +62,8 @@ class LoginRegisterComponent extends Component {
 			setTimeout(() => {
 				this.setState({
 					buttonDisabled: false,
-				}, 800);
-			})
+				});
+			}, 800);
 		});
 
         try {   
@@ -87,13 +87,13 @@ class LoginRegisterComponent extends Component {
 			// console.log(result);
             if (result && result.success) {
                 // Automatically log user in if successfully registered.
-                this.doLogin();
-				this.resetForm();
+				this.doLogin();
 				alert(result.msg); // add better alert.
+				this.resetForm();
             } else if (result && result.success === false) {
                 // User tried to log in, no account match found, login failed.
-                this.resetForm();
-                alert(result.msg); // change alert.
+				alert(result.msg); // change alert.
+				this.resetForm();
             }
         }
         catch(e) {
@@ -116,8 +116,8 @@ class LoginRegisterComponent extends Component {
 			setTimeout(() => {
 				this.setState({
 					buttonDisabled: false,
-				}, 800);
-			})
+				});
+			}, 800)
 		});
 
         try {   
@@ -141,9 +141,9 @@ class LoginRegisterComponent extends Component {
 				window.location.replace(WEBSITE_URL);
 				// alert(result.msg); // Don't alert a second time if coming from /register auto-login.
             } else if (result && result.success === false) {
+				alert(result.msg); // change alert
                 // User tried to log in, no account match found, login failed.
                 this.resetForm();
-                alert(result.msg); // change alert
             }
         }
         catch(e) {
