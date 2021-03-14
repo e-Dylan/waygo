@@ -37,7 +37,6 @@ import SaveLocationDialogue from './SaveLocationDialogue';
 import activeMarkerIcon from '../resources/map/activeMarkerIcon.svg';
 import destIcon from "../resources/map/destIcon.svg";
 import originIcon from '../resources/map/originIcon.svg';
-import { ajaxTransport } from 'jquery';
 
 const PRODUCTION_API_URL = "https://waygo.vercel.app/api";
 

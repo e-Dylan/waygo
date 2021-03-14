@@ -1,0 +1,30 @@
+WAYGO REMOTE MYSQL HOSTING:
+
+https://www.freemysqlhosting.net/account/
+
+EMAIL: jdh2j1h3sjdhsjdh@gmail.com
+
+Host: sql9.freemysqlhosting.net
+user: sql9380874
+Password: UenAiZQTdp
+Port: 3306
+
+
+
+
+
+WAYGO TO DO:
+
+using user location as origin:
+
+calculate route using their lnglat coordinates (state.userPosition), don't reverse geolocateloc a location to get
+the nearest ADDRESS to start their route.
+
+just use their coordinates, most accurate - especially on mobile.
+
+
+[DEC 18+]:
+
+	- front-page: USE ON IPHONE + gif of saving to your iphone
+
+	- 

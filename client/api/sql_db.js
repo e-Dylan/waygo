@@ -9,10 +9,10 @@ var database;
 if (process.env.NODE_ENV === 'production') {
 	// REMOTE HOST
 	sql_db_port = 3306;
-	host = 'sql9.freemysqlhosting.net';
-	user = 'sql9380874';
-	password = 'UenAiZQTdp';
-	database = 'sql9380874';
+	host = 'sql5.freemysqlhosting.net';
+	user = 'sql5398902';
+	password = 'V4wMK3fFvk';
+	database = 'sql5398902';
 } else if (process.env.NODE_ENV === 'development') {
 	// LOCALHOST:
 	sql_db_port = 3308;

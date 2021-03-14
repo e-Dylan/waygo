@@ -1,0 +1,22 @@
+Waygo Front Page:
+home screen: full-width image/animation
+Waygo written on left-side, white/blue/gray
+
+adv section:
+full-width 1-row or 3 rows, on left/right sides alternating:
+- optimize and visualize your travel
+- beat traffic
+- travel with friends
+(images/anims for each)
+
+analytics section:
+1 row: registered users, page views, other
+map of calculated users/routes?
+- registered users: # of rows in user db
+- page views: 	increment num in db every mount on App.js?
+
+USER LOGGED IN:
+user name top right of nav, click for drop down menu, settings/logout
+- settings has acc info, change pass, etc
+- user dashboard: see calculated routes logs? saved locations, clock
+center screen with applet library?

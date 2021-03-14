@@ -111,7 +111,7 @@ export function saveLocationToApi(locationData) {
 		return {
 			addedLocation: JSON.parse(locationData),
 			locationData: result.savedLocations,
-		};;
+		};
 	})
 }
 
