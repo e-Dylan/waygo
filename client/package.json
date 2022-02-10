@@ -25,7 +25,7 @@
     "mobx": "^5.15.7",
     "mobx-react": "^6.3.1",
     "mobx-react-lite": "^2.2.2",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-ga": "^3.3.0",
